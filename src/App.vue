@@ -14,7 +14,7 @@ export default {
 @import '~vux/src/styles/reset.less';
 
 body {
-  background-color: #fbf9fe;
+  background-color: #f4f7fa;
   font-family: "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 .icon {
