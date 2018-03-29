@@ -27,28 +27,45 @@
       <banner :src="tableData.activityBannerMobileUrl"></banner>
       <div class="container-title">
         <div class="company">
-          <p>北京汽车广场展览有限公司</p>
+          <p>{{sponsor.contactName}}</p>
           <a >关注</a>
         </div>
-        <h1 class="title">2017年中国国际节能与新能源汽车展览会</h1>
+        <h1 class="title">{{tableData.activityTitle}}</h1>
         <div class="time">
            <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-shijian"></use>
            </svg>
-           <span>周三，10月18日 9:00-14:00</span>
-           <span class="more" v-if>+3更多></span>
+           <span v-if="isSameYear">{{tableData.startTime | timeFormatExceptYear}}</span>
+           <span v-else>{{tableData.startTime | timeFormat}}</span>
+           —
+           <span v-if="isSameYear">{{tableData.endTime | timeFormatExceptYear}}</span>
+           <span v-else>{{tableData.endTime | timeFormat}}</span>
         </div>
         <div class="location">
            <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-weizhi"></use>
            </svg>
-           <span>中国北京朝阳区奥运村国家会议中心</span>
+           <span>{{tableData.activityAddress | adressFormat}}</span>
         </div>
         <div class="sectionStyle detailTime">
           <h1 class="title">
             日期时间
           </h1>
+          <div class="content">
+            <span v-if="isSameYear">{{tableData.startTime | timeFormatExceptYear}}</span>
+            <span v-else>{{tableData.startTime | timeFormat}}</span>
+            —
+            <p v-if="isSameYear">{{tableData.endTime | timeFormatExceptYear}}</p>
+            <p v-else>{{tableData.endTime | timeFormat}}</p>
+          </div>
+        </div>
+        <div class="sectionStyle detailLocation">
+          <h1 class="title">
+            位置
+          </h1>
+          <div class="content">
 
+          </div>
         </div>
       </div>
     </div>
@@ -59,7 +76,8 @@
 import { XHeader, XImg, XButton } from 'vux';
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
-import { getActivityInfoById } from '@/server/index.js';
+import { getActivityInfoById, getSponsorByUserId } from '@/server/index.js';
+import { formatDate } from '@/common/js/index.js';
 
 export default {
   name: 'detail',
@@ -81,8 +99,12 @@ export default {
         filter: 'blur(1.2px)',
         transition: 'all .3s linear',
       },
-      bannerSrc: '',
-      tableData: {},
+      tableData: {
+        activityBannerMobileUrl: '',
+      },
+      sponsor: {
+        contactName: '',
+      },
     };
   },
   components: {
@@ -97,17 +119,40 @@ export default {
   },
   computed: {
     ...mapState({ id: state => state.id }),
+    isSameYear() {
+      if ((Object.keys(this.tableData).length > 1) &&
+      (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
+        return true;
+      }
+      return false;
+    },
+  },
+  filters: {
+    timeFormat(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'yyyy年MM月dd日 hh:mm');
+    },
+    timeFormatExceptYear(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'MM月dd日 hh:mm');
+    },
+    adressFormat(value = '{}') {
+      let temp = JSON.parse(value);
+      temp = Object.values(temp);
+      temp = temp.join('');
+      return temp;
+    },
   },
   methods: {
     ...mapMutations(['SET_ID']),
-    getInfoById() {
-      getActivityInfoById(this.id).then((res) => {
-        if (res && res.data) {
-          this.tableData = res.data;
-        } else {
-          console.log('load Info err');
-        }
-      });
+    async getInfoById() {
+      const res1 = await getActivityInfoById(this.id);
+      this.tableData = res1.data;
+      const res2 = await getSponsorByUserId(res1.data.userId);
+      this.sponsor = res2.data;
+      if (!(res1.code === 0 && res2.code === 0)) {
+        console.log('error in getInfoById');
+      }
     },
   },
 };
@@ -197,6 +242,7 @@ export default {
         .title{
           font-size: 15px;
           color:#2b313c;
+          margin-bottom: 15px;
           &::before{
             content:'';
             background-color: #2c7dfa;
@@ -204,6 +250,20 @@ export default {
             height: 15px;
             display: inline-block;
             vertical-align: middle;
+          }
+        }
+        &.detailTime{
+          .content{
+            display: inline-block;
+            background-color: #f2f5f7;
+            color: #2b313c;
+            font-size: 12px;
+            padding: 16px 20px;
+          }
+        }
+        &.detailLocation{
+          .content{
+
           }
         }
       }
