@@ -1,5 +1,5 @@
 <template>
-  <div class="headerWithProcess border-1px">
+  <div class="headerWithProcess border-1px-b">
     <h1 class="title">{{ticketTitle}}</h1>
     <div class="process">
       <router-link tag="span" class="processItem" to="/buyTicket/selectTicket">选择门票</router-link>
@@ -42,14 +42,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  .border-1px(rgba(216, 219, 224, .7));
+  .border-1px-b(rgba(216, 219, 224, .7));
   .title {
     font-size: 19px;
     color: #333333;
   }
   .process {
     font-size: 14px;
-    color: #999999;
+    color: #9098a8;
     .processItem {
       &.router-link-active {
         color: #333333;

@@ -3,7 +3,7 @@
     <div class="ticketWrapper">
       <ul>
         <li v-for="ticket in meeting.tickets.list" class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
-          <div class="content border-1px">
+          <div class="content border-1px-b">
             <h1 class="title">{{ticket.name}}</h1>
             <p class="priceU" v-if="ticket.price">￥</p>
             <p class="price"
@@ -41,6 +41,9 @@ export default {
     meeting: {
       type: Object,
     },
+    selectTickets: {
+      type: Array,
+    },
   },
   computed: {},
   components: {
@@ -76,7 +79,7 @@ export default {
     }
     .content {
       padding: 20px 18px 10px;
-      .border-1px(rgba(216, 219, 224, .7));
+      .border-1px-b(rgba(216, 219, 224, .7));
       .title {
         font-size: 16px;
         font-weight: 200;
