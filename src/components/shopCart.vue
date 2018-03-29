@@ -70,16 +70,15 @@ export default {
       box-sizing: border-box;
       padding-left: 25px;
       height: 100%;
-      color: #9098a8;
       background-color: #ffffff;
       p {
         display: inline-block;
+        color: #9098a8;
       }
       .priceU {
         color: #ff9041;
       }
       .price {
-        // color: #ff9041;
         &.highLight {
           color: #ff9041;
         }

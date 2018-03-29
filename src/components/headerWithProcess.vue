@@ -2,15 +2,15 @@
   <div class="headerWithProcess border-1px">
     <h1 class="title">{{ticketTitle}}</h1>
     <div class="process">
-      <span class="processItem">选择门票</span>
+      <router-link tag="span" class="processItem" to="/buyTicket/selectTicket">选择门票</router-link>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <span class="processItem">填写信息</span>
+      <router-link tag="span" class="processItem" to="/buyTicket/fillInTicketMsg">填写信息</router-link>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <span class="processItem">购买成功</span>
+      <router-link tag="span" class="processItem" to="/buyTicket/success">购买成功</router-link>
     </div>
   </div>
 </template>
@@ -20,9 +20,6 @@ export default {
   props: {
     title: {
       type: String,
-    },
-    processType: {
-      type: Number,
     },
   },
   computed: {
@@ -53,6 +50,11 @@ export default {
   .process {
     font-size: 14px;
     color: #999999;
+    .processItem {
+      &.router-link-active {
+        color: #333333;
+      }
+    }
   }
 }
 </style>
