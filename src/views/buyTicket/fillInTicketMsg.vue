@@ -1,10 +1,10 @@
 <template>
   <div class="fillInTicketMsg">
-    <!-- <div class="userInput">
+    <div class="userInput">
       <h1 class="inputTitle border-1px-b">买家信息</h1>
       <p class="massage">门票信息将发送到您和每位订票人的邮箱中</p>
       <userInput-3 :titleSize="14"></userInput-3>
-    </div> -->
+    </div>
     <div class="userInput">
       <h1 class="inputTitle border-1px-b">门票信息</h1>
       <userInputBox :selectTicket="setSelectTicketToArray"></userInputBox>

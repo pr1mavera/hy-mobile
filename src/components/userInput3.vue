@@ -26,6 +26,7 @@ export default {
   },
   computed: {
     setTitleSize() {
+      // eslint-disable-next-line
       const className = 'titleSize-' + this.titleSize;
       return className;
     },
