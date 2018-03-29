@@ -23,18 +23,43 @@
       </div>
 
     </x-header>
-    <div>
-      <x-img
-      class="ximg-banner"
-      :src="bannerSrc"
-      >
-      </x-img>
+    <div class="main-container">
+      <banner :src="tableData.activityBannerMobileUrl"></banner>
+      <div class="container-title">
+        <div class="company">
+          <p>北京汽车广场展览有限公司</p>
+          <a >关注</a>
+        </div>
+        <h1 class="title">2017年中国国际节能与新能源汽车展览会</h1>
+        <div class="time">
+           <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-shijian"></use>
+           </svg>
+           <span>周三，10月18日 9:00-14:00</span>
+           <span class="more" v-if>+3更多></span>
+        </div>
+        <div class="location">
+           <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-weizhi"></use>
+           </svg>
+           <span>中国北京朝阳区奥运村国家会议中心</span>
+        </div>
+        <div class="sectionStyle detailTime">
+          <h1 class="title">
+            日期时间
+          </h1>
+
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { XHeader, XImg } from 'vux';
+import { XHeader, XImg, XButton } from 'vux';
+import { mapMutations, mapState } from 'vuex';
+import banner from '@/components/banner';
+import { getActivityInfoById } from '@/server/index.js';
 
 export default {
   name: 'detail',
@@ -56,25 +81,48 @@ export default {
         filter: 'blur(1.2px)',
         transition: 'all .3s linear',
       },
-      bannerSrc: '../../src/assets/testBanner.png',
+      bannerSrc: '',
+      tableData: {},
     };
   },
   components: {
     XHeader,
     XImg,
+    banner,
+    XButton,
+  },
+  mounted() {
+    this.SET_ID(this.$route.params.id);
+    this.getInfoById();
+  },
+  computed: {
+    ...mapState({ id: state => state.id }),
+  },
+  methods: {
+    ...mapMutations(['SET_ID']),
+    getInfoById() {
+      getActivityInfoById(this.id).then((res) => {
+        if (res && res.data) {
+          this.tableData = res.data;
+        } else {
+          console.log('load Info err');
+        }
+      });
+    },
   },
 };
 </script>
 
 <style  lang="less">
 #detail{
+
   .meetingHeader{
     padding: 0;
     height: 45px;
-    position: fixed;
     width: 100%;
     background-color: transparent;
     z-index: 999;
+    position: fixed;
     &::after{
       content: '';
       position: absolute;
@@ -82,7 +130,7 @@ export default {
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(255,255,255,0.8);
+      opacity: 1;
       z-index: -1;
     }
     .vux-header-left{
@@ -112,20 +160,54 @@ export default {
           color: #ffffff;
         }
       }
-      .background{
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100vw;
-        overflow: visible;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: transparent;
-        filter: blur(20px);
-        z-index: -1;
-      }
     }
 
+  }
+  .main-container{
+    .container-title{
+      background-color: #ffffff;
+      padding: 15px 25px;
+      z-index: 1;
+      position: relative;
+      .company{
+        p{
+          font-size: 12px;
+          color:#5d6574;
+          display: inline-block;
+        }
+        a{
+          font-size: 12px;
+          color: #2c7dfa;
+        }
+      }
+      h1.title{
+        font-size: 18px;
+        color: #2b313c;
+      }
+      .time,.location{
+        color: #5d6574;
+        font-size: 12px;
+        line-height: 30px;
+        .more{
+          text-decoration: underline;
+        }
+      }
+      .sectionStyle{
+        padding: 20px 0;
+        .title{
+          font-size: 15px;
+          color:#2b313c;
+          &::before{
+            content:'';
+            background-color: #2c7dfa;
+            width: 2px;
+            height: 15px;
+            display: inline-block;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
   }
 }
 </style>

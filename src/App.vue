@@ -16,6 +16,7 @@ export default {
 body {
   background-color: #fbf9fe;
   font-family: "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  overflow: hidden;
 }
 .icon {
     width: 1em; height: 1em;
