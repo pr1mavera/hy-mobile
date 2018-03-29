@@ -5,7 +5,7 @@
     </div>
     <div class="routerBody">
       <keep-alive>
-        <router-view :meeting="meeting"></router-view>
+        <router-view :meeting="meeting" :select-tickets="selectTickets"></router-view>
       </keep-alive>
     </div>
     <shopCart ref="shopCart" :select-tickets="selectTickets"></shopCart>
@@ -91,7 +91,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .header {
   position: fixed;
