@@ -30,11 +30,13 @@
       </ul>
       <span class="refund">退款说明：不支持退票</span>
     </div>
+    <shopCart ref="shopCart" :select-tickets="selectTickets"></shopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import cartControl from '@/components/cartControl.vue';
+import shopCart from '@/components/shopCart.vue';
 
 export default {
   props: {
@@ -48,6 +50,7 @@ export default {
   computed: {},
   components: {
     cartControl,
+    shopCart,
   },
 };
 </script>

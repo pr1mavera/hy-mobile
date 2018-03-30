@@ -8,13 +8,11 @@
         <router-view :meeting="meeting" :select-tickets="selectTickets"></router-view>
       </keep-alive>
     </div>
-    <shopCart ref="shopCart" :select-tickets="selectTickets"></shopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import headerWithProcess from '@/components/headerWithProcess.vue';
-import shopCart from '@/components/shopCart.vue';
 
 export default {
   data() {
@@ -25,11 +23,11 @@ export default {
           title: '2017年国际节能与新能源汽车展览会',
           list: [
             {
-              name: '1月12日门票',
-              surplus: 45,
-              price: 0,
-              needVerify: true,
-              canInvoice: false,
+              name: '1月12日门票', // 门票名称
+              surplus: 45,        // 剩余票数
+              price: 0,           // 价格
+              needVerify: true,   // 是否需要官方审核
+              canInvoice: false,  // 能否开发票
             },
             {
               name: 'VIP贵宾票',
@@ -85,7 +83,6 @@ export default {
   },
   components: {
     headerWithProcess,
-    shopCart,
   },
 };
 </script>

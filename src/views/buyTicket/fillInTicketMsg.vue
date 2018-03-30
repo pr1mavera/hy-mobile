@@ -1,20 +1,24 @@
 <template>
   <div class="fillInTicketMsg">
-    <div class="userInput">
-      <h1 class="inputTitle border-1px-b">买家信息</h1>
-      <p class="massage">门票信息将发送到您和每位订票人的邮箱中</p>
-      <userInput-3 :titleSize="14"></userInput-3>
+    <div class="fillInContent">
+      <div class="userInput">
+        <h1 class="inputTitle border-1px-b">买家信息</h1>
+        <p class="massage">门票信息将发送到您和每位订票人的邮箱中</p>
+        <userInput-3 :titleSize="14"></userInput-3>
+      </div>
+      <div class="userInput">
+        <h1 class="inputTitle border-1px-b">门票信息</h1>
+        <userInputBox :selectTicket="setSelectTicketToArray"></userInputBox>
+      </div>
     </div>
-    <div class="userInput">
-      <h1 class="inputTitle border-1px-b">门票信息</h1>
-      <userInputBox :selectTicket="setSelectTicketToArray"></userInputBox>
-    </div>
+    <shopCart ref="shopCart" :select-tickets="selectTickets"></shopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import userInput3 from '@/components/userInput3.vue';
 import userInputBox from '@/components/userInputBox.vue';
+import shopCart from '@/components/shopCart.vue';
 
 export default {
   props: {
@@ -39,6 +43,7 @@ export default {
   components: {
     userInput3,
     userInputBox,
+    shopCart,
   },
 };
 </script>
@@ -46,7 +51,7 @@ export default {
 <style lang="less">
 @import '../../common/style/mixin.less';
 
-.fillInTicketMsg {
+.fillInContent {
   width: 100%;
   box-sizing: border-box;
   padding: 0 22px 70px;
