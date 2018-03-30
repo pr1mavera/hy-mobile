@@ -42,17 +42,17 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  .border-1px-b(rgba(216, 219, 224, .7));
+  .border-1px-b(@border-1px-color);
   .title {
     font-size: 19px;
-    color: #333333;
+    color: @text-color-darker;
   }
   .process {
     font-size: 14px;
-    color: #9098a8;
+    color: @text-color;
     .processItem {
       &.router-link-active {
-        color: #333333;
+        color: @text-color-darker;
       }
     }
   }

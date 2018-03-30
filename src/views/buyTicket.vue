@@ -88,6 +88,7 @@ export default {
 </script>
 
 <style lang="less">
+@import '../common/style/mixin.less';
 
 .header {
   position: fixed;

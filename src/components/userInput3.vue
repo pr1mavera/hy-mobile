@@ -35,6 +35,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../common/style/mixin.less';
+
 .userInput-3 {
   width: 100%;
   .inputItem {
@@ -44,7 +46,7 @@ export default {
       height: 30px;
       line-height: 30px;
       font-size: 14px;
-      color: #9098a8;
+      color: @text-color;
       i {
         color: #ff584e;
       }
@@ -64,7 +66,7 @@ export default {
       line-height: 40px;
       box-sizing: border-box;
       border-radius: 3px;
-      border: 1px solid rgba(144, 152, 168, .3);
+      border: 1px solid @border-1px-color;
       padding-left: 10px;
       outline: none;
     }

@@ -42,6 +42,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../common/style/mixin.less';
+
 .cartControl {
   font-size: 0;
   .cart-decrease, .cart-add {
@@ -49,7 +51,7 @@ export default {
     padding: 4px;
     line-height: 16px;
     font-size: 16px;
-    color: #9098a8;
+    color: @text-color;
     background-color: #f3f4f8;
     border: 1px solid #dddddd;
   }
@@ -64,7 +66,7 @@ export default {
     line-height: 26px;
     text-align: center;
     font-size: 16px;
-    color: #5d6574;
+    color: @text-color-dark;
   }
 }
 

@@ -63,13 +63,13 @@ export default {
       line-height: 45px;
       font-size: 16px;
       font-weight: 200;
-      .border-1px-b(rgba(216, 219, 224, .7));
+      .border-1px-b(@border-1px-color);
     }
     .massage {
       height: 40px;
       line-height: 40px;
       font-size: 12px;
-      color: #9098a8;
+      color: @text-color;
     }
   }
 }

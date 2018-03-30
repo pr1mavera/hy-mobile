@@ -78,11 +78,11 @@ export default {
     list-style: none;
     transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46);
     &.borderHighLight {
-      border-color: #2c7dfa;
+      border-color: @theme-blue;
     }
     .content {
       padding: 20px 18px 10px;
-      .border-1px-b(rgba(216, 219, 224, .7));
+      .border-1px-b(@border-1px-color);
       .title {
         font-size: 16px;
         font-weight: 200;
@@ -90,11 +90,11 @@ export default {
       p {
         display: inline-block;
         line-height: 30px;
-        color: #ff9041;
+        color: @text-color-yellow;
       }
       .price {
         &.highLightFree {
-          color: #07d79c;
+          color: @text-color-green;
         }
       }
       .cartControl {
@@ -108,17 +108,17 @@ export default {
       .typeItem {
         line-height: 26px;
         .icon {
-          color: #2c7dfa;
+          color: @theme-blue;
         }
         .text {
-          color: #5d6574;
+          color: @text-color-dark;
         }
       }
     }
   }
   .refund {
     font-size: 14px;
-    color: #ff4b40;
+    color: @warning-red;
   }
 }
 </style>

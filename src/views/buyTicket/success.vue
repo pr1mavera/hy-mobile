@@ -54,6 +54,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../../common/style/mixin.less';
+
 body {
   background-color: #ffffff;
 }
@@ -82,12 +84,12 @@ body {
       margin-bottom: 15px;
     }
     .text {
-      color: #9098a8;
+      color: @text-color;
       font-size: 14px;
       text-align: center;
       font-weight: 200;
       span {
-        color: #2b313c;
+        color: @text-color-darker;
       }
     }
     .QRbox {
@@ -100,7 +102,7 @@ body {
       }
       .QRtext {
         font-size: 14px;
-        color: #9098a8;
+        color: @text-color;
       }
     }
   }
@@ -118,11 +120,11 @@ body {
       border: 1px solid rgba(144, 152, 168, .2);
       border-radius: 3px;
       font-size: 14px;
-      color: #9098a8;
+      color: @text-color;
       outline: none;
       &.btnItemHighLight {
-        border-color: #ff4b40;
-        color: #ff4b40;
+        border-color: @warning-red;
+        color: @warning-red;
       }
     }
   }

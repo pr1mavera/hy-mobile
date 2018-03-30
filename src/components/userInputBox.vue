@@ -39,7 +39,7 @@ export default {
   ul > li.inputBoxItem {
     margin-bottom: 20px;
     border-radius: 2px;
-    border: 1px solid rgba(144, 152, 168, .2);
+    border: 1px solid @border-1px-color;
     background-color: #f4f7fa;
     list-style: none;
     .boxTitle{
@@ -51,7 +51,7 @@ export default {
       padding: 0 10px;
       box-sizing: border-box;
       background-color: #ffffff;
-      .border-1px-b(rgba(144, 152, 168, .2));
+      .border-1px-b(@border-1px-color);
     }
     .boxContent {
       padding: 5px 15px 10px;

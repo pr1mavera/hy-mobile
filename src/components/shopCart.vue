@@ -54,6 +54,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../common/style/mixin.less';
+
 .shopcart {
   position: fixed;
   bottom: 0;
@@ -73,17 +75,17 @@ export default {
       background-color: #ffffff;
       p {
         display: inline-block;
-        color: #9098a8;
+        color: @text-color;
       }
       .priceU {
-        color: #ff9041;
+        color: @text-color-yellow;
       }
       .price {
         &.highLight {
-          color: #ff9041;
+          color: @text-color-yellow;
         }
         &.highLightFree {
-          color: #07d79c;
+          color: @text-color-green;
         }
       }
     }
@@ -92,7 +94,7 @@ export default {
       height: 100%;
       text-align: center;
       color: #ffffff;
-      background-color: #2c7dfa;
+      background-color: @theme-blue;
     }
   }
 }
