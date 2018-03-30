@@ -2,25 +2,25 @@
   <div class="selectTickets">
     <div class="ticketWrapper">
       <ul>
-        <li v-for="ticket in meeting.tickets.list" class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
+        <li v-for="ticket in tickets" class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
           <div class="content border-1px-b">
-            <h1 class="title">{{ticket.name}}</h1>
-            <p class="priceU" v-if="ticket.price">￥</p>
+            <h1 class="title">{{ticket.ticketName}}</h1>
+            <p class="priceU" v-if="ticket.ticketPrice">￥</p>
             <p class="price"
-              :class="{'highLightFree': ticket.price == 0}">
-              {{ticket.price ? ticket.price : '免费'}}
+              :class="{'highLightFree': ticket.ticketPrice == 0}">
+              {{ticket.ticketPrice ? ticket.ticketPrice : '免费'}}
             </p>
-            <cartControl :ticket="ticket" v-if="ticket.surplus"></cartControl>
-            <span class="sellOut" v-if="!ticket.surplus">已售罄</span>
+            <cartControl :ticket="ticket" v-if="ticket.totalNumber - ticket.sellStatus"></cartControl>
+            <span class="sellOut" v-if="!(ticket.totalNumber - ticket.sellStatus)">已售罄</span>
           </div>
           <div class="type">
-            <p class="typeItem" v-if="ticket.needVerify">
+            <p class="typeItem" v-if="ticket.isCheck">
               <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-shenhe"></use>
               </svg>
               <span class="text">此门票需要主办方审核</span>
             </p>
-            <p class="typeItem" v-if="ticket.canInvoice">
+            <p class="typeItem" v-if="ticket.isCheck">
               <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tanhao"></use>
               </svg>
@@ -41,8 +41,8 @@ import shopCart from '@/components/shopCart.vue';
 
 export default {
   props: {
-    meeting: {
-      type: Object,
+    tickets: {
+      type: Array,
     },
     selectTickets: {
       type: Array,
@@ -59,6 +59,9 @@ export default {
 <style lang="less">
 @import '../../common/style/mixin.less';
 
+Body {
+  background-color: #f4f7fa;
+}
 .routerBody {
   background-color: #f4f7fa;
 }

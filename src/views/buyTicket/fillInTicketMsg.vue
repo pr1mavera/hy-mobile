@@ -22,8 +22,8 @@ import shopCart from '@/components/shopCart.vue';
 
 export default {
   props: {
-    meeting: {
-      type: Object,
+    tickets: {
+      type: Array,
     },
     selectTickets: {
       type: Array,

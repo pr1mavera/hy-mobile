@@ -21,26 +21,26 @@ export default new Router({
       component: detail,
     },
     {
-      path: '/buyTicket',
+      path: '/buyTicket/:activityId',
       name: 'buyTicket',
       component: buyTicket,
       children: [
         {
-          path: '/',
-          redirect: 'selectTicket',
+          path: '/buyTicket/:activityId/',
+          redirect: '/buyTicket/:activityId/selectTicket',
         },
         {
-          path: 'selectTicket',
+          path: '/buyTicket/:activityId/selectTicket',
           component: selectTicket,
           name: '选择门票',
         },
         {
-          path: 'fillInTicketMsg',
+          path: '/buyTicket/:activityId/fillInTicketMsg',
           component: fillInTicketMsg,
           name: '填写信息',
         },
         {
-          path: 'success',
+          path: '/buyTicket/:activityId/success',
           component: success,
           name: '购买成功',
         },

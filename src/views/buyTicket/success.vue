@@ -27,8 +27,8 @@
 <script type="text/ecmascript-6">
 export default {
   props: {
-    meeting: {
-      type: Object,
+    tickets: {
+      type: Array,
     },
     selectTickets: {
       type: Array,

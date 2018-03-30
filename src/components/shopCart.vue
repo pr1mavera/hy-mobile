@@ -30,7 +30,7 @@ export default {
     totalPrice() { // 计算所选商品总价格
       let total = 0;
       this.selectTickets.forEach((ticket) => {
-        total += ticket.price * ticket.count;
+        total += ticket.ticketPrice * ticket.count;
       });
       return total;
     },

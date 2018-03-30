@@ -1,12 +1,12 @@
 <template>
   <div class="cartControl">
-    <div class="cart-decrease" @click="decreaseCart" :class="{'btn-enable': ticket.count > 0}">
+    <div class="cart-decrease" @click="decreaseCart" :class="{'btn-disable': !ticket.count}">
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon--"></use>
       </svg>
     </div>
     <div class="cart-count">{{ticket.count ? ticket.count : 0}}</div>
-    <div class="cart-add" @click="addCart">
+    <div class="cart-add" @click="addCart" :class="{'btn-disable': ticket.count >= (ticket.totalNumber - ticket.sellStatus)}">
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-icon-test"></use>
       </svg>
@@ -27,10 +27,9 @@ export default {
     addCart() {
       if (!this.ticket.count) {
         Vue.set(this.ticket, 'count', 1);
-      } else {
+      } else if (this.ticket.count < (this.ticket.totalNumber - this.ticket.sellStatus)) {
         this.ticket.count += 1;
       }
-      // this.$dispatch('cart.add', event.target)
     },
     decreaseCart() {
       if (this.ticket.count) {
@@ -54,11 +53,8 @@ export default {
     color: @text-color;
     background-color: #f3f4f8;
     border: 1px solid #dddddd;
-  }
-  .cart-decrease {
-    opacity: .3;
-    &.btn-enable {
-      opacity: 1;
+    &.btn-disable {
+      opacity: .3;
     }
   }
   .cart-count {
