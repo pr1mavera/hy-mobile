@@ -59,6 +59,9 @@ export default {
 <style lang="less">
 @import '../../common/style/mixin.less';
 
+.routerBody {
+  background-color: #f4f7fa;
+}
 .ticketWrapper{
   font-size: 0;
   display: flex;
