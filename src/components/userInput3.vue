@@ -69,6 +69,15 @@ export default {
       border: 1px solid @border-1px-color;
       padding-left: 10px;
       outline: none;
+      transition: all .25s cubic-bezier(0.84, 0, 0.24, 1);
+      &:focus {
+        border-color: @theme-blue;
+      }
+      &.inputWarning {
+        color: @warning-red;
+        background-color: #fff2f1;
+        border-color: @warning-red;
+      }
     }
   }
 

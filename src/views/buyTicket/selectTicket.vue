@@ -10,7 +10,8 @@
               :class="{'highLightFree': ticket.price == 0}">
               {{ticket.price ? ticket.price : '免费'}}
             </p>
-            <cartControl :ticket="ticket"></cartControl>
+            <cartControl :ticket="ticket" v-if="ticket.surplus"></cartControl>
+            <span class="sellOut" v-if="!ticket.surplus">已售罄</span>
           </div>
           <div class="type">
             <p class="typeItem" v-if="ticket.needVerify">
@@ -101,6 +102,14 @@ export default {
         position: absolute;
         right: 18px;
         top: 25px;
+      }
+      .sellOut {
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: @text-color;
       }
     }
     .type {

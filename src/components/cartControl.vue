@@ -1,14 +1,14 @@
 <template>
   <div class="cartControl">
-    <div class="cart-decrease" @click="decreaseCart">
+    <div class="cart-decrease" @click="decreaseCart" :class="{'btn-enable': ticket.count > 0}">
       <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-xinzeng"></use>
+          <use xlink:href="#icon--"></use>
       </svg>
     </div>
     <div class="cart-count">{{ticket.count ? ticket.count : 0}}</div>
     <div class="cart-add" @click="addCart">
       <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-xinzeng"></use>
+          <use xlink:href="#icon-icon-test"></use>
       </svg>
     </div>
   </div>
@@ -48,15 +48,18 @@ export default {
   font-size: 0;
   .cart-decrease, .cart-add {
     display: inline-block;
-    padding: 4px;
-    line-height: 16px;
-    font-size: 16px;
+    padding: 6px;
+    line-height: 14px;
+    font-size: 14px;
     color: @text-color;
     background-color: #f3f4f8;
     border: 1px solid #dddddd;
   }
   .cart-decrease {
-
+    opacity: .3;
+    &.btn-enable {
+      opacity: 1;
+    }
   }
   .cart-count {
     display: inline-block;
