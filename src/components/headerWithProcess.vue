@@ -2,15 +2,15 @@
   <div class="headerWithProcess border-1px-b">
     <h1 class="title">2017年国际节能与新能源汽车展览会</h1>
     <div class="process">
-      <router-link tag="span" class="processItem" to="selectTicket">选择门票</router-link>
+      <router-link tag="span" class="processItem" :to="{ path: 'selectTicket', name: 'selectTicket', query: query}">选择门票</router-link>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <router-link tag="span" class="processItem" to="fillInTicketMsg">填写信息</router-link>
+      <router-link tag="span" class="processItem" :to="{ path: 'fillInTicketMsg', name: 'fillInTicketMsg', query: query}">填写信息</router-link>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <router-link tag="span" class="processItem" to="success">购买成功</router-link>
+      <router-link tag="span" class="processItem" :to="{ path: 'success', name: 'success', query: query}">购买成功</router-link>
     </div>
   </div>
 </template>
@@ -20,6 +20,9 @@ export default {
   props: {
     activityId: {
       type: Number,
+    },
+    query: {
+      type: Object,
     },
   },
   computed: {

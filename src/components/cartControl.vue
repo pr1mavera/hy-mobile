@@ -5,6 +5,7 @@
           <use xlink:href="#icon--"></use>
       </svg>
     </div>
+{{ticket.count}}
     <div class="cart-count">{{ticket.count ? ticket.count : 0}}</div>
     <div class="cart-add" @click="addCart" :class="{'btn-disable': ticket.count >= (ticket.totalNumber - ticket.sellStatus)}">
       <svg class="icon" aria-hidden="true">
@@ -25,6 +26,7 @@ export default {
   },
   methods: {
     addCart() {
+      debugger;
       if (!this.ticket.count) {
         Vue.set(this.ticket, 'count', 1);
       } else if (this.ticket.count < (this.ticket.totalNumber - this.ticket.sellStatus)) {

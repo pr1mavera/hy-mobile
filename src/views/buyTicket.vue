@@ -1,24 +1,69 @@
 <template>
   <div class="buyTicket">
     <div class="header">
-      <headerWithProcess :activityId="parseInt(this.$route.params.activityId)"></headerWithProcess>
+      <headerWithProcess :query="setQuery" :activityId="parseInt(this.$route.params.activityId)"></headerWithProcess>
     </div>
     <div class="routerBody">
       <keep-alive>
-        <router-view :tickets="ticketData" :select-tickets="selectTickets"></router-view>
+        <router-view :tickets="tickets" :select-tickets="selectTickets"></router-view>
       </keep-alive>
     </div>
+    <shopCart ref="shopCart" :query="setQuery" :select-tickets="selectTickets"></shopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import { mapMutations, mapState } from 'vuex';
-import { getTicketsByActivityId } from '@/server/index.js';
+import { mapMutations } from 'vuex';
+// import { mapMutations, mapState } from 'vuex';
+// import { getTicketsByActivityId } from '@/server/index.js';
 import headerWithProcess from '@/components/headerWithProcess.vue';
+import shopCart from '@/components/shopCart.vue';
 
 export default {
   data() {
     return {
+      tickets: [
+        {
+          id: 12,
+          ticketName: '1月12日门票',
+          totalNumber: 45,
+          sellStatus: 12,
+          ticketPrice: 0,
+          isCheck: true,
+        },
+        {
+          id: 13,
+          ticketName: '1月12日门票',
+          totalNumber: 45,
+          sellStatus: 12,
+          ticketPrice: 457,
+          isCheck: true,
+        },
+        {
+          id: 14,
+          ticketName: '1月12日门票',
+          totalNumber: 45,
+          sellStatus: 12,
+          ticketPrice: 75,
+          isCheck: true,
+        },
+        {
+          id: 15,
+          ticketName: '1月12日门票',
+          totalNumber: 45,
+          sellStatus: 12,
+          ticketPrice: 4,
+          isCheck: true,
+        },
+        {
+          id: 16,
+          ticketName: '1月12日门票',
+          totalNumber: 45,
+          sellStatus: 12,
+          ticketPrice: 26,
+          isCheck: true,
+        },
+      ],
       // meeting: {
       //   code: 0,
       //   tickets: {
@@ -70,19 +115,26 @@ export default {
       //     total: 60,
       //   },
       // },
-      ticketData: [],
+      // tickets: [],
     };
   },
   computed: {
-    ...mapState({ activityId: state => state.activityId }),
+    // ...mapState({ activityId: state => state.activityId }),
     selectTickets() {
       const tickets = [];
-      this.ticketData.forEach((ticket) => {
+      this.tickets.forEach((ticket) => {
         if (ticket.count) {
           tickets.push(ticket);
         }
       });
       return tickets;
+    },
+    setQuery() {
+      const query = {};
+      this.selectTickets.forEach((item) => {
+        query[item.id] = item.count;
+      });
+      return query;
     },
   },
   mounted() {
@@ -91,16 +143,23 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_ACTIVITY_ID']),
-    async getTicketsById() {
-      const res = await getTicketsByActivityId(this.activityId);
-      this.ticketData = res.data;
-      if (res.code !== 0) {
-        console.log('error in getTicketsById');
-      }
+    getTicketsById() {
+      // const res = await getTicketsByActivityId(this.activityId);
+      // this.tickets = res.data;
+      const tickets = this.tickets.map((v) => {
+        /* eslint max-len: ["error", 200] */
+        v.count = ~Object.keys(this.$route.query).indexOf(v.id) ? 0 : Number(this.$route.query[v.id]);
+        return v;
+      });
+      this.tickets = tickets;
+      // if (res.code !== 0) {
+      //   console.log('error in getTicketsById');
+      // }
     },
   },
   components: {
     headerWithProcess,
+    shopCart,
   },
 };
 </script>

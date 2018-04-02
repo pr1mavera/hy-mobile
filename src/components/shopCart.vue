@@ -12,7 +12,7 @@
           {{showTotalPrice}}
         </p>
       </div>
-      <div class="contentLight">
+      <div class="contentLight" @click="sendProps">
         <div class="next">下一步</div>
       </div>
     </div>
@@ -24,6 +24,9 @@ export default {
   props: {
     selectTickets: {
       type: Array,
+    },
+    query: {
+      type: Object,
     },
   },
   computed: {
@@ -48,6 +51,15 @@ export default {
         return '免费';
       }
       return this.totalPrice;
+    },
+  },
+  methods: {
+    sendProps() {
+      this.$router.push({
+        path: 'yourPath',
+        name: 'fillInTicketMsg',
+        query: this.query,
+      });
     },
   },
 };

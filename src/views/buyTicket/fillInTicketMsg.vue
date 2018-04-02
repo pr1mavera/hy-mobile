@@ -11,14 +11,12 @@
         <userInputBox :selectTicket="setSelectTicketToArray"></userInputBox>
       </div>
     </div>
-    <shopCart ref="shopCart" :select-tickets="selectTickets"></shopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import userInput3 from '@/components/userInput3.vue';
 import userInputBox from '@/components/userInputBox.vue';
-import shopCart from '@/components/shopCart.vue';
 
 export default {
   props: {
@@ -43,7 +41,6 @@ export default {
   components: {
     userInput3,
     userInputBox,
-    shopCart,
   },
 };
 </script>
