@@ -1,11 +1,11 @@
 <template>
   <div class="buyTicket">
     <div class="header">
-      <headerWithProcess :query="setQuery" :activityId="parseInt(this.$route.params.activityId)"></headerWithProcess>
+      <headerWithProcess :query="setQuery" :activity-id="parseInt(this.$route.params.activityId)"></headerWithProcess>
     </div>
     <div class="routerBody">
       <keep-alive>
-        <router-view :tickets="tickets" :select-tickets="selectTickets"></router-view>
+        <router-view :tickets="ticketsData" :select-tickets="selectTickets"></router-view>
       </keep-alive>
     </div>
     <shopCart ref="shopCart" :query="setQuery" :select-tickets="selectTickets"></shopCart>
@@ -13,8 +13,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { mapMutations } from 'vuex';
-// import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 // import { getTicketsByActivityId } from '@/server/index.js';
 import headerWithProcess from '@/components/headerWithProcess.vue';
 import shopCart from '@/components/shopCart.vue';
@@ -64,62 +63,12 @@ export default {
           isCheck: true,
         },
       ],
-      // meeting: {
-      //   code: 0,
-      //   tickets: {
-      //     title: '2017年国际节能与新能源汽车展览会',
-      //     list: [
-      //       {
-      //         name: '1月12日门票', // 门票名称
-      //         surplus: 45,        // 剩余票数
-      //         price: 0,           // 价格
-      //         needVerify: true,   // 是否需要官方审核
-      //         canInvoice: false,  // 能否开发票
-      //       },
-      //       {
-      //         name: 'VIP贵宾票',
-      //         surplus: 15,
-      //         price: 99,
-      //         needVerify: true,
-      //         canInvoice: true,
-      //       },
-      //       {
-      //         name: 'VIP早鸟票',
-      //         surplus: 0,
-      //         price: 59,
-      //         needVerify: true,
-      //         canInvoice: true,
-      //       },
-      //       {
-      //         name: '1月12日门票',
-      //         surplus: 45,
-      //         price: 0,
-      //         needVerify: true,
-      //         canInvoice: false,
-      //       },
-      //       {
-      //         name: 'VIP贵宾票',
-      //         surplus: 15,
-      //         price: 99,
-      //         needVerify: true,
-      //         canInvoice: true,
-      //       },
-      //       {
-      //         name: 'VIP早鸟票',
-      //         surplus: 0,
-      //         price: 59,
-      //         needVerify: true,
-      //         canInvoice: true,
-      //       },
-      //     ],
-      //     total: 60,
-      //   },
-      // },
-      // tickets: [],
+      ticketsData: [],
     };
   },
   computed: {
     // ...mapState({ activityId: state => state.activityId }),
+    ...mapState({ tickets: 'tickets' }),
     selectTickets() {
       const tickets = [];
       this.tickets.forEach((ticket) => {
@@ -146,15 +95,22 @@ export default {
     getTicketsById() {
       // const res = await getTicketsByActivityId(this.activityId);
       // this.tickets = res.data;
-      const tickets = this.tickets.map((v) => {
-        /* eslint max-len: ["error", 200] */
-        v.count = ~Object.keys(this.$route.query).indexOf(v.id) ? 0 : Number(this.$route.query[v.id]);
-        return v;
+      const tickets = this.tickets.map((item) => {
+        // eslint-disable-next-line
+        item.count = ~Object.keys(this.$route.query).indexOf(item.id.toString()) ? Number(this.$route.query[item.id]) : 0;
+        return item;
       });
-      this.tickets = tickets;
+      this.ticketsData = tickets;
       // if (res.code !== 0) {
       //   console.log('error in getTicketsById');
       // }
+    },
+    sendProps() {
+      this.$router.push({
+        path: 'yourPath',
+        name: 'fillInTicketMsg',
+        query: this.query,
+      });
     },
   },
   components: {

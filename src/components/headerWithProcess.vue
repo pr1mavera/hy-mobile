@@ -1,6 +1,6 @@
 <template>
   <div class="headerWithProcess border-1px-b">
-    <h1 class="title">2017年国际节能与新能源汽车展览会</h1>
+    <h1 class="title">{{activityId}}</h1>
     <div class="process">
       <router-link tag="span" class="processItem" :to="{ path: 'selectTicket', name: 'selectTicket', query: query}">选择门票</router-link>
       <svg class="icon" aria-hidden="true">

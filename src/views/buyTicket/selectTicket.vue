@@ -2,7 +2,7 @@
   <div class="selectTickets">
     <div class="ticketWrapper">
       <ul>
-        <li v-for="(ticket,i) in tickets" :key='i' class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
+        <li v-for="(ticket, index) in tickets" :key='index' class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
           <div class="content border-1px-b">
             <h1 class="title">{{ticket.ticketName}}</h1>
             <p class="priceU" v-if="ticket.ticketPrice">￥</p>
@@ -10,13 +10,7 @@
               :class="{'highLightFree': ticket.ticketPrice == 0}">
               {{ticket.ticketPrice ? ticket.ticketPrice : '免费'}}
             </p>
-            <x-number
-              class="cartControl"
-              v-model="ticket.count"
-              v-if="ticket.totalNumber - ticket.sellStatus"
-              button-style="round"
-              >
-            </x-number>
+            <XNumberSetCount class="cartControl" :ticket="ticket"></XNumberSetCount>
             <span class="sellOut" v-if="!(ticket.totalNumber - ticket.sellStatus)">已售罄</span>
           </div>
           <div class="type">
@@ -41,7 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { XNumber } from 'vux';
+import XNumberSetCount from '@/components/XNumberSetCount.vue';
 
 export default {
   props: {
@@ -51,16 +45,28 @@ export default {
     selectTickets: {
       type: Array,
     },
+    query: {
+      type: Object,
+    },
   },
   data() {
     return {
-      query: {},
+      selTickets: [],
     };
   },
-  computed: { },
-  methods: {},
+  created() {
+    this.setSelTickets();
+  },
+  computed: {
+
+  },
+  methods: {
+    setSelTickets() {
+      this.selTickets = this.selectTickets;
+    },
+  },
   components: {
-    XNumber,
+    XNumberSetCount,
   },
 };
 </script>
@@ -117,23 +123,28 @@ Body {
         position: absolute;
         right: 18px;
         top: 25px;
-      }
-      .weui-cell {
-        padding: 0;
-        &:before {
+        .weui-cells {
+          margin-top: 0;
+        }
+        .weui-cells:after, .weui-cell:before, .weui-cell:after {
           display: none;
         }
-        .vux-number-round {
-          .vux-number-selector {
-            border: 1px solid #dddddd;
-            background-color: #f3f4f8;
-            border-radius: 0;
-            svg {
-              fill: @text-color;
+        .weui-cell {
+          padding: 0;
+          .vux-number-round {
+            .vux-number-selector {
+              margin-right: 0;
+              border: 1px solid #dddddd;
+              background-color: #f3f4f8;
+              border-radius: 0;
+              svg {
+                fill: @text-color;
+              }
             }
           }
         }
       }
+
       .sellOut {
         position: absolute;
         right: 40px;
