@@ -1,34 +1,35 @@
 <template>
   <div class="headerWithProcess border-1px-b">
-    <h1 class="title">{{activityId}}</h1>
+    <h1 class="title">{{this.activityId}}</h1>
     <div class="process">
-      <router-link tag="span" class="processItem" :to="{ path: 'selectTicket', name: 'selectTicket', query: query}">选择门票</router-link>
+      <router-link tag="span" class="processItem" :to="{ path: 'selectTicket', name: 'selectTicket', query: this.query ? this.query : {}}">选择门票</router-link>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <router-link tag="span" class="processItem" :to="{ path: 'fillInTicketMsg', name: 'fillInTicketMsg', query: query}">填写信息</router-link>
+      <router-link tag="span" class="processItem" :to="{ path: 'fillInTicketMsg', name: 'fillInTicketMsg', query: this.query ? this.query : {}}">填写信息</router-link>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <router-link tag="span" class="processItem" :to="{ path: 'success', name: 'success', query: query}">购买成功</router-link>
+      <router-link tag="span" class="processItem" :to="{ path: 'success', name: 'success'}">购买成功</router-link>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex';
+
 export default {
-  props: {
-    activityId: {
-      type: Number,
-    },
-    query: {
-      type: Object,
-    },
-  },
   computed: {
+    ...mapGetters([
+      'activityId',
+      'query',
+    ]),
     ticketTitle() {
       return this.title;
     },
+  },
+  methods: {
+
   },
 };
 </script>

@@ -12,7 +12,7 @@
           {{showTotalPrice}}
         </p>
       </div>
-      <div class="contentLight" @click="sendProps">
+      <div class="contentLight" @click="clickToNextRoute">
         <div class="next">下一步</div>
       </div>
     </div>
@@ -20,26 +20,24 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex';
+
 export default {
-  props: {
-    selectTickets: {
-      type: Array,
-    },
-    query: {
-      type: Object,
-    },
-  },
   computed: {
+    ...mapGetters([
+      'selTickets',
+      'query',
+    ]),
     totalPrice() { // 计算所选商品总价格
       let total = 0;
-      this.selectTickets.forEach((ticket) => {
+      this.selTickets.forEach((ticket) => {
         total += ticket.ticketPrice * ticket.count;
       });
       return total;
     },
     totalCount() { // 计算所选商品总数
       let count = 0;
-      this.selectTickets.forEach((ticket) => {
+      this.selTickets.forEach((ticket) => {
         count += ticket.count;
       });
       return count;
@@ -54,10 +52,11 @@ export default {
     },
   },
   methods: {
-    sendProps() {
+    clickToNextRoute() {
+      // console.log(this.$route.name);
+      const nextRoute = this.$route.name === 'selectTicket' ? 'fillInTicketMsg' : 'success';
       this.$router.push({
-        path: 'yourPath',
-        name: 'fillInTicketMsg',
+        path: nextRoute,
         query: this.query,
       });
     },

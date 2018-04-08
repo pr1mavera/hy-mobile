@@ -37,16 +37,16 @@ export default {
   data() {
     return {
       feedback: {
-        // typeCode: 1,
-        // massage: {
-        //   orderNum: '41665212851523654',
-        //   orderTime: '2018-03-26 14:36:56',
-        //   QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
-        // },
-        typeCode: 0,
+        typeCode: 1,
         massage: {
-          error: '',
+          orderNum: '41665212851523654',
+          orderTime: '2018-03-26 14:36:56',
+          QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
         },
+        // typeCode: 0,
+        // massage: {
+        //   error: '',
+        // },
       },
     };
   },

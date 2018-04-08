@@ -15,22 +15,19 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex';
 import userInput3 from '@/components/userInput3.vue';
 import userInputBox from '@/components/userInputBox.vue';
 
 export default {
-  props: {
-    tickets: {
-      type: Array,
-    },
-    selectTickets: {
-      type: Array,
-    },
-  },
   computed: {
+    ...mapGetters([
+      'tickets',
+      'selTickets',
+    ]),
     setSelectTicketToArray() {
       const tickets = [];
-      this.selectTickets.forEach((ticket) => {
+      this.selTickets.forEach((ticket) => {
         for (let i = 0; i < ticket.count; i += 1) {
           tickets.push(ticket);
         }

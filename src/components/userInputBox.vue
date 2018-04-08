@@ -2,7 +2,7 @@
   <div class="userInputBox">
     <ul>
       <li v-for="(ticket, index) in selectTicket" class="inputBoxItem" :key="index">
-        <div class="boxTitle border-1px-b">{{index + 1}}.{{ticket.name}}</div>
+        <div class="boxTitle border-1px-b">{{index + 1}}.{{ticket.ticketName}}</div>
         <div class="boxContent">
           <userInput-3 :titleSize="12"></userInput-3>
         </div>

@@ -2,7 +2,7 @@
   <div class="selectTickets">
     <div class="ticketWrapper">
       <ul>
-        <li v-for="(ticket, index) in tickets" :key='index' class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
+        <li v-for="(ticket, index) in this.tickets" :key='index' class="ticketList" :class="{'borderHighLight': ticket.count > 0}">
           <div class="content border-1px-b">
             <h1 class="title">{{ticket.ticketName}}</h1>
             <p class="priceU" v-if="ticket.ticketPrice">￥</p>
@@ -10,7 +10,12 @@
               :class="{'highLightFree': ticket.ticketPrice == 0}">
               {{ticket.ticketPrice ? ticket.ticketPrice : '免费'}}
             </p>
-            <XNumberSetCount class="cartControl" :ticket="ticket"></XNumberSetCount>
+            <XNumberSetCount
+              class="cartControl"
+              :ticket="ticket"
+              @countChangeWithId="countChangeWithId"
+              >
+            </XNumberSetCount>
             <span class="sellOut" v-if="!(ticket.totalNumber - ticket.sellStatus)">已售罄</span>
           </div>
           <div class="type">
@@ -36,34 +41,25 @@
 
 <script type="text/ecmascript-6">
 import XNumberSetCount from '@/components/XNumberSetCount.vue';
+// import Vue from 'vue';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
-  props: {
-    tickets: {
-      type: Array,
-    },
-    selectTickets: {
-      type: Array,
-    },
-    query: {
-      type: Object,
-    },
-  },
-  data() {
-    return {
-      selTickets: [],
-    };
-  },
-  created() {
-    this.setSelTickets();
-  },
   computed: {
-
+    ...mapGetters([
+      'tickets',
+      'selTickets',
+    ]),
   },
   methods: {
-    setSelTickets() {
-      this.selTickets = this.selectTickets;
+    countChangeWithId(id, val) { // 响应子组件事件方法
+      this.$emit('countChangeWithId', id, val);
     },
+    ...mapMutations({
+      ticketChangeCount: 'SET_TICKETS',
+      setSelTicketsByChangeCount: 'SET_SELTICKETS',
+      setQuery: 'SET_QUERY',
+    }),
   },
   components: {
     XNumberSetCount,
@@ -140,6 +136,9 @@ Body {
               svg {
                 fill: @text-color;
               }
+            }
+            .vux-number-disabled {
+              opacity: .4;
             }
           }
         }

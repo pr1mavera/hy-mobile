@@ -25,7 +25,11 @@ export default {
   },
   methods: {
     change(val) {
-      this.ticket.count = val;
+      // this.ticket.count = val;
+      this.countChange(this.ticket.id, val);
+    },
+    countChange(id, val) {
+      this.$emit('countChangeWithId', id, val);
     },
   },
   components: {

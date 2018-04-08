@@ -4,6 +4,8 @@ export const state = {
   id: 1,
   activityId: 14,
   tickets: [],
+  selTickets: [],
+  query: {},
 };
 
 /* eslint-disable no-param-reassign */
@@ -15,6 +17,12 @@ export const mutations = {
     st.activityId = data;
   },
   [types.SET_TICKETS](st, tickets) {
-    st.singer = tickets;
+    st.tickets = tickets;
+  },
+  [types.SET_SELTICKETS](st, selTickets) {
+    st.selTickets = selTickets;
+  },
+  [types.SET_QUERY](st, query) {
+    st.query = query;
   },
 };

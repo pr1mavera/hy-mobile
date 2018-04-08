@@ -1,30 +1,33 @@
 <template>
   <div class="buyTicket">
     <div class="header">
-      <headerWithProcess :query="setQuery" :activity-id="parseInt(this.$route.params.activityId)"></headerWithProcess>
+      <!-- <headerWithProcess :query="setQuery" :activity-id="parseInt(this.$route.params.activityId)"></headerWithProcess> -->
+      <headerWithProcess></headerWithProcess>
     </div>
     <div class="routerBody">
       <keep-alive>
-        <router-view :tickets="ticketsData" :select-tickets="selectTickets"></router-view>
+        <router-view @countChangeWithId="countChangeWithId"></router-view>
+        <!-- <router-view :tickets="ticketsData" :select-tickets="selectTickets"></router-view> -->
       </keep-alive>
     </div>
-    <shopCart ref="shopCart" :query="setQuery" :select-tickets="selectTickets"></shopCart>
+    <shopCart v-if="this.$route.name !== 'success'"></shopCart>
+    <!-- <shopCart ref="shopCart" :query="setQuery" :select-tickets="selectTickets"></shopCart> -->
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import { mapMutations, mapState } from 'vuex';
-// import { getTicketsByActivityId } from '@/server/index.js';
+import { mapMutations, mapGetters } from 'vuex';
+import { getTicketsByActivityId } from '@/server/index.js';
 import headerWithProcess from '@/components/headerWithProcess.vue';
 import shopCart from '@/components/shopCart.vue';
 
 export default {
   data() {
     return {
-      tickets: [
+      ticketsList: [
         {
           id: 12,
-          ticketName: '1月12日门票',
+          ticketName: '门票1',
           totalNumber: 45,
           sellStatus: 12,
           ticketPrice: 0,
@@ -32,7 +35,7 @@ export default {
         },
         {
           id: 13,
-          ticketName: '1月12日门票',
+          ticketName: '门票2',
           totalNumber: 45,
           sellStatus: 12,
           ticketPrice: 457,
@@ -40,7 +43,7 @@ export default {
         },
         {
           id: 14,
-          ticketName: '1月12日门票',
+          ticketName: '门票3',
           totalNumber: 45,
           sellStatus: 12,
           ticketPrice: 75,
@@ -48,7 +51,7 @@ export default {
         },
         {
           id: 15,
-          ticketName: '1月12日门票',
+          ticketName: '门票4',
           totalNumber: 45,
           sellStatus: 12,
           ticketPrice: 4,
@@ -56,7 +59,7 @@ export default {
         },
         {
           id: 16,
-          ticketName: '1月12日门票',
+          ticketName: '门票5',
           totalNumber: 45,
           sellStatus: 12,
           ticketPrice: 26,
@@ -67,51 +70,76 @@ export default {
     };
   },
   computed: {
-    // ...mapState({ activityId: state => state.activityId }),
-    ...mapState({ tickets: 'tickets' }),
-    selectTickets() {
-      const tickets = [];
-      this.tickets.forEach((ticket) => {
-        if (ticket.count) {
-          tickets.push(ticket);
-        }
-      });
-      return tickets;
-    },
-    setQuery() {
-      const query = {};
-      this.selectTickets.forEach((item) => {
-        query[item.id] = item.count;
-      });
-      return query;
-    },
+    ...mapGetters([
+      'activityId',
+      'tickets',
+      'query',
+    ]),
   },
   mounted() {
-    this.SET_ACTIVITY_ID(this.$route.params.activityId);
+    this.setActivityId(this.$route.params.activityId);
+
     this.getTicketsById();
   },
   methods: {
-    ...mapMutations(['SET_ACTIVITY_ID']),
-    getTicketsById() {
-      // const res = await getTicketsByActivityId(this.activityId);
-      // this.tickets = res.data;
-      const tickets = this.tickets.map((item) => {
+    async getTicketsById() {
+      const res = await getTicketsByActivityId(this.activityId);
+      this.ticketsData = res.data;
+      // 初始化state ==> tickets
+      this.resetState(this.ticketsData);
+      if (res.code !== 0) {
+        console.log('error in getTicketsById');
+      }
+    },
+    resetState(ticketsList) {
+      const tickets = this.resetTickets(ticketsList);
+      this.setTickets(tickets);
+      this.resetSelTickets(tickets);
+      this.resetQueryBySelTickets(tickets);
+    },
+    resetTickets(ticketsList) { // 给门票数据加入count字段
+      return ticketsList.map((item) => {
         // eslint-disable-next-line
         item.count = ~Object.keys(this.$route.query).indexOf(item.id.toString()) ? Number(this.$route.query[item.id]) : 0;
         return item;
       });
-      this.ticketsData = tickets;
-      // if (res.code !== 0) {
-      //   console.log('error in getTicketsById');
-      // }
     },
-    sendProps() {
-      this.$router.push({
-        path: 'yourPath',
-        name: 'fillInTicketMsg',
-        query: this.query,
+    resetSelTickets(tickets) {
+      const selTickets = [];
+      tickets.forEach((ticket) => {
+        if (ticket.count) {
+          selTickets.push(ticket);
+        }
       });
+      this.setSelTicketsByChangeCount(selTickets);
     },
+    resetQueryBySelTickets(tickets) {
+      const query = {};
+      tickets.forEach((item) => {
+        if (item.count) {
+          query[item.id] = item.count;
+        }
+      });
+      this.setQuery(query);
+    },
+    countChangeWithId(id, val) { // 响应子组件事件方法
+      const tickets = this.tickets.map((item) => {
+        if (item.id === id) {
+          // eslint-disable-next-line
+          item.count = val;
+        }
+        return item;
+      });
+      this.setTickets(tickets);
+      this.resetSelTickets(tickets);
+      this.resetQueryBySelTickets(tickets);
+    },
+    ...mapMutations({
+      setActivityId: 'SET_ACTIVITY_ID',
+      setTickets: 'SET_TICKETS',
+      setSelTicketsByChangeCount: 'SET_SELTICKETS',
+      setQuery: 'SET_QUERY',
+    }),
   },
   components: {
     headerWithProcess,
