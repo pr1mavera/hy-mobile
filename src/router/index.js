@@ -1,10 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import detail from '@/views/detail';
+
 import buyTicket from '@/views/buyTicket';
 import selectTicket from '@/views/buyTicket/selectTicket';
 import fillInTicketMsg from '@/views/buyTicket/fillInTicketMsg';
 import success from '@/views/buyTicket/success';
+
+import personalPage from '@/views/personalPage';
 
 Vue.use(Router);
 
@@ -45,6 +48,12 @@ export default new Router({
           name: 'success',
         },
       ],
+    },
+    {
+      path: '/personalPage',
+      name: 'personalPage',
+      component: personalPage,
+      children: [],
     },
   ],
 });

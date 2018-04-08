@@ -2,13 +2,16 @@
   <div class="success">
     <div class="orderType">
       <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-chenggong" v-if="feedback.typeCode === 1"></use>
-          <use xlink:href="#icon-shibai" v-if="feedback.typeCode === 0"></use>
+          <use xlink:href="#icon-chenggong" v-if="feedback.code === 0"></use>
+          <use xlink:href="#icon-shibai" v-if="feedback.code === 1"></use>
+          <use xlink:href="#icon-dengdaishenhe" style="color: #ff9041;" v-if="feedback.code === -1"></use>
       </svg>
-      <span class="text">购票{{feedback.typeCode ? '成功' : '失败'}}！</span>
+      <span class="text" v-if="feedback.code !== -1">购票{{feedback.code ? '失败' : '成功'}}！</span>
+      <span class="text" v-if="feedback.code === -1">等待审核！</span>
     </div>
-    <div class="msgContent" v-if="feedback.typeCode === 1">
-      <p class="text">您的订单及门票信息已下发到您的邮箱，请注意查收！若未收到邮件，请查看垃圾邮件是否屏蔽。</p>
+    <div class="msgContent" v-if="feedback.code !== 1">
+      <p class="text" v-if="feedback.code === 0">您的订单及门票信息已下发到您的邮箱，请注意查收！若未收到邮件，请查看垃圾邮件是否屏蔽。</p>
+      <p class="text" v-if="feedback.code === -1">您本次申请的门票需要组织者审核，审核结果将发送至您的邮箱，请注意查收。</p>
       <p class="text">订单号：<span class="orderNum">{{feedback.massage.orderNum}}</span></p>
       <p class="text">订票时间：<span class="orderTime">{{feedback.massage.orderTime}}</span></p>
       <div class="QRbox">
@@ -18,7 +21,7 @@
       </div>
     </div>
     <div class="orderBtn">
-      <button class="btnItem" type="button" name="button" :class="{'btnItemHighLight': !feedback.typeCode}">{{feedback.typeCode ? '查看门票' : '重新购买'}}</button>
+      <button class="btnItem" type="button" name="button" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
       <button class="btnItem" type="button" name="button">返回首页</button>
     </div>
   </div>
@@ -37,15 +40,21 @@ export default {
   data() {
     return {
       feedback: {
-        typeCode: 1,
+        code: 0,
         massage: {
           orderNum: '41665212851523654',
           orderTime: '2018-03-26 14:36:56',
           QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
         },
-        // typeCode: 0,
+        // code: 1,
         // massage: {
         //   error: '',
+        // },
+        // code: -1,
+        // massage: {
+        //   orderNum: '518032490929310',
+        //   orderTime: '2018-03-26 14:36:56',
+        //   QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
         // },
       },
     };
@@ -68,6 +77,9 @@ Body {
     text-align: center;
     .icon {
       font-size: 35px;
+      #icon-dengdaishenhe {
+        color: #ff9041;
+      }
     }
     .text {
       display: inline-block;
@@ -108,14 +120,12 @@ Body {
   }
   .orderBtn {
     display: flex;
-    justify-content: space-between;
-    width: 250px;
-    margin: 0 auto 60px;
+    justify-content: center;
     .btnItem {
       width: 115px;
       height: 40px;
       padding: 0;
-      margin: 0;
+      margin: 0 10px;
       background-color: #ffffff;
       border: 1px solid rgba(144, 152, 168, .2);
       border-radius: 3px;
