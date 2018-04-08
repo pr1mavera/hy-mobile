@@ -10,6 +10,44 @@
     content: '';
   }
 }
+.border-1px-l(@color) {
+  position: relative;
+  &:after {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    border-left: 1px solid @color;
+    content: '';
+  }
+}
+.border-1px-timeLine(@color) {
+  position: relative;
+  &:before{
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid @color;
+    z-index: 99;
+    display: block;
+    position: absolute;
+    right: -2px;
+    transform: translateY(18px);
+  }
+  &:after {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    border-right: 1px solid @color;
+    content: '';
+    transform: translateY(18px);
+  }
+}
 
 @text-color: #9098a8;
 @text-color-dark: #5d6574;

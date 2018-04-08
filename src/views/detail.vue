@@ -27,7 +27,7 @@
       <banner :src="tableData.activityBannerMobileUrl"></banner>
       <div class="container-title">
         <div class="company">
-          <p>{{sponsor.contactName}}</p>
+          <p>{{tableData.nickname}}</p>
           <a >关注</a>
         </div>
         <h1 class="title">{{tableData.activityTitle}}</h1>
@@ -64,20 +64,144 @@
             位置
           </h1>
           <div class="content">
+            <div id="container" >
 
+            </div>
+          </div>
+        </div>
+        <div class="sectionStyle detailIntroduction">
+          <h1 class="title">
+            简介
+          </h1>
+          <div class="content">
+            <p>{{this.tableData.activityDescription}}</p>
+          </div>
+        </div>
+        <div class="sectionStyle detailSchedule">
+          <h1 class="title">
+            日程
+          </h1>
+          <div class="content">
+            <div v-for="item in activitySchedulesOBJ">
+              <h1>{{item.scheduleTitle}}</h1>
+              <div class="info border-1px-b">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-weizhi"></use>
+                </svg>
+                <span style="padding-right:15px;">{{item.schedulePlace}}</span>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-shijian"></use>
+                </svg>
+                <span>{{item.startDate | timeFormatExceptHour}}</span>
+              </div>
+              <div class="timeLine-container">
+                <div v-for="itm in item.scheduleDetail " class="timeLine">
+                  <div class="left">
+                    <p class="hour">{{itm.time}} - {{itm.time}}</p>
+                    <p class="day">{{item.startDate | timeFormatExceptHour2}}</p>
+                  </div>
+                  <div class="right">
+                    <p class="theme">{{itm.theme}}</p>
+                    <p class="remark">{{itm.remark}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sectionStyle detailGuests">
+          <h1 class="title">
+            嘉宾
+          </h1>
+          <div class="content">
+            <div class="main-container" v-for="item in tableData.activityGuests">
+              <div class="left">
+                <div class="avator">
+                  <img :src="item.guestAvatar" alt="">
+                </div>
+              </div>
+              <div class="right">
+                <p class="title_little">
+                  {{item.guestName}}
+                  <span>{{item.guestIntro}}</span>
+                </p>
+                <p>
+                  {{item.guestIdentity}}
+
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sectionStyle detailSupport">
+          <h1 class="title">
+            合作支持
+          </h1>
+          <div class="content">
+            <div class="container-layout">
+              <h2>特别赞助</h2>
+              <div class="container">
+                <div class="box">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sectionStyle detailContact">
+          <h1 class="title">
+            联系方式
+          </h1>
+          <div class="content">
+            <div v-for="item in tableData.activityContacts" class="box">
+              <flexbox >
+                <flexbox-item >
+                  <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#icon-wode"></use>
+                  </svg>
+                  <span>{{item.contactName}}</span>
+                </flexbox-item>
+                <flexbox-item  >
+                  <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#icon-youxiang1"></use>
+                  </svg>
+                  <span>{{item.contactEmail}}</span>
+                </flexbox-item>
+              </flexbox>
+              <flexbox>
+                <flexbox-item  >
+                  <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#icon-Telephone"></use>
+                  </svg>
+                  <span>{{item.contactPhone}}</span>
+                </flexbox-item>
+                <flexbox-item  >
+                  <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#icon-weixin"></use>
+                  </svg>
+                  <span>{{item.contactWechat}}</span>
+                </flexbox-item>
+
+              </flexbox>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <footer>
+      <p>本站由<span>会议站</span>提供技术支持</p>
+      <p>Copyright © 2013-2017 版权所有 北京韦尔科技有限公司</p>
+      <p>京ICP备14040981号-2</p>
+    </footer>
   </div>
 </template>
 
 <script>
-import { XHeader, XImg, XButton } from 'vux';
+import { XHeader, XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem } from 'vux';
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
-import { getActivityInfoById, getSponsorByUserId } from '@/server/index.js';
-import { formatDate } from '@/common/js/index.js';
+import { getActivityInfoById } from '@/server/index.js';
+import { formatDate, MP } from '@/common/js/index.js';
 
 export default {
   name: 'detail',
@@ -101,9 +225,7 @@ export default {
       },
       tableData: {
         activityBannerMobileUrl: '',
-      },
-      sponsor: {
-        contactName: '',
+        activitySchedules: [],
       },
     };
   },
@@ -112,6 +234,10 @@ export default {
     XImg,
     banner,
     XButton,
+    Grid,
+    GridItem,
+    Flexbox,
+    FlexboxItem,
   },
   mounted() {
     this.SET_ID(this.$route.params.id);
@@ -120,11 +246,20 @@ export default {
   computed: {
     ...mapState({ id: state => state.id }),
     isSameYear() {
-      if ((Object.keys(this.tableData).length > 1) &&
+      if ((Object.keys(this.tableData).length > 1) && this.tableData.startTime &&
       (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
         return true;
       }
       return false;
+    },
+    activitySchedulesOBJ() {
+      const obj = this.tableData.activitySchedules.map((e) => {
+        const temp = e;
+        temp.scheduleDetail = JSON.parse(e.scheduleDetail);
+        console.log(temp);
+        return temp;
+      });
+      return obj;
     },
   },
   filters: {
@@ -136,29 +271,58 @@ export default {
       const temp = new Date(value.replace(/-/g, '/'));
       return formatDate(temp, 'MM月dd日 hh:mm');
     },
+    timeFormatExceptHour(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'yyyy年MM月dd日');
+    },
+    timeFormatExceptHour2(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'yyyy/MM/dd');
+    },
     adressFormat(value = '{}') {
       let temp = JSON.parse(value);
       temp = Object.values(temp);
       temp = temp.join('');
       return temp;
     },
+
   },
   methods: {
     ...mapMutations(['SET_ID']),
     async getInfoById() {
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
-      const res2 = await getSponsorByUserId(res1.data.userId);
-      this.sponsor = res2.data;
-      if (!(res1.code === 0 && res2.code === 0)) {
-        console.log('error in getInfoById');
+
+      this.$nextTick(() => {
+        MP().then((mp) => {
+          const map = new mp.Map('container');
+          let temp = JSON.parse(this.tableData.activityAddress);
+          const city = Object.values(temp)[0];
+          temp = Object.values(temp).join('');
+          map.centerAndZoom(temp, 12);
+          const myGeo = new mp.Geocoder();
+          // 将地址解析结果显示在地图上,并调整地图视野
+          myGeo.getPoint(temp, (point) => {
+            if (point) {
+              map.centerAndZoom(point, 16);
+              map.addOverlay(new mp.Marker(point));
+            } else {
+              console.log('您选择地址没有解析到结果!');
+            }
+          }, city);
+        });
+      });
+      if (!(res1.code === 0 && res1.data)) {
+        console.log('error in getInfoById ');
       }
     },
+
   },
 };
 </script>
 
 <style  lang="less">
+@import '../common/style/mixin.less';
 #detail{
 
   .meetingHeader{
@@ -167,7 +331,7 @@ export default {
     width: 100%;
     background-color: transparent;
     z-index: 999;
-    position: fixed;
+    position: absolute;
     &::after{
       content: '';
       position: absolute;
@@ -238,7 +402,7 @@ export default {
         }
       }
       .sectionStyle{
-        padding: 20px 0;
+        padding-top: 20px;
         .title{
           font-size: 15px;
           color:#2b313c;
@@ -263,11 +427,187 @@ export default {
         }
         &.detailLocation{
           .content{
+            #container{
+              height: 150px;
+            }
+          }
+        }
+        &.detailIntroduction{
+          .content{
+            p{
+              font-size: 13px;
+              color:#5d6574;
+            }
+          }
+        }
+        &.detailSchedule{
+          .content{
+            &>div{
+              overflow: hidden;
+            }
+            h1{
+              font-size: 14px;
+              color:#2b313c;
+            }
+            .info{
+              padding: 15px 0;
+              font-size: 12px;
+              color:#5d6574;
+              .border-1px-b(#d8dbe0);
+            }
+            .timeLine-container{
+              padding-top: 14px;
+              padding-bottom: 40px;
+              .timeLine{
+                display: flex;
+                .left{
+                  width: 100px;
+                  min-width: 100px;
+                  max-width: 100px;
+                  flex-grow: 0;
+                  text-align: right;
+                  padding-right: 12px;
+                  box-sizing: border-box;
+                  .border-1px-timeLine(#d8dbe0);
+                  .hour{
+                    color: #2b313c;
+                    font-size: 13px;
+                    line-height: 40px;
+                  }
+                  .day{
+                    font-size: 12px;
+                    color: #5d6574;
+                    line-height: 15px;
+                  }
+                }
+                .right{
+                  margin-left: 10px;
+                  width: auto;
+                  .theme{
+                    color: #2b313c;
+                    font-size: 13px;
+                    font-weight: bold;
+                    line-height: 40px;
+                  }
+                  .remark{
+                    font-size: 12px;
+                    color: #5d6574;
+                    line-height: 15px;
+                    margin-bottom: 10px;
+                  }
+                }
+                &:last-child{
+                  overflow: hidden;
+                  .right{
+                    .remark{
+                      margin-bottom: 0;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.detailGuests{
+          .content{
+            .main-container{
+              display: flex;
 
+              .left{
+                width: 50px;
+                min-width: 50px;
+                max-width: 50px;
+                flex-grow: 0;
+                .avator{
+                  display: inline-block;
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  img{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                  }
+                }
+              }
+              .right{
+                p{
+                  font-size: 12px;
+                  color: #5d6574;
+                  &.title_little{
+                    color: #2b313c;
+                    font-weight: 600;
+                    line-height: 25px;
+                    span{
+                      color: #5d6574;
+                      padding-left: 15px;
+                      margin-left: 10px;
+                      .border-1px-l(#5d6574);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.detailSupport{
+          .content{
+            .container-layout{
+              h2{
+                font-size: 13px;
+                color: #666666;
+              }
+              .container{
+                display: flex;
+                justify-content: flex-start;
+                .box{
+                  width: 100px;
+                  height: 50px;
+                }
+              }
+            }
+          }
+        }
+        &.detailContact{
+          .content{
+            .box{
+              color:#5d6574;
+              font-size: 12px;
+              &:not(:last-child){
+                .border-1px-b(#5d6574)
+              }
+              padding-bottom: 15px;
+              &:not(:first-child){
+                padding: 15px 0;
+              }
+              span{
+                margin-left: 10px;
+              }
+            }
           }
         }
       }
     }
   }
+  footer{
+    background-color: #f3f4f8;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p{
+      font-size: 10px;
+      color:#b8bcc4;
+      span{
+        color:#8a8e94;
+      }
+      &:nth-child(1){
+        line-height: 40px;
+      }
+    }
+  }
 }
+
 </style>
+
