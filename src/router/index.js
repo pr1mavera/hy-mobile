@@ -8,6 +8,11 @@ import fillInTicketMsg from '@/views/buyTicket/fillInTicketMsg';
 import success from '@/views/buyTicket/success';
 
 import personalPage from '@/views/personalPage';
+import PPActivity from '@/views/personalPage/PPActivity';
+import PPParticipate from '@/views/personalPage/PPParticipate';
+import PPCollection from '@/views/personalPage/PPCollection';
+import PPFollow from '@/views/personalPage/PPFollow';
+import PPTrack from '@/views/personalPage/PPTrack';
 
 Vue.use(Router);
 
@@ -53,7 +58,37 @@ export default new Router({
       path: '/personalPage',
       name: 'personalPage',
       component: personalPage,
-      children: [],
+      children: [
+        {
+          path: '/personalPage',
+          redirect: '/personalPage/PPActivity',
+        },
+        {
+          path: 'PPActivity',
+          component: PPActivity,
+          name: 'PPActivity',
+        },
+        {
+          path: 'PPParticipate',
+          component: PPParticipate,
+          name: 'PPParticipate',
+        },
+        {
+          path: 'PPCollection',
+          component: PPCollection,
+          name: 'PPCollection',
+        },
+        {
+          path: 'PPFollow',
+          component: PPFollow,
+          name: 'PPFollow',
+        },
+        {
+          path: 'PPTrack',
+          component: PPTrack,
+          name: 'PPTrack',
+        },
+      ],
     },
   ],
 });
