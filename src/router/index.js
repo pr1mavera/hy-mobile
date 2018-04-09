@@ -14,10 +14,10 @@ import PPCollection from '@/views/personalPage/PPCollection';
 import PPFollow from '@/views/personalPage/PPFollow';
 import PPTrack from '@/views/personalPage/PPTrack';
 
-const pathToRegexp = require('path-to-regexp');
+// const pathToRegexp = require('path-to-regexp');
 
-const re = pathToRegexp('/personalPage/:id*');
-re.exec('/personalPage');
+// const re = pathToRegexp('/personalPage/:id*');
+// re.exec('/personalPage');
 
 Vue.use(Router);
 
@@ -60,13 +60,13 @@ export default new Router({
       ],
     },
     {
-      path: '/personalPage/:id',
+      path: '/personalPage/:id(\\d+)',
       name: 'personalPage',
       component: personalPage,
       children: [
         {
           path: '/personalPage/:id/',
-          redirect: '/personalPage/:id/PPActivity',
+          redirect: '/personalPage/:id(\\d+)/PPActivity',
         },
         {
           path: 'PPActivity',
