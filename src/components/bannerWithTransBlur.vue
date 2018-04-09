@@ -1,12 +1,12 @@
 <template>
   <div class="bannerWithTransBlur">
     <div class="bannerBg">
-      <img src="@/views/personalPage/bannerBg.png" height="300">
+      <img src="@/views/personalPage/bannerBg.png" width=100%>
     </div>
     <div class="avatar">
       <img src="@/views/personalPage/icon.png" width="60" height="60">
     </div>
-    <h1 class="name">北京汽车广场展览有限公司</h1>
+    <h1 class="name">{{this.userProfile.nickname}}</h1>
     <p class="desc">这个人很烂，什么都没有留下...</p>
     <x-button class="followBtn">
       <svg class="icon" aria-hidden="true">
@@ -36,10 +36,10 @@ import { XButton } from 'vux';
 
 export default {
   name: 'detail',
-  data() {
-    return {
-
-    };
+  props: {
+    userProfile: {
+      type: Object,
+    },
   },
   components: {
     XButton,
@@ -57,6 +57,7 @@ export default {
 
   .bannerBg {
     position: fixed;
+    width: 100%;
     top: 0;
     left: 50%;
     transform: translateX(-50%);

@@ -24,7 +24,7 @@
 
     </x-header>
     <div class="mainContainer">
-      <bannerWithTransBlur></bannerWithTransBlur>
+      <bannerWithTransBlur :userProfile="userProfile"></bannerWithTransBlur>
       <tab
       class="tab"
       :line-width="2"
@@ -39,17 +39,24 @@
         <tab-item @on-item-click="onTabItemClick">关注</tab-item>
         <tab-item @on-item-click="onTabItemClick">动态</tab-item>
       </tab>
-      <div class="routerBody">
+      <div class="routerBody clearfix">
         <keep-alive>
-          <router-view></router-view>
+          <router-view class="routerView"></router-view>
         </keep-alive>
       </div>
+      <footer class="footer">
+        <p class="text">本站由<span> 会议站 </span>提供技术支持</p>
+        <p class="text">Copyright &copy; 2013-2018 版权所有 北京韦尔科技有限公司</p>
+        <p class="text">京ICP备14040981号-2</p>
+      </footer>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import { XHeader, Tab, TabItem } from 'vux';
+import { mapMutations, mapGetters } from 'vuex';
+import { getProfile, getProfileById } from '@/server/index.js';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
 
 export default {
@@ -73,18 +80,45 @@ export default {
         filter: 'blur(1.2px)',
         transition: 'all .3s linear',
       },
-      sponsor: {
-        contactName: '',
-      },
-      pathList: ['PPActivity', 'PPParticipate', 'PPCollection', 'PPFollow', 'PPTrack'],
+      pathMap: ['PPActivity', 'PPParticipate', 'PPCollection', 'PPFollow', 'PPTrack'],
+      userProfile: {},
     };
+  },
+  mounted() {
+    // if (this.$route.params.id) {
+    //   this.setId(this.$route.params.id);
+    // }
+    this.getUserProfile();
+  },
+  computed: {
+    ...mapGetters([
+      'id',
+    ]),
   },
   methods: {
     onTabItemClick(index) {
       this.$router.push({
-        path: this.pathList[index],
+        path: this.pathMap[index],
       });
     },
+    async getUserProfile() {
+      let res = {};
+      if (this.$route.params.id) {
+        res = await getProfileById(this.$route.params.id);
+      } else {
+        res = await getProfile();
+      }
+      // eslint-disable-next-line
+      // const res = await this.$route.params.id ? getProfileById(this.$route.params.id) : getProfile();
+      this.userProfile = res.data;
+      console.log(res.data);
+      if (res.code) {
+        console.log('error in getUserProfile');
+      }
+    },
+    ...mapMutations({
+      setId: 'SET_ID',
+    }),
   },
   components: {
     XHeader,
@@ -96,6 +130,9 @@ export default {
 </script>
 
 <style lang="less">
+html, body, #app, #personalPage {
+  height: 100%;
+}
 #personalPage {
   .meetingHeader{
     padding: 0;
@@ -145,6 +182,7 @@ export default {
 
   }
   .mainContainer {
+    height: 100%;
     .tab {
       .vux-tab-container {
         .vux-tab {
@@ -159,9 +197,45 @@ export default {
             transform: translateX(20px);
           }
         }
-
       }
-
+    }
+    .routerBody {
+      width: 100%;
+      min-height: 100%;
+      height: auto;
+      background-color: #f4f7fa;
+      .routerView {
+        padding-bottom: 90px;
+      }
+    }
+    .clearfix{
+      display: inline-block;
+    }
+    .clearfix:after {
+      content: ".";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+    }
+    .footer {
+      position: relative;
+      height: 90px;
+      margin-top: -90px;
+      background-color: #2b3134;
+      color: #aaaaaa;
+      text-align: center;
+      padding: 12px 0;
+      box-sizing: border-box;
+      clear:both;
+      .text {
+        font-size: 12px;
+        font-weight: 200;
+        line-height: 22px;
+        span {
+          color: #1191ff;
+        }
+      }
     }
   }
 }
