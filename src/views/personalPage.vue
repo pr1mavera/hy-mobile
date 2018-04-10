@@ -55,7 +55,7 @@
 
 <script type="text/ecmascript-6">
 import { XHeader, Tab, TabItem } from 'vux';
-import { mapMutations, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import { getProfile, getProfileById } from '@/server/index.js';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
 
@@ -84,6 +84,11 @@ export default {
       userProfile: {},
     };
   },
+  watch: {
+    $route(to, form) {
+      console.log(form);
+    },
+  },
   mounted() {
     // if (this.$route.params.id) {
     //   this.setId(this.$route.params.id);
@@ -108,17 +113,15 @@ export default {
       } else {
         res = await getProfile();
       }
-      // eslint-disable-next-line
-      // const res = await this.$route.params.id ? getProfileById(this.$route.params.id) : getProfile();
       this.userProfile = res.data;
       console.log(res.data);
       if (res.code) {
         console.log('error in getUserProfile');
       }
     },
-    ...mapMutations({
-      setId: 'SET_ID',
-    }),
+    // ...mapMutations({
+    //   setId: 'SET_ID',
+    // }),
   },
   components: {
     XHeader,
