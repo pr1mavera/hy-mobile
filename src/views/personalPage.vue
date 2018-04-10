@@ -55,7 +55,7 @@
 
 <script type="text/ecmascript-6">
 import { XHeader, Tab, TabItem } from 'vux';
-import { mapGetters } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import { getProfile, getProfileById } from '@/server/index.js';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
 
@@ -84,44 +84,44 @@ export default {
       userProfile: {},
     };
   },
-  watch: {
-    $route(to, form) {
-      console.log(form);
-    },
-  },
   mounted() {
-    // if (this.$route.params.id) {
-    //   this.setId(this.$route.params.id);
-    // }
+    this.setIDInQueryByPath();
     this.getUserProfile();
   },
   computed: {
     ...mapGetters([
       'id',
+      'query',
     ]),
   },
   methods: {
     onTabItemClick(index) {
       this.$router.push({
         path: this.pathMap[index],
+        query: this.query,
       });
+    },
+    setIDInQueryByPath() {
+      const reg = new RegExp('(^|&)id=([^&]*)');
+      const r = window.location.search.substr(1).match(reg);
+      this.setIdInQuery(r ? { id: decodeURIComponent(r[2]) } : {});
     },
     async getUserProfile() {
       let res = {};
-      if (this.$route.params.id) {
-        res = await getProfileById(this.$route.params.id);
+      if (this.$route.query.id) {
+        res = await getProfileById(this.$route.query.id);
       } else {
         res = await getProfile();
       }
       this.userProfile = res.data;
-      console.log(res.data);
+      // console.log(res.data);
       if (res.code) {
         console.log('error in getUserProfile');
       }
     },
-    // ...mapMutations({
-    //   setId: 'SET_ID',
-    // }),
+    ...mapMutations({
+      setIdInQuery: 'SET_QUERY',
+    }),
   },
   components: {
     XHeader,
