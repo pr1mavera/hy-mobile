@@ -190,6 +190,7 @@ html, body, #app, #personalPage {
           box-sizing: border-box;
           border: 0;
           .vux-tab-item {
+            background-size: 100% 0px;
             flex: 0 0 20%;
           }
           .vux-tab-ink-bar {
