@@ -85,8 +85,8 @@ export default {
     };
   },
   mounted() {
-    this.setIDInQueryByPath();
     this.getUserProfile();
+    this.setIDInQuery();
   },
   computed: {
     ...mapGetters([
@@ -101,18 +101,16 @@ export default {
         query: this.query,
       });
     },
-    setIDInQueryByPath() {
-      const reg = new RegExp('(^|&)id=([^&]*)');
-      const r = window.location.search.substr(1).match(reg);
-      this.setIdInQuery(r ? { id: decodeURIComponent(r[2]) } : {});
+    setIDInQuery() {
+      if (this.$route.query.id) {
+        const reg = new RegExp('(^|&)id=([^&]*)');
+        const r = window.location.search.substr(1).match(reg);
+        this.setIdInQuery(r ? { id: decodeURIComponent(r[2]) } : {});
+      }
     },
     async getUserProfile() {
-      let res = {};
-      if (this.$route.query.id) {
-        res = await getProfileById(this.$route.query.id);
-      } else {
-        res = await getProfile();
-      }
+      // eslint-disable-next-line
+      const res = this.$route.query.id ? await getProfileById(Number(this.$route.query.id)) : await getProfile();
       this.userProfile = res.data;
       // console.log(res.data);
       if (res.code) {
