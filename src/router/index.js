@@ -60,13 +60,13 @@ export default new Router({
       ],
     },
     {
-      path: '/personalPage/:id(\\d+)',
+      path: '/personalPage',
       name: 'personalPage',
       component: personalPage,
       children: [
         {
-          path: '/personalPage/:id/',
-          redirect: '/personalPage/:id(\\d+)/PPActivity',
+          path: '/personalPage/',
+          redirect: '/personalPage/PPActivity',
         },
         {
           path: 'PPActivity',

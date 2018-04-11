@@ -1,23 +1,34 @@
 <template>
   <div class="listNav">
-    <p v-for="(item, index) in navOption" class="tabItem" :key="index">{{item.name}}({{item.count}})</p>
+    <p
+    v-for="(item, index) in navOption"
+    class="tabItem"
+    :class="{ navHighLight:currentNav === index}"
+    :key="index"
+    @click="changeCurrentNav(index)"
+    >
+      {{item.name}}({{item.count}})
+    </p>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
   props: {
-    activityList: {
-      type: Array,
-    },
     navOption: {
       type: Array,
     },
   },
   data() {
     return {
-
+      currentNav: 0,
     };
+  },
+  methods: {
+    changeCurrentNav(index) {
+      this.currentNav = index;
+      this.$emit('navChange', index);
+    },
   },
 };
 </script>
@@ -31,6 +42,9 @@ export default {
   color: #5d6574;
   .tabItem {
     margin: 0 16px;
+    &.navHighLight {
+      color: #2c7dfa;
+    }
   }
 }
 </style>

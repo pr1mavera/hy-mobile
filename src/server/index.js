@@ -17,3 +17,7 @@ export const getActivityListById = id => http.get(`/activity/getAll?id=${id}&pag
 export const getWatchPeopleList = query => http.get(`/watchPeople/users`, null, { params: query });
 // 获取粉丝信息
 export const getFanList = query => http.get(`/watchPeople/fans`, null, { params: query });
+// 根据主办方获取会议列表(不分页)(未发布/发布中)
+export const getActivityList = status => http.get(`/activity/issue/${status}`);
+// 根据主办方获取已结束会议列表(不分页)(未发布/发布中)
+export const getActivityListIsOver = () => http.get('/activity/issueOver');
