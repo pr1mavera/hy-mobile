@@ -112,8 +112,7 @@ export default {
       // eslint-disable-next-line
       const res = this.$route.query.id ? await getProfileById(Number(this.$route.query.id)) : await getProfile();
       this.userProfile = res.data;
-      // console.log(res.data);
-      if (res.code) {
+      if (res.code !== 0) {
         console.log('error in getUserProfile');
       }
     },
