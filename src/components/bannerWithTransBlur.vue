@@ -1,7 +1,7 @@
 <template>
   <div class="bannerWithTransBlur">
     <div class="bannerBg">
-      <img src="@/views/personalPage/bannerBg.png" width=100%>
+      <img src="http://p5zhgy42k.bkt.clouddn.com/test/14/20180410/1524643919513.jpg">
     </div>
     <div class="avatar">
       <img src="@/views/personalPage/icon.png" width="60" height="60">
@@ -55,14 +55,17 @@ export default {
   color: #ffffff;
   text-align: center;
   overflow-y: hidden;
-
   .bannerBg {
     position: fixed;
     width: 100%;
+    height: 300px;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
     z-index: -1;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
   .avatar {
     img {

@@ -1,6 +1,5 @@
 <template>
   <div class="PPActivity">
-    <!-- <listNav @navChange="navChange" :navOption="navOption"></listNav> -->
     <div class="tab-container">
       <tab
       class="SLtab"
@@ -58,7 +57,6 @@ export default {
       activityIsPublish: [],
       activityNotPublish: [],
       activityIsOver: [],
-      ShowActivityMap: [this.activityIsPublish, this.activityNotPublish, this.activityIsOver],
       currentShowActivityIndex: 0,
     };
   },
@@ -74,11 +72,11 @@ export default {
   },
   methods: {
     async getActivityList() {
-      if (this.query.id) {
-        const res = await getActivityListById(this.query.id);
+      if (this.$route.query.id) {
+        const res = await getActivityListById(this.$route.query.id);
         this.classifyActivityAndSetToDate(res.data);
         if (res.code) {
-          console.log('error in getInfoById');
+          console.log('error in getActivityList');
         }
       } else {
         const res0 = await getActivityList(0);
@@ -88,7 +86,7 @@ export default {
         const res2 = await getActivityListIsOver();
         this.activityIsOver = res2.data;
         if (res0.code !== 0 || res1.code !== 0 || res2.code !== 0) {
-          console.log('error in getInfoById');
+          console.log('error in getActivityList');
         }
       }
     },

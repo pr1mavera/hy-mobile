@@ -17,3 +17,5 @@ export const getActivityListById = id => http.get(`/activity/getAll?id=${id}&pag
 export const getActivityList = status => http.get(`/activity/issue/${status}`);
 // 根据主办方获取已结束会议列表(不分页)(未发布/发布中)
 export const getActivityListIsOver = () => http.get('/activity/issueOver');
+// 根据主办方获取参与的会议
+export const getActivityMyJoin = () => http.get('/activity/myJoin');
