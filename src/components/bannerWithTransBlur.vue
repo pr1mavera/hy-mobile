@@ -8,12 +8,13 @@
     </div>
     <h1 class="name">{{this.userProfile.nickname}}</h1>
     <p class="desc">这个人很烂，什么都没有留下...</p>
-    <x-button class="followBtn">
+    <x-button class="followBtn" v-if="this.$route.query.id">
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-icon-test"></use>
       </svg>
       关注
     </x-button>
+    <div class="fillBox" v-if="!this.$route.query.id"></div>
     <div class="attribute">
       <div class="item">
         <p>223</p>
@@ -79,6 +80,7 @@ export default {
     opacity: .7;
   }
   .followBtn {
+    position: relative;
     width: 60px;
     line-height: 24px;
     font-size: 13px;
@@ -92,6 +94,10 @@ export default {
       font-size: 12px;
       transform: scale(.8);
     }
+  }
+  .fillBox {
+    width: 100%;
+    height: 34px;
   }
   .attribute {
     display: flex;

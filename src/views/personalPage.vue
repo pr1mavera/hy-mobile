@@ -34,10 +34,10 @@
       custom-bar-width="28px"
       >
         <tab-item @on-item-click="onTabItemClick" selected>活动</tab-item>
-        <tab-item @on-item-click="onTabItemClick">参与</tab-item>
-        <tab-item @on-item-click="onTabItemClick">收藏</tab-item>
-        <tab-item @on-item-click="onTabItemClick">关注</tab-item>
-        <tab-item @on-item-click="onTabItemClick">动态</tab-item>
+        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">参与</tab-item>
+        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">收藏</tab-item>
+        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">关注</tab-item>
+        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">动态</tab-item>
       </tab>
       <div class="routerBody clearfix">
         <keep-alive>
@@ -187,23 +187,18 @@ html, body, #app, #personalPage {
     .tab {
       .vux-tab-container {
         .vux-tab {
-          padding: 0 20px;
-          box-sizing: border-box;
+          width: 100%;
           border: 0;
           .vux-tab-item {
             background-size: 100% 0px;
-            flex: 0 0 20%;
-          }
-          .vux-tab-ink-bar {
-            bottom: 0;
-            transform: translateX(20px);
+            flex: 1;
           }
         }
       }
     }
     .routerBody {
       width: 100%;
-      min-height: 100%;
+      min-height: 55%;
       height: auto;
       background-color: #f4f7fa;
       .routerView {
