@@ -51,7 +51,7 @@ export default {
       const res = await getActivityListById(this.id);
       this.activityListData = res.data;
       // console.log(this.activityListData);
-      if (res.code) {
+      if (res.code !== 0) {
         console.log('error in getInfoById');
       }
     },

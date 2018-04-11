@@ -115,7 +115,7 @@ export default {
       }
       this.userProfile = res.data;
       console.log(res.data);
-      if (res.code) {
+      if (res.code !== 0) {
         console.log('error in getUserProfile');
       }
     },
