@@ -29,3 +29,5 @@ export const getDynamicOfMeeting = (query) => http.get('/watch/dynamic', null, {
 
 // 个人中心获取关注人动态 人
 export const getDynamicOfPerson = (query) => http.get('/watchPeople/dynamic', null, { params: query});
+// 根据主办方获取收藏的会议
+export const getActivityMyWatch = () => http.get('/watch');
