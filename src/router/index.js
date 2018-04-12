@@ -14,6 +14,7 @@ import PPCollection from '@/views/personalPage/PPCollection';
 import PPFollow from '@/views/personalPage/PPFollow';
 import PPTrack from '@/views/personalPage/PPTrack';
 
+import service from '@/views/service';
 // const pathToRegexp = require('path-to-regexp');
 
 // const re = pathToRegexp('/personalPage/:id*');
@@ -25,8 +26,9 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      redirect: '/detail/:id',
+      path: '/service',
+      name: 'service',
+      component: service,
     },
     {
       path: '/detail/:id',

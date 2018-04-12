@@ -1,28 +1,6 @@
 <template>
   <div id="detail">
-    <x-header
-    class="meetingHeader"
-    :left-options="titleOptions.left"
-    :right-options="titleOptions.right"
-    @on-click-back=""
-    @on-click-more=""
-    >
-      <div class="left" slot="left">
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-Seach"></use>
-        </svg>
-      </div>
-      <div class="title" slot="default">
-        <h1>会议站</h1>
-
-      </div>
-      <div class="right" slot="right">
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-caidan"></use>
-        </svg>
-      </div>
-
-    </x-header>
+    <meetingHeader :colorStyle="colorStyle"></meetingHeader>
     <div class="main-container">
       <banner :src="tableData.activityBannerMobileUrl"></banner>
       <div class="container-title">
@@ -197,9 +175,10 @@
 </template>
 
 <script>
-import { XHeader, XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem } from 'vux';
+import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem } from 'vux';
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
+import meetingHeader from '@/components/meetingHeader';
 import { getActivityInfoById } from '@/server/index.js';
 import { formatDate, MP } from '@/common/js/index.js';
 
@@ -207,6 +186,11 @@ export default {
   name: 'detail',
   data() {
     return {
+      colorStyle: {
+        mainColor: '#ffffff',
+        minorColor: '#ffffff',
+        backgroundColor: 'transparent',
+      },
       titleOptions: {
         left: {
           showBack: false,
@@ -230,7 +214,7 @@ export default {
     };
   },
   components: {
-    XHeader,
+    meetingHeader,
     XImg,
     banner,
     XButton,
@@ -324,54 +308,6 @@ export default {
 <style  lang="less">
 @import '../common/style/mixin.less';
 #detail{
-
-  .meetingHeader{
-    padding: 0;
-    height: 45px;
-    width: 100%;
-    background-color: transparent;
-    z-index: 999;
-    position: absolute;
-    &::after{
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 1;
-      z-index: -1;
-    }
-    .vux-header-left{
-      left: 15px;
-      top: 50%;
-      margin-top: -12px;
-      .left{
-        font-size: 24px;
-        color: #ffffff;
-      }
-    }
-    .vux-header-right{
-      right: 15px;
-      top: 50%;
-      margin-top: -12px;
-      .right{
-        font-size: 24px;
-        color: #ffffff;
-      }
-    }
-    .vux-header-title{
-      height: 45px;
-      .title{
-        h1{
-          line-height: 45px;
-          font-size: 23px;
-          color: #ffffff;
-        }
-      }
-    }
-
-  }
   .main-container{
     .container-title{
       background-color: #ffffff;
