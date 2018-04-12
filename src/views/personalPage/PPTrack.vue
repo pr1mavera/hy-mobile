@@ -17,47 +17,47 @@
       </tab>
     </div>
     <div class="swiper-container">
-      <swiper class="swiper" v-model="check" height="100px" :show-dots="false">
+      <swiper  @on-index-change="handlerHeight(check)" id="swiper2" class="swiper" v-model="check" height="100px" :show-dots="false">
         <swiper-item >
-          <div class="tab-swiper vux-center">
+          <div class="tab-swiper vux-center"  v-for="item in meetingData">
             <div class="flex-box">
               <div class="left">
-                <img src="../../assets/logo.png" alt="">
+                <img :src="item.user.avatarUrl" alt="">
               </div>
               <div class="center">
                 <!-- 别人收藏你 -->
-                <div v-if="passive">
-                  <h5>李开复</h5>
+                <div v-if="item.status">
+                  <h5>{{item.user.nickname}}</h5>
                   <p>收藏了你的会议</p>
-                  <p class="time">5分钟前</p>
+                  <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
                 <div v-else>
                   <h5>我<span class="gray">收藏了会议</span></h5>
-                  <h5>新能源汽车展览会</h5>
-                  <p class="time">5分钟前</p>
+                  <h5>{{item.activity.activityTitle}}</h5>
+                  <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
               </div>
               <div class="right">
-                <img src="../../assets/logo.png" alt="">
+                <img :src="item.activity.activityBannerMobileUrl" alt="">
               </div>
             </div>
           </div>
         </swiper-item>
         <swiper-item >
-          <div class="tab-swiper vux-center">
+          <div class="tab-swiper vux-center" v-for="item in personData">
             <div class="flex-box">
               <div class="left">
-                <img src="../../assets/logo.png" alt="">
+                <img :src="item.user.avatarUrl" alt="">
               </div>
               <div class="center">
                 <!-- 别人关注你 -->
-                <div v-if="passive">
-                  <h5>李开复<span class="gray">关注了你</span></h5>
-                  <p class="time">5分钟前</p>
+                <div v-if="item.status">
+                  <h5>{{item.user.nickname}}<span class="gray">关注了你</span></h5>
+                  <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
                 <div v-else>
-                  <h5>我<span class="gray">关注了</span>巴拉巴拉小魔仙</h5>
-                  <p class="time">5分钟前</p>
+                  <h5>我<span class="gray">关注了</span>{{item.user.nickname}}</h5>
+                  <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
               </div>
             </div>
@@ -73,13 +73,27 @@
 
 <script type="text/ecmascript-6">
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
+import { getDynamicOfMeeting, getDynamicOfPerson } from '@/server/index.js';
 
 export default {
   name: 'personalPage',
   data() {
     return {
       check: 0,
-      passive: 0,
+      meetingData: [],
+      personData: [],
+      queryMeeting: {
+        page: 1,
+        pageNum: 1,
+        pageSize: 5,
+      },
+      queryPerson: {
+        page: 1,
+        pageNum: 1,
+        pageSize: 5,
+      },
+      mboxNum: 0,
+      pboxNum: 0,
     };
   },
   components: {
@@ -87,6 +101,73 @@ export default {
     TabItem,
     Swiper,
     SwiperItem,
+  },
+  mounted() {
+    this.initData();
+  },
+  methods: {
+    initData() {
+      this.resetData();
+      this.getDynamicOfMeetingList();
+      this.getDynamicOfPersonList();
+    },
+    resetData() {
+      this.meetingData = [];
+      this.personData = [];
+      this.queryMeeting.pageNum = 1;
+      this.queryPerson.pageNum = 1;
+    },
+    getDynamicOfMeetingList() {
+      getDynamicOfMeeting(this.queryMeeting).then((res) => {
+        this.meetingData.push(...res.data.list);
+        if (res.data.pageNum < res.data.pages) {
+          this.mboxNum = res.data.pageNum * res.data.size;
+        } else {
+          this.mboxNum = res.data.total;
+        }
+        document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
+        document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
+      });
+    },
+    getDynamicOfPersonList() {
+      getDynamicOfPerson(this.queryPerson).then((res) => {
+        this.personData.push(...res.data.list);
+        if (res.data.pageNum < res.data.pages) {
+          this.pboxNum = res.data.pageNum * res.data.size;
+        } else {
+          this.pboxNum = res.data.total;
+        }
+      });
+    },
+    handlerHeight(index) {
+      if (index === 0) {
+        document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
+        document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
+      } else {
+        document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
+        document.getElementById('swiper2').firstChild.style.height = `${this.pboxNum * 95}px`;
+      }
+    },
+  },
+  filters: {
+    timeApart(value = '') {
+      const occur = new Date(value.replace(/-/g, '/')).getTime();
+      const now = new Date().getTime();
+      const dis = now - occur;
+      let temp = '';
+      if (dis < (1000 * 60)) {
+        temp = `${parseInt(dis / 1000, 10)}秒前`;
+      } else if (dis < (1000 * 60 * 60)) {
+        temp = `${parseInt(dis / 1000 / 60, 10)}分钟前`;
+      } else if (dis < (1000 * 60 * 60 * 24)) {
+        temp = `${parseInt(dis / 1000 / 60 / 60, 10)}小时前`;
+      } else if (dis < (1000 * 60 * 60 * 24 * 365)) {
+        temp = `${parseInt(dis / 1000 / 60 / 60 / 24, 10)}天前`;
+      } else if (dis) {
+        temp = `${parseInt(dis / 1000 / 60 / 60 / 24 / 365, 10)}年前`;
+      }
+      return temp;
+    },
   },
 };
 </script>

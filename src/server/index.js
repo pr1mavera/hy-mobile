@@ -23,3 +23,9 @@ export const getActivityList = status => http.get(`/activity/issue/${status}`);
 export const getActivityListIsOver = () => http.get('/activity/issueOver');
 // 根据主办方获取参与的会议
 export const getActivityMyJoin = () => http.get('/activity/myJoin');
+
+// 个人中心获取关注人动态 会议
+export const getDynamicOfMeeting = (query) => http.get('/watch/dynamic', null, { params: query});
+
+// 个人中心获取关注人动态 人
+export const getDynamicOfPerson = (query) => http.get('/watchPeople/dynamic', null, { params: query});
