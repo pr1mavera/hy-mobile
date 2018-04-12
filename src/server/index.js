@@ -23,3 +23,5 @@ export const getActivityList = status => http.get(`/activity/issue/${status}`);
 export const getActivityListIsOver = () => http.get('/activity/issueOver');
 // 根据主办方获取参与的会议
 export const getActivityMyJoin = () => http.get('/activity/myJoin');
+// 根据主办方获取收藏的会议
+export const getActivityMyWatch = () => http.get('/watch');

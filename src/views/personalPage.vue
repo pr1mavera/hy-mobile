@@ -23,40 +23,43 @@
       </div>
 
     </x-header>
-    <div class="mainContainer">
-      <bannerWithTransBlur :userProfile="userProfile"></bannerWithTransBlur>
-      <tab
-      class="tab"
-      :line-width="2"
-      default-color="#9098a8"
-      active-color="#2b313c"
-      bar-active-color="#2c7dfa"
-      custom-bar-width="28px"
-      >
-        <tab-item @on-item-click="onTabItemClick" selected>活动</tab-item>
-        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">参与</tab-item>
-        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">收藏</tab-item>
-        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">关注</tab-item>
-        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">动态</tab-item>
-      </tab>
-      <div class="routerBody clearfix">
-        <keep-alive>
-          <router-view class="routerView"></router-view>
-        </keep-alive>
+    <div class="scrollWrapper" ref="scrollWrapper">
+      <div class="mainContainer">
+        <bannerWithTransBlur :userProfile="userProfile" :scrollY="scrollY"></bannerWithTransBlur>
+        <tab
+        class="tab"
+        :line-width="2"
+        default-color="#9098a8"
+        active-color="#2b313c"
+        bar-active-color="#2c7dfa"
+        custom-bar-width="28px"
+        >
+          <tab-item @on-item-click="onTabItemClick" selected>活动</tab-item>
+          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">参与</tab-item>
+          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">收藏</tab-item>
+          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">关注</tab-item>
+          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">动态</tab-item>
+        </tab>
+        <div class="routerBody clearfix">
+          <keep-alive>
+            <router-view class="routerView"></router-view>
+          </keep-alive>
+        </div>
+        <footer class="footer">
+          <p class="text">本站由<span> 会议站 </span>提供技术支持</p>
+          <p class="text">Copyright &copy; 2013-2018 版权所有 北京韦尔科技有限公司</p>
+          <p class="text">京ICP备14040981号-2</p>
+        </footer>
       </div>
-      <footer class="footer">
-        <p class="text">本站由<span> 会议站 </span>提供技术支持</p>
-        <p class="text">Copyright &copy; 2013-2018 版权所有 北京韦尔科技有限公司</p>
-        <p class="text">京ICP备14040981号-2</p>
-      </footer>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import { getProfile, getProfileById } from '@/server/index.js';
 import { XHeader, Tab, TabItem } from 'vux';
 import { mapMutations, mapGetters } from 'vuex';
-import { getProfile, getProfileById } from '@/server/index.js';
+import BScroll from 'better-scroll';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
 
 export default {
@@ -82,11 +85,17 @@ export default {
       },
       pathMap: ['PPActivity', 'PPParticipate', 'PPCollection', 'PPFollow', 'PPTrack'],
       userProfile: {},
+      scrollY: 0,
+      bannerH: 0,
+      nearNode: false,
+      scrollWrapper: null,
     };
   },
   mounted() {
     this.getUserProfile();
     this.setIDInQuery();
+    this.initScroll();
+    this.calculateBannerHeight();
   },
   computed: {
     ...mapGetters([
@@ -95,7 +104,13 @@ export default {
     ]),
   },
   methods: {
+    qwe() {
+      debugger;
+      this.scrollWrapper.scrollTo(0, -50, 600);
+    },
     onTabItemClick(index) {
+      debugger;
+      this.scrollWrapper.scrollTo(0, -50, 600);
       this.$router.push({
         path: this.pathMap[index],
         query: this.query,
@@ -115,6 +130,49 @@ export default {
       if (res.code !== 0) {
         console.log('error in getUserProfile');
       }
+    },
+    initScroll() {
+      this.scrollWrapper = new BScroll(this.$refs.scrollWrapper, {
+        bounce: true,
+        probeType: 3,
+        momentum: false,
+        // click: true,
+      });
+      this.scrollWrapper.on('scroll', (pos) => {
+        this.scrollY = -Math.round(pos.y);
+        console.log(`当前滚动位置：${this.scrollY}`);
+        // if (this.scrollY >= 20 && this.scrollY <= 110 && !this.nearNode) {
+        //   this.scrollWrapper.scrollTo(0, -50, 600);
+        //   this.nearNode = true;
+        //   console.log('111111111');
+        // }
+        // if (this.scrollY >= 20 && this.scrollY <= 110 && !this.nearNode) {
+        //   this.scrollWrapper.scrollTo(0, -50, 600);
+        //   this.nearNode = true;
+        //   console.log('111111111');
+        // } else if (this.scrollY <= 20 && this.nearNode) {
+        //   this.scrollWrapper.scrollTo(0, 0, 600);
+        //   this.nearNode = false;
+        //   console.log('222222222');
+        // } else if (this.scrollY >= 110 && this.nearNode) {
+        //   this.scrollWrapper.scrollTo(0, 286, 600);
+        //   this.nearNode = false;
+        //   console.log('333333333');
+        // }
+      });
+      // this.scrollWrapper.on('touchEnd', (pos) => {
+      //   const scrollY = -Math.round(pos.y);
+      //   // console.log(`当前滚动位置：${this.scrollY}`);
+      //   if (scrollY >= 20 && scrollY <= 110 && !this.nearNode) {
+      //     this.scrollWrapper.scrollTo(0, -150, 600);
+      //     this.nearNode = true;
+      //     console.log('111111111');
+      //   }
+      // });
+    },
+    calculateBannerHeight() {
+      this.bannerH = document.getElementsByClassName('bannerWithTransBlur')[0].clientHeight;
+      // console.log(this.bannerH);
     },
     ...mapMutations({
       setIdInQuery: 'SET_QUERY',
@@ -181,55 +239,63 @@ html, body, #app, #personalPage {
     }
 
   }
-  .mainContainer {
-    height: 100%;
-    .tab {
-      .vux-tab-container {
-        .vux-tab {
-          width: 100%;
-          border: 0;
-          .vux-tab-item {
-            background-size: 100% 0px;
-            flex: 1;
+  .scrollWrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+    .mainContainer {
+      overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+      .tab {
+        .vux-tab-container {
+          .vux-tab {
+            width: 100%;
+            border: 0;
+            .vux-tab-item {
+              background-size: 100% 0px;
+              flex: 1;
+            }
           }
         }
       }
-    }
-    .routerBody {
-      width: 100%;
-      min-height: 55%;
-      height: auto;
-      background-color: #f4f7fa;
-      .routerView {
-        padding-bottom: 90px;
+      .routerBody {
+        width: 100%;
+        min-height: 3000px;
+        height: auto;
+        background-color: #f4f7fa;
+        .routerView {
+          padding-bottom: 90px;
+        }
       }
-    }
-    .clearfix{
-      display: inline-block;
-    }
-    .clearfix:after {
-      content: ".";
-      display: block;
-      height: 0;
-      clear: both;
-      visibility: hidden;
-    }
-    .footer {
-      position: relative;
-      height: 90px;
-      margin-top: -90px;
-      background-color: #2b3134;
-      color: #aaaaaa;
-      text-align: center;
-      padding: 12px 0;
-      box-sizing: border-box;
-      clear:both;
-      .text {
-        font-size: 12px;
-        font-weight: 200;
-        line-height: 22px;
-        span {
-          color: #1191ff;
+      .clearfix{
+        display: inline-block;
+      }
+      .clearfix:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+      .footer {
+        position: relative;
+        height: 90px;
+        margin-top: -90px;
+        background-color: #2b3134;
+        color: #aaaaaa;
+        text-align: center;
+        padding: 12px 0;
+        box-sizing: border-box;
+        clear:both;
+        .text {
+          font-size: 12px;
+          font-weight: 200;
+          line-height: 22px;
+          span {
+            color: #1191ff;
+          }
         }
       }
     }
