@@ -40,7 +40,7 @@
           <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">关注</tab-item>
           <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">动态</tab-item>
         </tab>
-        <div class="routerBody clearfix">
+        <div class="routerBody clearfix" :style="`min-height: ${this.routerBodyMinHeight}px;`">
           <keep-alive>
             <router-view class="routerView"></router-view>
           </keep-alive>
@@ -86,16 +86,15 @@ export default {
       pathMap: ['PPActivity', 'PPParticipate', 'PPCollection', 'PPFollow', 'PPTrack'],
       userProfile: {},
       scrollY: 0,
-      bannerH: 0,
+      routerBodyMinHeight: 0,
       nearNode: false,
-      scrollWrapper: null,
     };
   },
   mounted() {
     this.getUserProfile();
     this.setIDInQuery();
     this.initScroll();
-    this.calculateBannerHeight();
+    this.calculateHeight();
   },
   computed: {
     ...mapGetters([
@@ -143,9 +142,10 @@ export default {
         }
       });
     },
-    calculateBannerHeight() {
-      this.bannerH = document.getElementsByClassName('bannerWithTransBlur')[0].clientHeight;
-      // console.log(this.bannerH);
+    calculateHeight() {
+      const bannerH = document.getElementsByClassName('bannerWithTransBlur')[0].clientHeight;
+      const windowH = document.documentElement.clientHeight;
+      this.routerBodyMinHeight = windowH - bannerH - 44;
     },
     ...mapMutations({
       setIdInQuery: 'SET_QUERY',
@@ -220,7 +220,7 @@ html, body, #app, #personalPage {
     overflow: hidden;
     .mainContainer {
       overflow: scroll;
-  -webkit-overflow-scrolling: touch;
+      -webkit-overflow-scrolling: touch;
       .tab {
         .vux-tab-container {
           .vux-tab {
@@ -235,7 +235,6 @@ html, body, #app, #personalPage {
       }
       .routerBody {
         width: 100%;
-        min-height: 3000px;
         height: auto;
         background-color: #f4f7fa;
         .routerView {
@@ -246,7 +245,7 @@ html, body, #app, #personalPage {
         display: inline-block;
       }
       .clearfix:after {
-        content: ".";
+        content: "";
         display: block;
         height: 0;
         clear: both;

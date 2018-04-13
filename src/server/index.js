@@ -1,5 +1,12 @@
 import http from './request';
 /* eslint-disable */
+// 获取首页轮播图
+export const getBanner = () => http.get('/banner');
+// 获取当前登录人的热门会议列表
+export const getActivityHots = () => http.get('/activity/hots');
+// 获取当前登录人的最近活动列表
+export const getActivityRecents = () => http.get('/activity/recents');
+
 // 根据id获取会议详情
 export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 
