@@ -134,7 +134,7 @@ export default {
       });
       this.scrollWrapper.on('scroll', (pos) => {
         this.scrollY = -Math.round(pos.y);
-        console.log(`当前滚动位置：${this.scrollY}`);
+        // console.log(`当前滚动位置：${this.scrollY}`);
       });
       this.scrollWrapper.on('touchEnd', (pos) => {
         this.scrollY = -Math.round(pos.y);
@@ -235,7 +235,7 @@ html, body, #app, #personalPage {
       }
       .routerBody {
         width: 100%;
-        min-height: 3000px;
+        min-height: calc(~'100vh - 660px');
         height: auto;
         background-color: #f4f7fa;
         .routerView {

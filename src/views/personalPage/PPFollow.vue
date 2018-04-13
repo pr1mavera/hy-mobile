@@ -19,45 +19,45 @@
     <div class="swiper-container">
       <swiper @on-index-change="handlerHeight(check)" id="swiper" class="swiper" v-model="check"  :show-dots="false">
         <swiper-item >
-          <div class="tab-swiper vux-center" v-for="item in wTableData">
+          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData">
             <div class="flex-box" >
               <div class="left">
-                <img src="../../assets/logo.png" alt="">
+                <img :src="item.avatarUrl" alt="">
               </div>
               <div class="center">
                   <h5>{{item.nickname}}</h5>
-                  <p>收藏了你的会议</p>
-                  <div >
-                    <p>会议<span class="num">10</span></p>
-                    <p>粉丝<span class="num">9998</span></p>
+                  <p>{{item.info}}</p>
+                  <div v-if="item.userStatistics" >
+                    <p>会议<span class="num" >{{item.userStatistics.activityCount }}</span></p>
+                    <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
               </div>
               <div class="right">
-                <button v-if="true" class="style1">互相关注</button>
-                <button v-if="false" class="style1">已关注</button>
-                <button v-if="false" class="style2">关注</button>
+                <button v-if="item.mutualFansStatus && !item.watchFlag" class="style1" @click ="removeWatch(item, index, 0)">互相关注</button>
+                <button v-if="!item.mutualFansStatus && !item.watchFlag" class="style1"  @click ="removeWatch(item, index, 0)">已关注</button>
+                <button v-if="item.watchFlag" class="style2" @click="watchPeople(item, index, 0)">关注</button>
               </div>
             </div>
           </div>
         </swiper-item>
         <swiper-item >
-          <div class="tab-swiper vux-center" v-for="item in fTableData">
+          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData">
             <div class="flex-box">
               <div class="left">
-                <img src="../../assets/logo.png" alt="">
+                <img :src="item.avatarUrl" alt="">
               </div>
               <div class="center">
                   <h5>{{item.nickname}}</h5>
-                  <p>收藏了你的会议</p>
-                  <div >
-                    <p>会议<span class="num">10</span></p>
-                    <p>粉丝<span class="num">9998</span></p>
+                  <p>{{item.info}}</p>
+                  <div v-if="item.userStatistics">
+                    <p>会议<span class="num">{{item.userStatistics.activityCount }}</span></p>
+                    <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
               </div>
               <div class="right">
-                <button v-if="true" class="style1">互相关注</button>
-                <button v-if="false" class="style1">已关注</button>
-                <button v-if="false" class="style2">关注</button>
+                <button v-if="item.mutualFansStatus && !item.watchFlag" @click="removeWatch(item, index, 1)" class="style1">互相关注</button>
+                <!-- <button v-if="false" class="style1">已关注</button> -->
+                <button v-if="!item.mutualFansStatus || item.watchFlag" @click="watchPeople(item, index, 1)" class="style2">关注</button>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@
 
 <script type="text/ecmascript-6">
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
-import { getWatchPeopleList, getFanList } from '@/server/index.js';
+import { getWatchPeopleList, getFanList, addWatch, deleteWatch } from '@/server/index.js';
 
 export default {
   name: 'personalPage',
@@ -132,6 +132,42 @@ export default {
         document.getElementById('swiper').style.height = `${this.fTableData.length * 95}px`;
         document.getElementById('swiper').firstChild.style.height = `${this.fTableData.length * 95}px`;
       }
+    },
+    watchPeople(obj, index, swiper) {
+      addWatch(obj.id).then((res) => {
+        if (res.code === 0) {
+          this.$vux.toast.text('关注成功', 'top');
+          if (swiper === 0) {
+            const object = this.wTableData[index];
+            object.watchFlag = false;
+            this.$set(this.wTableData, index, object);
+          } else {
+            const object = this.fTableData[index];
+            object.watchFlag = false;
+            this.$set(this.fTableData, index, object);
+          }
+        } else {
+          this.$vux.toast.text('关注失败', 'top');
+        }
+      });
+    },
+    removeWatch(obj, index, swiper) {
+      deleteWatch(obj.id).then((res) => {
+        if (res.code === 0) {
+          this.$vux.toast.text('取消成功', 'top');
+          if (swiper === 0) {
+            const object = this.wTableData[index];
+            object.watchFlag = true;
+            this.$set(this.wTableData, index, object);
+          } else {
+            const object = this.fTableData[index];
+            object.watchFlag = true;
+            this.$set(this.fTableData, index, object);
+          }
+        } else {
+          this.$vux.toast.text('取消失败', 'top');
+        }
+      });
     },
   },
 };

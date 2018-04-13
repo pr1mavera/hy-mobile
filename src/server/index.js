@@ -31,3 +31,10 @@ export const getDynamicOfMeeting = (query) => http.get('/watch/dynamic', null, {
 export const getDynamicOfPerson = (query) => http.get('/watchPeople/dynamic', null, { params: query});
 // 根据主办方获取收藏的会议
 export const getActivityMyWatch = () => http.get('/watch');
+
+// 添加关注
+export const addWatch = (id) => http.post(`/watchPeople/${id}`);
+
+//取消关注
+
+export const deleteWatch = (id) => http.delete(`/watchPeople/${id}`);

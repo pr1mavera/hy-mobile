@@ -1,5 +1,5 @@
 <template>
-  <div class="PPTrack">
+  <div class="PPTrack" >
     <div class="tab-container">
       <tab
       class="SLtab"
@@ -9,10 +9,10 @@
       v-model="check"
       >
         <tab-item selected @on-item-click="check=0">
-          收藏
+          收藏({{meetingTotal}})
         </tab-item>
         <tab-item @on-item-click="check=1">
-          关注
+          关注({{personTotal}})
         </tab-item>
       </tab>
     </div>
@@ -20,7 +20,7 @@
       <swiper  @on-index-change="handlerHeight(check)" id="swiper2" class="swiper" v-model="check" height="100px" :show-dots="false">
         <swiper-item >
           <div class="tab-swiper vux-center"  v-for="item in meetingData">
-            <div class="flex-box">
+            <div class="flex-box" v-if="item.user">
               <div class="left">
                 <img :src="item.user.avatarUrl" alt="">
               </div>
@@ -45,7 +45,7 @@
         </swiper-item>
         <swiper-item >
           <div class="tab-swiper vux-center" v-for="item in personData">
-            <div class="flex-box">
+            <div class="flex-box" v-if="item.user">
               <div class="left">
                 <img :src="item.user.avatarUrl" alt="">
               </div>
@@ -65,7 +65,7 @@
         </swiper-item>
       </swiper>
     </div>
-    <div class="bottom">
+    <div class="bottom" >
       已经到底啦~
     </div>
   </div>
@@ -73,6 +73,7 @@
 
 <script type="text/ecmascript-6">
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
+import BScroll from 'better-scroll';
 import { getDynamicOfMeeting, getDynamicOfPerson } from '@/server/index.js';
 
 export default {
@@ -85,16 +86,18 @@ export default {
       queryMeeting: {
         page: 1,
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
       },
       queryPerson: {
         page: 1,
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
       },
       mboxNum: 0,
       pboxNum: 0,
-      scrollWraper: null,
+      meetingTotal: 0,
+      personTotal: 0,
+      scrollWrapper: null,
     };
   },
   components: {
@@ -105,9 +108,30 @@ export default {
   },
   mounted() {
     this.initData();
+    this.initScroll();
   },
   methods: {
     initScroll() {
+      this.scrollWrapper = new BScroll(this.$parent.$refs.scrollWrapper, {
+        bounce: true,
+        probeType: 3,
+        momentum: false,
+        // click: true,
+        pullUpLoad: {
+          threshold: 50,
+        },
+      });
+
+      this.scrollWrapper.on('pullingUp', () => {
+        console.log('上拉加载');
+        if (this.check === 0) {
+          this.queryMeeting.pageNum += 1;
+          this.getDynamicOfMeetingList();
+        } else {
+          this.queryPerson.pageNum += 1;
+          this.getDynamicOfPersonList();
+        }
+      });
     },
     initData() {
       this.resetData();
@@ -123,11 +147,14 @@ export default {
     getDynamicOfMeetingList() {
       getDynamicOfMeeting(this.queryMeeting).then((res) => {
         this.meetingData.push(...res.data.list);
+        this.meetingTotal = res.data.total;
         if (res.data.pageNum < res.data.pages) {
           this.mboxNum = res.data.pageNum * res.data.size;
         } else {
           this.mboxNum = res.data.total;
         }
+        this.scrollWrapper.finishPullUp();
+        this.scrollWrapper.refresh();
         document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
         document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
       });
@@ -135,11 +162,16 @@ export default {
     getDynamicOfPersonList() {
       getDynamicOfPerson(this.queryPerson).then((res) => {
         this.personData.push(...res.data.list);
+        this.personTotal = res.data.total;
         if (res.data.pageNum < res.data.pages) {
           this.pboxNum = res.data.pageNum * res.data.size;
         } else {
           this.pboxNum = res.data.total;
         }
+        this.scrollWrapper.finishPullUp();
+        this.scrollWrapper.refresh();
+        document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
+        document.getElementById('swiper2').firstChild.style.height = `${this.pboxNum * 95}px`;
       });
     },
     handlerHeight(index) {

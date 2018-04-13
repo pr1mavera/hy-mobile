@@ -116,13 +116,13 @@
             合作支持
           </h1>
           <div class="content">
-            <div class="container-layout">
-              <h2>特别赞助</h2>
-              <div class="container">
-                <div class="box">
-
-                </div>
-              </div>
+            <div class="container-layout" v-for="item in partnersOBJ">
+              <h2>{{item[0].partnerType}}</h2>
+              <flexbox :gutter='0' class="container" >
+                <flexbox-item :span='1/3' class="box" v-for="(itm ,index) in item" :key="index">
+                  <img :src="itm.logoPics">
+                </flexbox-item>
+              </flexbox>
             </div>
           </div>
         </div>
@@ -210,6 +210,7 @@ export default {
       tableData: {
         activityBannerMobileUrl: '',
         activitySchedules: [],
+        activityPartners: [],
       },
     };
   },
@@ -242,6 +243,24 @@ export default {
         temp.scheduleDetail = JSON.parse(e.scheduleDetail);
         console.log(temp);
         return temp;
+      });
+      return obj;
+    },
+    partnersOBJ() {
+      // eslint-disable-next-line
+      const keyArrayTemp = this.tableData.activityPartners.map((e) => {
+        return e.partnerType;
+      });
+      const keyArray = [...new Set(keyArrayTemp)];
+      const obj = [];
+      keyArray.forEach((e) => {
+        // eslint-disable-next-line
+        const temp = this.tableData.activityPartners.filter((element) => {
+          if (e === element.partnerType) {
+            return element;
+          }
+        });
+        obj.push(temp);
       });
       return obj;
     },
@@ -494,11 +513,18 @@ export default {
                 color: #666666;
               }
               .container{
-                display: flex;
-                justify-content: flex-start;
+                margin:15px 0;
                 .box{
+                  &:nth-child(2+3n){
+                    text-align: center;
+                  }
                   width: 100px;
                   height: 50px;
+                  img{
+                    width: 100px;
+                    height: 50px;
+
+                  }
                 }
               }
             }
