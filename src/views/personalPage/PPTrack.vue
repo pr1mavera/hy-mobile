@@ -16,7 +16,7 @@
         </tab-item>
       </tab>
     </div>
-    <div class="swiper-container">
+    <div class="swiper-container" >
       <swiper  @on-index-change="handlerHeight(check)" id="swiper2" class="swiper" v-model="check" height="100px" :show-dots="false">
         <swiper-item >
           <div class="tab-swiper vux-center"  v-for="item in meetingData">
@@ -94,6 +94,7 @@ export default {
       },
       mboxNum: 0,
       pboxNum: 0,
+      scrollWraper: null,
     };
   },
   components: {
@@ -106,6 +107,8 @@ export default {
     this.initData();
   },
   methods: {
+    initScroll() {
+    },
     initData() {
       this.resetData();
       this.getDynamicOfMeetingList();
