@@ -100,7 +100,7 @@ export default {
 .bannerWithTransBlur {
   position: relative;
   width: 100%;
-  // height: 400px;
+  height: 286px;
   color: #ffffff;
   text-align: center;
   overflow-y: hidden;
@@ -171,6 +171,7 @@ export default {
   .fillBox {
     width: 100%;
     height: 34px;
+    margin-top: 192px;
   }
   .attribute {
     display: flex;

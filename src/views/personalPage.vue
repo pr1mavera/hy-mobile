@@ -104,13 +104,7 @@ export default {
     ]),
   },
   methods: {
-    qwe() {
-      debugger;
-      this.scrollWrapper.scrollTo(0, -50, 600);
-    },
     onTabItemClick(index) {
-      debugger;
-      this.scrollWrapper.scrollTo(0, -50, 600);
       this.$router.push({
         path: this.pathMap[index],
         query: this.query,
@@ -141,34 +135,13 @@ export default {
       this.scrollWrapper.on('scroll', (pos) => {
         this.scrollY = -Math.round(pos.y);
         console.log(`当前滚动位置：${this.scrollY}`);
-        // if (this.scrollY >= 20 && this.scrollY <= 110 && !this.nearNode) {
-        //   this.scrollWrapper.scrollTo(0, -50, 600);
-        //   this.nearNode = true;
-        //   console.log('111111111');
-        // }
-        // if (this.scrollY >= 20 && this.scrollY <= 110 && !this.nearNode) {
-        //   this.scrollWrapper.scrollTo(0, -50, 600);
-        //   this.nearNode = true;
-        //   console.log('111111111');
-        // } else if (this.scrollY <= 20 && this.nearNode) {
-        //   this.scrollWrapper.scrollTo(0, 0, 600);
-        //   this.nearNode = false;
-        //   console.log('222222222');
-        // } else if (this.scrollY >= 110 && this.nearNode) {
-        //   this.scrollWrapper.scrollTo(0, 286, 600);
-        //   this.nearNode = false;
-        //   console.log('333333333');
-        // }
       });
-      // this.scrollWrapper.on('touchEnd', (pos) => {
-      //   const scrollY = -Math.round(pos.y);
-      //   // console.log(`当前滚动位置：${this.scrollY}`);
-      //   if (scrollY >= 20 && scrollY <= 110 && !this.nearNode) {
-      //     this.scrollWrapper.scrollTo(0, -150, 600);
-      //     this.nearNode = true;
-      //     console.log('111111111');
-      //   }
-      // });
+      this.scrollWrapper.on('touchEnd', (pos) => {
+        this.scrollY = -Math.round(pos.y);
+        if (this.scrollY >= 20 && this.scrollY <= 110) {
+          this.scrollWrapper.scrollTo(0, -50, 400);
+        }
+      });
     },
     calculateBannerHeight() {
       this.bannerH = document.getElementsByClassName('bannerWithTransBlur')[0].clientHeight;
