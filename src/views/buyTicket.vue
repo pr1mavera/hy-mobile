@@ -1,17 +1,14 @@
 <template>
   <div class="buyTicket">
     <div class="header">
-      <!-- <headerWithProcess :query="setQuery" :activity-id="parseInt(this.$route.params.activityId)"></headerWithProcess> -->
       <headerWithProcess></headerWithProcess>
     </div>
     <div class="routerBody">
       <keep-alive>
         <router-view @countChangeWithId="countChangeWithId"></router-view>
-        <!-- <router-view :tickets="ticketsData" :select-tickets="selectTickets"></router-view> -->
       </keep-alive>
     </div>
     <shopCart v-if="this.$route.name !== 'success'"></shopCart>
-    <!-- <shopCart ref="shopCart" :query="setQuery" :select-tickets="selectTickets"></shopCart> -->
   </div>
 </template>
 

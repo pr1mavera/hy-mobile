@@ -132,6 +132,8 @@ export default {
   .activityListView {
     ul > .activityListLi {
       margin-bottom: 5px;
+      padding: 14px 20px;
+      background-color: #ffffff;
       list-style-type:none;
     }
   }

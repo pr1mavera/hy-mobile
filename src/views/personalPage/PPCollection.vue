@@ -1,6 +1,6 @@
 <template>
   <div class="PPCollection">
-    <!-- <div class="tab-container">
+    <div class="tab-container">
       <tab
       class="SLtab"
       bar-active-color="transparent"
@@ -31,7 +31,7 @@
     </div>
     <div class="bottom">
       已经到底啦~
-    </div> -->
+    </div>
   </div>
 </template>
 

@@ -24,4 +24,8 @@ body {
     fill: currentColor;
     overflow: hidden;
 }
+html, body, #app {
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
 </style>

@@ -1,5 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
+import home from '@/views/home';
+
+import activity from '@/views/activity';
+
 import detail from '@/views/detail';
 
 import buyTicket from '@/views/buyTicket';
@@ -25,6 +30,16 @@ Vue.use(Router);
 export default new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: home,
+    },
+    {
+      path: '/activity',
+      name: 'activity',
+      component: activity,
+    },
     {
       path: '/service',
       name: 'service',

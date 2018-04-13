@@ -23,7 +23,7 @@ export default {
 <style lang="less">
 .activityList {
   width: 100%;
-  padding: 14px 20px;
+  // padding: 14px 20px;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
