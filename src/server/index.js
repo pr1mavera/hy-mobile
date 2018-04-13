@@ -17,6 +17,8 @@ export const getTicketsByActivityId = activityId => http.get(`/activityTickets/a
 export const getProfile = () => http.get('/user');
 // 根据id获取用户基本信息
 export const getProfileById = id => http.get(`/user?id=${id}`);
+// 获取会议列表(不分页)
+export const getAllActivityList = () => http.get(`/activity/getAll?page=0`);
 // 根据用户id获取会议列表(不分页)
 export const getActivityListById = id => http.get(`/activity/getAll?id=${id}&page=0`);
 

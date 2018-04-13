@@ -3,6 +3,8 @@ import Router from 'vue-router';
 
 import home from '@/views/home';
 
+import activity from '@/views/activity';
+
 import detail from '@/views/detail';
 
 import buyTicket from '@/views/buyTicket';
@@ -32,6 +34,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: home,
+    },
+    {
+      path: '/activity',
+      name: 'activity',
+      component: activity,
     },
     {
       path: '/service',
