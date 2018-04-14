@@ -25,7 +25,7 @@
 
     </x-header>
     <div v-transfer-dom>
-      <popup v-model="showMenu" position="right" @on-hide="handlerClose()">
+      <popup v-model="showMenu" position="right" >
         <div class="menu">
           <button class="close" @click="showMenu = false">
             <svg class="icon" aria-hidden="true">

@@ -47,3 +47,9 @@ export const addWatch = (id) => http.post(`/watchPeople/${id}`);
 //取消关注
 
 export const deleteWatch = (id) => http.delete(`/watchPeople/${id}`);
+
+// 添加会议收藏
+export const addWatchCollect = (meetingId) => http.post(`/watch/${meetingId}`);
+
+// 取消会议收藏
+export const removeWatchCollect = (meetingId) =>http.delete(`/watch/${meetingId}`);
