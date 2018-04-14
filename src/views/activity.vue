@@ -5,7 +5,7 @@
       <div
       class="selectItem"
       @click="showSelectView(1)"
-      :class="{'selectItemHighLight': flag === true && selectState === 1}"
+      :class="{'selectItemHighLight': flag === true && selectMode === 1}"
       >
         所有类别
         <svg class="icon" aria-hidden="true">
@@ -15,32 +15,38 @@
       <div
       class="selectItem"
       @click="showSelectView(2)"
-      :class="{'selectItemHighLight': flag === true && selectState === 2}"
+      :class="{'selectItemHighLight': flag === true && selectMode === 2}"
       >
         全部时间
         <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-xia1"></use>
         </svg>
       </div>
-      <div class="selectView" v-if="flag">
-        <div class="selectBox select_time" v-show="selectState === 1">
+      <div class="selectView" v-if="flag" ref="selectView">
+        <div class="selectBox select_time select-box-hook" v-show="selectMode === 1">
           <ul>
-            <li class="selectLi" @click="setCurrentActivity(1, 1)">全部</li>
-            <li class="selectLi">1</li>
-            <li class="selectLi">1</li>
-            <li class="selectLi">1</li>
-            <li class="selectLi">1</li>
-            <li class="selectLi">1</li>
-            <li class="selectLi">1</li>
-            <li class="selectLi">1</li>
+            <li class="selectLi" @click="setCurrentActivity(selectMode, 0)">全部</li>
+            <li
+            v-for="(item, index) in activityClass"
+            :key="index"
+            class="selectLi"
+            @click="setCurrentActivity(selectMode, item.type)"
+            >
+              {{item.typeName}}
+            </li>
           </ul>
         </div>
-        <div class="selectBox select_category" v-show="selectState === 2">
+        <div class="selectBox select_category select-box-hook" v-show="selectMode === 2">
           <ul>
-            <li class="selectLi">全部</li>
-            <li class="selectLi">明天</li>
-            <li class="selectLi">未来一周</li>
-            <li class="selectLi">未来一月</li>
+            <li class="selectLi" @click="setCurrentActivity(selectMode, 0)">全部</li>
+            <li
+            v-for="(item, index) in activityTime"
+            :key="index"
+            class="selectLi"
+            @click="setCurrentActivity(selectMode, item.type)"
+            >
+              {{item.typeName}}
+            </li>
           </ul>
         </div>
       </div>
@@ -49,7 +55,7 @@
     <div class="activityContent">
       <div class="activityContentWrapper">
         <div class="activityListView">
-          <ul>
+          <ul :style="this.scrollWhenSelect">
             <li v-for="(activity, index) in currentActivityList" class="activityListLi vux-1px-b" :key="index">
               <activityList :activity="activity"></activityList>
             </li>
@@ -65,7 +71,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { getAllActivityList } from '@/server/index.js';
+import { getAllActivityList, getActivityClass } from '@/server/index.js';
 import meetingHeader from '@/components/meetingHeader';
 import activityList from '@/components/activityList';
 import homeFooter from '@/components/homeFooter';
@@ -78,36 +84,64 @@ export default {
         minorColor: '#b8bcc4',
         backgroundColor: '#ffffff',
       },
-      AllActivityList: [],
+      activityClass: [],
+      activityTime: [
+        {
+          id: 1,
+          type: 1,
+          typeName: '明天',
+        },
+        {
+          id: 2,
+          type: 2,
+          typeName: '未来一周',
+        },
+        {
+          id: 3,
+          type: 3,
+          typeName: '未来一月',
+        },
+      ],
+      allActivityList: [],
       currentActivityList: [],
-      flag: false,      // select开关
-      selectState: 1,   // 选择方式（类别/时间）
-      selectIndex: -1,  // 选项索引
+      flag: false,            // select开关
+      selectMode: 1,         // 选择方式（类别/时间）
+      selectIndex: 0,        // 选项索引
+      scrollWhenSelect: 'height: auto;',    // 下拉菜单出现时可滚动范围
     };
   },
   mounted() {
-    this.getHomeActivityList();
+    this.getActivity();
   },
   methods: {
-    async getHomeActivityList() {
-      const res = await getAllActivityList();
-      this.AllActivityList = res.data;
-      this.currentActivityList = this.AllActivityList;
-      if (res.code !== 0) {
-        console.log('error in getActivityTicketsList');
+    async getActivity() {
+      const resOfActivityClass = await getActivityClass();
+      const resOfAllActivity = await getAllActivityList();
+      this.activityClass = resOfActivityClass.data;
+      this.allActivityList = resOfAllActivity.data;
+      // 初始化当前显示的会议列表
+      this.currentActivityList = this.allActivityList;
+      if (resOfActivityClass.code !== 0 || resOfAllActivity.code !== 0) {
+        console.log('error in getActivity');
       }
     },
     showSelectView(index) {
       if (this.flag) { // 当前状态为打开
         // eslint-disable-next-line
-        (this.selectState === index) ? (this.flag = false) : (this.selectState = index);
+        (this.selectMode === index) ? (this.flag = false) : (this.selectMode = index);
       } else { // 当前状态为关闭
-        this.selectState = index;
+        this.selectMode = index;
         this.flag = true;
       }
+      this.$nextTick(() => {
+        this.setScrollWhenSelect();
+      });
     },
     closeSelectView() {
       this.flag = false;
+      this.$nextTick(() => {
+        this.setScrollWhenSelect();
+      });
     },
     // initCategoryOption() {
     //
@@ -119,11 +153,26 @@ export default {
       // eslint-disable-next-line
       (state === 1) ? this.filterActivityByCategory(index) : this.filterActivityByTime(index);
       this.flag = false;
+      this.$nextTick(() => {
+        this.setScrollWhenSelect();
+      });
     },
     filterActivityByCategory(index) {
-      this.currentActivityList = this.AllActivityList.filter(item => item.activityType === index);
+      // eslint-disable-next-line
+      this.currentActivityList = (index > 0) ? this.allActivityList.filter(item => item.activityType === index) : this.allActivityList;
     },
-    // filterActivityByTime(index) {},
+    filterActivityByTime(index) {
+      // eslint-disable-next-line
+      this.currentActivityList = (index > 0) ? this.allActivityList.filter(item => item.timeStatus === index - 1) : this.allActivityList;
+    },
+    setScrollWhenSelect() {
+      if (this.flag) {
+        const selectBox = this.$refs.selectView.getElementsByClassName('select-box-hook');
+        this.scrollWhenSelect = `height: ${selectBox[0].clientHeight}px; overflow: hidden;`;
+      } else {
+        this.scrollWhenSelect = 'height: auto;';
+      }
+    },
   },
   components: {
     activityHeader: meetingHeader,
