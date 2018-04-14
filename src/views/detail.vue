@@ -177,7 +177,10 @@
     <aside>
       <div class="box-container">
         <div class="price">
-          <span>免费</span>
+          <!-- <span class="money" v-if="tableData.activityTickets[0].ticketPrice > 0">
+            {{tableData.activityTickets[0].ticketPrice}}
+          </span> -->
+          <span class="free" >免费</span>
         </div>
         <div class="next" @click="goBuyTicket()">
           <span>获取门票</span>
@@ -676,7 +679,7 @@ export default {
         flex-grow: 1;
         text-align: left;
         padding-left: 26px;
-        span{
+        span.free{
           color: #07D79C;
         }
       }
