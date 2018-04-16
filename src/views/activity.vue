@@ -143,12 +143,6 @@ export default {
         this.setScrollWhenSelect();
       });
     },
-    // initCategoryOption() {
-    //
-    // },
-    // initTimeOption() {
-    //
-    // },
     setCurrentActivity(state, index) {
       // eslint-disable-next-line
       (state === 1) ? this.filterActivityByCategory(index) : this.filterActivityByTime(index);
