@@ -6,7 +6,8 @@
       <div class="container-title">
         <div class="company">
           <p>{{tableData.nickname}}</p>
-          <a >关注</a>
+          <a v-if="!isWatch"  @click="addWatchPerson()">关注</a>
+          <a v-else  @click="removeWatchPerson()">取消关注</a>
         </div>
         <h1 class="title">{{tableData.activityTitle}}</h1>
         <div class="time">
@@ -25,6 +26,8 @@
            </svg>
            <span>{{tableData.activityAddress | adressFormat}}</span>
         </div>
+        <button class="buttonStyle1" v-if="!tableData.isCollect" @click="addWatchMeeting()">收藏</button>
+        <button  class="buttonStyle2" v-else @click="removeWatchMeeting()">已收藏</button>
         <div class="sectionStyle detailTime">
           <h1 class="title">
             日期时间
@@ -171,6 +174,19 @@
       <p>Copyright © 2013-2017 版权所有 北京韦尔科技有限公司</p>
       <p>京ICP备14040981号-2</p>
     </footer>
+    <aside>
+      <div class="box-container">
+        <div class="price">
+          <!-- <span class="money" v-if="tableData.activityTickets[0].ticketPrice > 0">
+            {{tableData.activityTickets[0].ticketPrice}}
+          </span> -->
+          <span class="free" >免费</span>
+        </div>
+        <div class="next" @click="goBuyTicket()">
+          <span>获取门票</span>
+        </div>
+      </div>
+    </aside>
   </div>
 </template>
 
@@ -179,7 +195,7 @@ import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem } from 'vux';
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
 import meetingHeader from '@/components/meetingHeader';
-import { getActivityInfoById } from '@/server/index.js';
+import { getActivityInfoById, addWatchCollect, removeWatchCollect, addWatch, deleteWatch, getWatchPeopleList } from '@/server/index.js';
 import { formatDate, MP } from '@/common/js/index.js';
 
 export default {
@@ -212,6 +228,7 @@ export default {
         activitySchedules: [],
         activityPartners: [],
       },
+      isWatch: 0,
     };
   },
   components: {
@@ -295,29 +312,83 @@ export default {
     async getInfoById() {
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
-
-      this.$nextTick(() => {
-        MP().then((mp) => {
-          const map = new mp.Map('container');
-          let temp = JSON.parse(this.tableData.activityAddress);
-          const city = Object.values(temp)[0];
-          temp = Object.values(temp).join('');
-          map.centerAndZoom(temp, 12);
-          const myGeo = new mp.Geocoder();
-          // 将地址解析结果显示在地图上,并调整地图视野
-          myGeo.getPoint(temp, (point) => {
-            if (point) {
-              map.centerAndZoom(point, 16);
-              map.addOverlay(new mp.Marker(point));
-            } else {
-              console.log('您选择地址没有解析到结果!');
-            }
-          }, city);
-        });
-      });
-      if (!(res1.code === 0 && res1.data)) {
+      const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
+      if (!(res1.code === 0 && res1) || !(res2.code === 0 && res2)) {
         console.log('error in getInfoById ');
+      } else {
+        res2.data.forEach((e) => {
+          if (e.id === res1.data.userId) {
+            this.isWatch = 1;
+          }
+        });
+        this.$nextTick(() => {
+          MP().then((mp) => {
+            const map = new mp.Map('container');
+            let temp = JSON.parse(this.tableData.activityAddress);
+            const city = Object.values(temp)[0];
+            temp = Object.values(temp).join('');
+            map.centerAndZoom(temp, 12);
+            const myGeo = new mp.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(temp, (point) => {
+              if (point) {
+                map.centerAndZoom(point, 16);
+                map.addOverlay(new mp.Marker(point));
+              } else {
+                console.log('您选择地址没有解析到结果!');
+              }
+            }, city);
+          });
+        });
       }
+    },
+    goBuyTicket() {
+      const id = this.id;
+      const nextRoute = `/buyTicket/${id}`;
+      this.$router.push({
+        path: nextRoute,
+      });
+    },
+    addWatchMeeting() {
+      addWatchCollect(this.id).then((res) => {
+        if (res && res.code === 0) {
+          this.$vux.toast.text('收藏成功', 'top');
+          this.tableData.isCollect = 1;
+        } else {
+          this.$vux.toast.text('收藏失败', 'top');
+        }
+      });
+    },
+    removeWatchMeeting() {
+      removeWatchCollect(this.id).then((res) => {
+        if (res && res.code === 0) {
+          this.$vux.toast.text('取消成功', 'top');
+          this.tableData.isCollect = 0;
+        } else {
+          this.$vux.toast.text('取消失败', 'top');
+        }
+      });
+    },
+    addWatchPerson() {
+      debugger;
+      addWatch(this.tableData.userId).then((res) => {
+        if (res && res.code === 0) {
+          this.$vux.toast.text('关注成功', 'top');
+          this.isWatch = 1;
+        } else {
+          this.$vux.toast.text('关注失败', 'top');
+        }
+      });
+    },
+    removeWatchPerson() {
+      deleteWatch(this.tableData.userId).then((res) => {
+        if (res && res.code === 0) {
+          this.$vux.toast.text('取消成功', 'top');
+          this.isWatch = 0;
+        } else {
+          this.$vux.toast.text('取消失败', 'top');
+        }
+      });
     },
 
   },
@@ -355,6 +426,26 @@ export default {
         .more{
           text-decoration: underline;
         }
+      }
+      .buttonStyle1{
+        width: 100%;
+        color: #2C7DFA;
+        border: 1px solid #2C7DFA;
+        background-color: #ffffff;
+        border-radius: 4px;
+        font-size: 16px;
+        height: 45px;
+        margin-top: 10px;
+      }
+      .buttonStyle2{
+        margin-top: 10px;
+        width: 100%;
+        color: #B8BCC4;
+        background-color: #ffffff;
+        border: 1px solid #B8BCC4;
+        border-radius: 4px;
+        font-size: 16px;
+        height: 45px;
       }
       .sectionStyle{
         padding-top: 20px;
@@ -552,6 +643,7 @@ export default {
     }
   }
   footer{
+    margin-bottom: 65px;
     background-color: #f3f4f8;
     height: 180px;
     display: flex;
@@ -566,6 +658,42 @@ export default {
       }
       &:nth-child(1){
         line-height: 40px;
+      }
+    }
+  }
+  aside{
+    position: fixed;
+    width: 100vw;
+    bottom: 0;
+    background-color: #ffffff;
+    z-index: 2;
+    .box-container{
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 65px;
+      box-shadow: 0px -3px 5px 0px rgba(44,125,250,.1);
+      font-size: 16px;
+      line-height: 65px;
+      .price{
+        flex-grow: 1;
+        text-align: left;
+        padding-left: 26px;
+        span.free{
+          color: #07D79C;
+        }
+      }
+      .next{
+        text-align: center;
+        flex-grow: 0;
+        width: 150px;
+        max-width: 150px;
+        min-width: 150px;
+        background-color: #2c7dfa;
+        span{
+          color: #ffffff;
+
+        }
       }
     }
   }

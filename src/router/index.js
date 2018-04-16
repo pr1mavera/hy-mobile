@@ -19,6 +19,8 @@ import PPCollection from '@/views/personalPage/PPCollection';
 import PPFollow from '@/views/personalPage/PPFollow';
 import PPTrack from '@/views/personalPage/PPTrack';
 
+import TCKIndex from '@/views/TCKIndex';
+
 import service from '@/views/service';
 // const pathToRegexp = require('path-to-regexp');
 
@@ -34,6 +36,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: home,
+    },
+    {
+      path: '/TCKIndex',
+      name: 'TCKIndex',
+      component: TCKIndex,
     },
     {
       path: '/activity',
