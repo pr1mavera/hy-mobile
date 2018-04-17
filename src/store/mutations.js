@@ -6,6 +6,11 @@ export const state = {
   tickets: [],
   selTickets: [],
   query: {},
+  firstEditData: {
+    name: '',
+    phone: 0,
+    email: '',
+  },
 };
 
 /* eslint-disable no-param-reassign */
@@ -24,5 +29,8 @@ export const mutations = {
   },
   [types.SET_QUERY](st, query) {
     st.query = query;
+  },
+  [types.SET_FIRST_EDIT_DATA](st, EditData) {
+    st.firstEditData = EditData;
   },
 };

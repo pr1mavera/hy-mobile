@@ -3,32 +3,67 @@
     <form method="post">
       <div class="inputItem">
         <label class="title" :class="setTitleSize">姓名<i>*</i></label>
-        <input class="input" type="text" name="name" value="">
+        <input class="input input-hook" type="text" name="name" :value="setNameDefaultInput" v-on:input="userChangeEdit" id="firstFocus">
       </div>
       <div class="inputItem">
         <label class="title" :class="setTitleSize">电话<i>*</i></label>
-        <input class="input" type="text" name="phone" value="">
+        <input class="input input-hook" type="text" name="phone" :value="setPhoneDefaultInput" v-on:input="userChangeEdit">
       </div>
       <div class="inputItem">
         <label class="title" :class="setTitleSize">邮箱<i>*</i></label>
-        <input class="input" type="text" name="email" value="">
+        <input class="input input-hook" type="text" name="email" :value="setEmailDefaultInput" v-on:input="userChangeEdit">
       </div>
     </form>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     titleSize: {
       type: Number,
     },
+    index: {
+      type: Number,
+    },
   },
   computed: {
+    ...mapGetters([
+      'firstEditData',
+    ]),
     setTitleSize() {
-      // eslint-disable-next-line
-      const className = 'titleSize-' + this.titleSize;
+      const className = `titleSize-${this.titleSize}`;
       return className;
+    },
+    setNameDefaultInput() {
+      if (this.index === 0) {
+        return this.firstEditData.name;
+      }
+      // eslint-disable-next-line
+      return;
+    },
+    setPhoneDefaultInput() {
+      if (this.index === 0) {
+        return this.firstEditData.phone;
+      }
+      // eslint-disable-next-line
+      return;
+    },
+    setEmailDefaultInput() {
+      if (this.index === 0) {
+        return this.firstEditData.email;
+      }
+      // eslint-disable-next-line
+      return;
+    },
+  },
+  methods: {
+    userChangeEdit() {
+      if (this.index === 0) {
+        this.$emit('userChangeEdit');
+      }
     },
   },
 };
