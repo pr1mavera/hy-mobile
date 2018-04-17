@@ -41,22 +41,28 @@
     <div v-transfer-dom>
       <popup
         v-model="showTicket"
-        height="100%"
+        height="90%"
         position="top"
         :is-transparent='true'
         >
-        <div class="popupTicket">
-          <div class="popupTicketBox">
-            <p class="title">{{currentTicket.ticketName}}</p>
-            <p class="desc time">{{currentTicket.startTime | timeFormat}} ~ {{currentTicket.cutTime | timeFormat}}</p>
-            <p class="desc location">{{currentTicket.activityAddress | adressFormat}}</p>
-            <div class="line vux-1px-t"></div>
-            <p class="title ticketN">{{currentTicket.ticketName}}</p>
-            <img :src="currentTicket.QRcode" width=60%>
-            <p class="code vux-1px">{{currentTicket.getTicketCode}}</p>
-            <div class="massage">
-              <p class="name"><span>姓名</span> {{currentTicket.confereeName}}</p>
-              <p class="price"><span>票价</span> ￥{{currentTicket.ticketPrice}}</p>
+        <div class="popup popupTicket">
+          <div class="popupTicketBox" id="popupTicketBox">
+            <div class="popupTicketBoxContent">
+              <div class="hole" id="hole">
+                <div class="holeLeft"></div>
+                <div class="holeRight"></div>
+              </div>
+              <p class="title">{{currentTicket.ticketName}}</p>
+              <p class="desc time">{{currentTicket.startTime | timeFormat}} ~ {{currentTicket.cutTime | timeFormat}}</p>
+              <p class="desc location">{{currentTicket.activityAddress | adressFormat}}</p>
+              <div class="line vux-1px-t"></div>
+              <p class="title ticketN">{{currentTicket.ticketName}}</p>
+              <img :src="currentTicket.QRcode" width=60%>
+              <p class="code vux-1px">{{currentTicket.getTicketCode}}</p>
+              <div class="massage">
+                <p class="name"><span>姓名</span> {{currentTicket.confereeName}}</p>
+                <p class="price"><span>票价</span> ￥{{currentTicket.ticketPrice}}</p>
+              </div>
             </div>
             <div class="close" @click="showTicket=false">
               <svg class="icon" aria-hidden="true">
@@ -64,19 +70,45 @@
               </svg>
             </div>
           </div>
-          <div class="block"></div>
-          <div class="hole holeLeft"></div>
-          <div class="hole holeRight"></div>
+          <!-- <div class="block"></div> -->
         </div>
       </popup>
     </div>
     <div v-transfer-dom>
       <popup
         v-model="showEdit"
-        height="65%"
-        position="top">
-        <div class="popupEdit">
-
+        height="90%"
+        position="bottom"
+        :is-transparent='true'
+        >
+        <div class="popup popupEdit">
+          <div class="popupEditBox">
+            <p class="title">修改门票</p>
+            <div class="inputContent">
+              <form action="index.html" method="post">
+                <!-- 姓名输入框 -->
+                <div class="inputItem userInput">
+                  <input type="text" placeholder="姓名">
+                </div>
+                <!-- 手机号输入框 -->
+                <div class="inputItem userInput">
+                  <input type="number" placeholder="手机号">
+                </div>
+                <!-- 邮箱输入框 -->
+                <div class="inputItem userInput">
+                  <input type="email" placeholder="邮箱">
+                </div>
+              </form>
+            </div>
+            <!-- 主按钮 -->
+            <button class="loginBtn">确认</button>
+            <div class="close" @click="showEdit=false">
+              <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-guanbi2"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="block"></div>
         </div>
       </popup>
     </div>
@@ -107,6 +139,10 @@ export default {
     clickToShowTicket(ticket) {
       this.showTicket = true;
       this.currentTicket = ticket;
+      // this.$nextTick(() => {
+      //   const popupTicketBoxHeight = document.getElementById('popupTicketBox').clientHeight;
+      //   document.getElementById('hole').style.height = `${popupTicketBoxHeight}px`;
+      // });
     },
     clickToShowEdit(ticket) {
       this.showEdit = true;
@@ -234,97 +270,225 @@ export default {
 }
 .v-transfer-dom {
   width: 100%;
-  .popupTicket {
+  .popup {
     position: absolute;
     background: transparent;
-    width: 100%;
-    height: 100%;
-    padding: 20px 25px 0;
-    box-sizing: border-box;
-    overflow: scroll;
-    .hole {
-      position: absolute;
-      bottom: 0;
-      width: 20px;
-      height: 20px;
-      background: transparent;
-      border-radius: 50%;
-      z-index: 9999;
-    }
-    .popupTicketBox {
-      position: relative;
-      bottom: 0;
-      width: 100%;
-      padding: 39px 31px 30px;
-      box-sizing: border-box;
-      border-radius: 4px;
-      background-color: #ffffff;
-      p {
-        color: #2B313C;
-        &.title {
-          font-size: 18px;
-          margin-bottom: 16px;
-          line-height: 20px;
-        }
-        &.desc {
-          font-size: 13px;
-          font-weight: 200;
-        }
-        &.ticketN {
-          text-align: center;
-          margin-bottom: 20px;
-        }
-      }
-      .line {
-        width: 100%;
-        margin-top: 20px;
-        padding-bottom: 20px;
-      }
-      img {
+    &.popupTicket {
+      width: calc(~'100% - 50px');
+      height: calc(~'100% - 20px');
+      margin: 20px 25px 0;
+      .popupTicketBox {
         position: relative;
-        display: block;
-        margin: 0 auto;
-      }
-      .code {
-        padding: 12px 19px;
-        width: 160px;
-        font-size: 14px;
-        text-align: center;
-        margin: 19px auto;
-      }
-      .massage {
-        display: flex;
-        justify-content: center;
-        p {
-          margin: 0 11px;
-          color: #5D6574;
-          font-size: 16px;
-          line-height: 16px;
-          span {
-            color: #9098A8;
+        .popupTicketBoxContent {
+          position: relative;
+          bottom: 0;
+          width: 100%;
+          padding: 39px 31px 30px;
+          border-radius: 4px;
+          box-sizing: border-box;
+          overflow: hidden;
+          .hole {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            .holeLeft {
+              position: absolute;
+              width: 70%;
+              height: 100%;
+              left: 0;
+              overflow: hidden;
+              &:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                transform: translate(-50%, -50%);
+                margin-top: 135px;
+                width: 20px;
+                height: 20px;
+                border: 1000px solid #ffffff;
+                border-radius: 50%;
+                z-index: 20px;
+              }
+            }
+            .holeRight {
+              position: absolute;
+              width: 200px;
+              height: 100%;
+              right: 0;
+              overflow: hidden;
+              &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin-left: 200px;
+                transform: translate(-50%, -50%);
+                margin-top: 135px;
+                width: 20px;
+                height: 20px;
+                border: 1000px solid #ffffff;
+                border-radius: 50%;
+                z-index: 20px;
+              }
+            }
+          }
+          p {
+            color: #2B313C;
+            &.title {
+              font-size: 18px;
+              margin-bottom: 16px;
+              line-height: 20px;
+            }
+            &.desc {
+              font-size: 13px;
+              font-weight: 200;
+            }
+            &.ticketN {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+          }
+          .line {
+            width: 100%;
+            margin-top: 20px;
+            padding-bottom: 20px;
+          }
+          img {
+            position: relative;
+            display: block;
+            margin: 0 auto;
+          }
+          .code {
+            padding: 12px 19px;
+            width: 160px;
             font-size: 14px;
+            text-align: center;
+            margin: 19px auto;
+          }
+          .massage {
+            display: flex;
+            justify-content: center;
+            p {
+              margin: 0 11px;
+              color: #5D6574;
+              font-size: 16px;
+              line-height: 16px;
+              span {
+                color: #9098A8;
+                font-size: 14px;
+              }
+            }
+          }
+        }
+        .close {
+          position: absolute;
+          display: block;
+          bottom: -45px;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 8px;
+          font-size: 14px;
+          line-height: 14px;
+          border-radius: 50%;
+          border: 2px solid #ffffff;
+          .icon {
+            color: #ffffff;
           }
         }
       }
-      .close {
-        position: absolute;
-        display: block;
-        bottom: -50px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px;
-        font-size: 14px;
-        line-height: 14px;
-        border-radius: 50%;
-        border: 2px solid #ffffff;
-        .icon {
-          color: #ffffff;
+    }
+    &.popupEdit {
+      width: calc(~'100% - 50px');
+      height: calc(~'100% - 20px');
+      margin: 20px 25px 0;
+      overflow: hidden;
+      .popupEditBox {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        padding: 39px 31px 30px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        background-color: #ffffff;
+        p {
+          color: #666666;
+          &.title {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 16px;
+            line-height: 20px;
+          }
+        }
+        .inputContent {
+          width: 100%;
+          margin-top: 24px;
+          font-size: 15px;
+          color: #5d6574-light;
+          form {
+            .inputItem {
+              width: 100%;
+              height: 40px;
+              margin-bottom: 15px;
+            }
+            .userInput {
+              display: flex;
+              align-items: center;
+              border: 1px solid rgba(184, 188, 196, .5);
+              box-sizing: border-box;
+              border-radius: 4px;
+              overflow: hidden;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+              input {
+                border: 0;
+                padding: 0;
+                padding-left: 11px;
+                width: 100%;
+                height: 100%;
+                line-height: 100%;
+                font-size: 14px;
+                color: #5d6574;
+                outline: none;
+              }
+            }
+          }
+        }
+        .loginBtn {
+          width: 100%;
+          height: 42px;
+          border: 0;
+          margin-top: 11px;
+          border-radius: 4px;
+          font-size: 15px;
+          color: #fff;
+          outline: none;
+          background-color: #2c7dfa;
+        }
+        .close {
+          position: absolute;
+          display: block;
+          bottom: -50px;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 8px;
+          font-size: 14px;
+          line-height: 14px;
+          border-radius: 50%;
+          border: 2px solid #ffffff;
+          .icon {
+            color: #ffffff;
+          }
         }
       }
-    }
-    .block {
-      width: 100%;
-      height: 65px;
+      .block {
+        width: 100%;
+        height: 65px;
+      }
     }
   }
 }
