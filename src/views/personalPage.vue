@@ -105,7 +105,7 @@ export default {
   methods: {
     onTabItemClick(index) {
       this.$router.push({
-        path: this.pathMap[index],
+        name: this.pathMap[index],
         query: this.query,
       });
     },

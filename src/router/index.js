@@ -53,7 +53,7 @@ export default new Router({
       component: service,
     },
     {
-      path: '/detail/:id',
+      path: '/activity/:id',
       name: 'detail',
       component: detail,
     },
@@ -84,40 +84,41 @@ export default new Router({
       ],
     },
     {
-      path: '/personalPage',
-      name: 'personalPage',
+      path: '/usercenter',
+      name: 'usercenter',
       component: personalPage,
       children: [
         {
-          path: '/personalPage/',
-          redirect: '/personalPage/PPActivity',
+          path: '/usercenter/',
+          redirect: '/usercenter/activity',
         },
         {
-          path: 'PPActivity',
+          path: 'activity/:id?',
           component: PPActivity,
           name: 'PPActivity',
         },
         {
-          path: 'PPParticipate',
+          path: 'partake',
           component: PPParticipate,
           name: 'PPParticipate',
         },
         {
-          path: 'PPCollection',
+          path: 'collection',
           component: PPCollection,
           name: 'PPCollection',
         },
         {
-          path: 'PPFollow',
+          path: 'follow',
           component: PPFollow,
           name: 'PPFollow',
         },
         {
-          path: 'PPTrack',
+          path: 'dynamic',
           component: PPTrack,
           name: 'PPTrack',
         },
       ],
     },
   ],
+  base: '/web/',
 });

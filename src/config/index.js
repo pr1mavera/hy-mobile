@@ -7,11 +7,11 @@
 import ENV from './env';
 
 const production = {
-  publicPath: 'http://172.168.1.5:5081/api',
+  publicPath: 'http://huiyizhan.ourwill.cn:5081/api',
 };
 
 const development = {
-  publicPath: 'http://172.168.1.5:5081/api',
+  publicPath: 'http://huiyizhan.ourwill.cn:5081/api',
 };
 
 const location = ENV === 'production' ? production : development;
