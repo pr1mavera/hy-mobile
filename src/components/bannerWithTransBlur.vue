@@ -9,7 +9,7 @@
     <div class="title" :style="this.setTitleByScrollY" :class="{'textAlignLeft': this.scrollY > 0}">
       <!-- <h1 class="titleItem name">{{this.userProfile.nickname}}</h1> -->
       <!-- <p class="titleItem desc">这个人很烂，什么都没有留下...</p> -->
-      <h1 class="titleItem name">家居安静安静安静安静啊</h1>
+      <h1 class="titleItem name">{{this.userProfile.username}}</h1>
       <p class="titleItem desc">{{this.scrollY}}</p>
     </div>
     <x-button class="followBtn" v-if="this.$route.query.id">

@@ -383,7 +383,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
     height: 45px;
     width: 100%;
     background-color: transparent;
-    z-index: 999;
+    z-index: 499;
     position: absolute;
     &::after{
       content: '';

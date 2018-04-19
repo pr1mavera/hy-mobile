@@ -5,3 +5,5 @@ export const SET_ACTIVITY_ID = 'SET_ACTIVITY_ID';
 export const SET_TICKETS = 'SET_TICKETS';
 export const SET_SELTICKETS = 'SET_SELTICKETS';
 export const SET_QUERY = 'SET_QUERY';
+
+export const SET_FIRST_EDIT_DATA = 'SET_FIRST_EDIT_DATA';

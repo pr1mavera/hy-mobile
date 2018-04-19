@@ -1,28 +1,6 @@
 <template>
   <div id="personalPage">
-    <x-header
-    class="meetingHeader"
-    :left-options="titleOptions.left"
-    :right-options="titleOptions.right"
-    @on-click-back=""
-    @on-click-more=""
-    >
-      <div class="left" slot="left">
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-Seach"></use>
-        </svg>
-      </div>
-      <div class="title" slot="default">
-        <h1>会议站</h1>
-
-      </div>
-      <div class="right" slot="right">
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-caidan"></use>
-        </svg>
-      </div>
-
-    </x-header>
+    <meetingHeader :colorStyle="colorStyle"></meetingHeader>
     <div class="scrollWrapper" ref="scrollWrapper">
       <div class="mainContainer">
         <bannerWithTransBlur :userProfile="userProfile" :scrollY="scrollY"></bannerWithTransBlur>
@@ -57,16 +35,21 @@
 
 <script type="text/ecmascript-6">
 import { getProfile, getProfileById } from '@/server/index.js';
-import { XHeader, Tab, TabItem } from 'vux';
+import { Tab, TabItem } from 'vux';
 import { mapMutations, mapGetters } from 'vuex';
 import BScroll from 'better-scroll';
+import meetingHeader from '@/components/meetingHeader';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
 
 export default {
   name: 'personalPage',
   data() {
     return {
-      // XHeader
+      colorStyle: {
+        mainColor: '#ffffff',
+        minorColor: '#ffffff',
+        backgroundColor: 'transparent',
+      },
       titleOptions: {
         left: {
           showBack: false,
@@ -152,7 +135,7 @@ export default {
     }),
   },
   components: {
-    XHeader,
+    meetingHeader,
     Tab,
     TabItem,
     bannerWithTransBlur,

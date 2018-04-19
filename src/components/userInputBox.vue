@@ -4,7 +4,7 @@
       <li v-for="(ticket, index) in selectTicket" class="inputBoxItem" :key="index">
         <div class="boxTitle border-1px-b">{{index + 1}}.{{ticket.ticketName}}</div>
         <div class="boxContent">
-          <userInput-3 :titleSize="12"></userInput-3>
+          <userInput-3 :titleSize="12" :index="index" @userChangeEdit="userChangeEdit"></userInput-3>
         </div>
       </li>
     </ul>
@@ -22,6 +22,11 @@ export default {
   },
   computed: {
 
+  },
+  methods: {
+    userChangeEdit() {
+      this.$emit('userChangeEdit');
+    },
   },
   components: {
     userInput3,
