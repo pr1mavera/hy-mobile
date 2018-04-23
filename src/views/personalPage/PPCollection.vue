@@ -24,7 +24,7 @@
     </div>
     <div class="activityListView" v-if="currentShowActivityIndex === 1">
       <ul>
-        <li v-for="(activity, index) in activityNotPublish" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityIsOver" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
@@ -61,9 +61,12 @@ export default {
   },
   methods: {
     async getActivityList() {
-      const res = await getActivityMyWatch();
-      this.activityIsPublish = res.data;
-      if (res.code) {
+      const res1 = await getActivityMyWatch(1);
+      this.activityIsPublish = res1.data.list;
+      const res2 = await getActivityMyWatch(2);
+      this.activityIsOver = res2.data.list;
+      debugger;
+      if (res1.code === -1 || res2.code === -1) {
         console.log('error in getActivityList');
       }
     },
