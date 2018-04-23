@@ -370,7 +370,6 @@ export default {
       });
     },
     addWatchPerson() {
-      debugger;
       addWatch(this.tableData.userId).then((res) => {
         if (res && res.code === 0) {
           this.$vux.toast.text('关注成功', 'top');

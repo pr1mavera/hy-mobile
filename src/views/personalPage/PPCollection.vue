@@ -8,23 +8,23 @@
       active-color="#2c7dfa"
       >
         <tab-item selected @on-item-click="onTabItemClick">
-          发布中({{activityIsPublish.length}})
+          发布中({{activityIsPublish.list.length}})
         </tab-item>
         <tab-item @on-item-click="onTabItemClick">
-          已结束({{activityIsOver.length}})
+          已结束({{activityIsOver.list.length}})
         </tab-item>
       </tab>
     </div>
     <div class="activityListView" v-if="currentShowActivityIndex === 0">
       <ul>
-        <li v-for="(activity, index) in activityIsPublish" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityIsPublish.list" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
     </div>
     <div class="activityListView" v-if="currentShowActivityIndex === 1">
       <ul>
-        <li v-for="(activity, index) in activityIsOver" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityIsOver.list" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
@@ -50,7 +50,6 @@ export default {
     };
   },
   mounted() {
-    // this.setId(this.$route.params.id);
     this.getActivityList();
   },
   computed: {
@@ -62,11 +61,10 @@ export default {
   methods: {
     async getActivityList() {
       const res1 = await getActivityMyWatch(1);
-      this.activityIsPublish = res1.data.list;
+      this.activityIsPublish = res1.data;
       const res2 = await getActivityMyWatch(2);
-      this.activityIsOver = res2.data.list;
-      debugger;
-      if (res1.code === -1 || res2.code === -1) {
+      this.activityIsOver = res2.data;
+      if (res1.code !== 0 || res2.code !== 0) {
         console.log('error in getActivityList');
       }
     },
@@ -108,6 +106,8 @@ export default {
   .activityListView {
     ul > .activityListLi {
       margin-bottom: 5px;
+      padding: 14px 20px;
+      background-color: #ffffff;
       list-style-type:none;
     }
   }

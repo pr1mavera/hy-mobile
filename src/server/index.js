@@ -32,8 +32,10 @@ export const getFanList = query => http.get(`/watchPeople/fans`, null, { params:
 export const getActivityList = status => http.get(`/activity/issue/${status}`);
 // 根据主办方获取已结束会议列表(不分页)(未发布/发布中)
 export const getActivityListIsOver = () => http.get('/activity/issueOver');
-// 根据主办方获取参与的会议
+// 根据主办方获取参与的会议(购票)
 export const getActivityMyJoin = () => http.get('/activity/myJoin');
+// 根据状态获取当前登录人参与的会议的 票的信息（有效票—已失效）
+export const getActivityWithStatus = status => http.get(`/ticketsRecord/participation/${status}`);
 
 // 个人中心获取关注人动态 会议
 export const getDynamicOfMeeting = (query) => http.get('/watch/dynamic', null, { params: query});
@@ -41,7 +43,7 @@ export const getDynamicOfMeeting = (query) => http.get('/watch/dynamic', null, {
 // 个人中心获取关注人动态 人
 export const getDynamicOfPerson = (query) => http.get('/watchPeople/dynamic', null, { params: query});
 // 根据主办方获取收藏的会议
-export const getActivityMyWatch = (status) => http.get(`/watch/${status}`);
+export const getActivityMyWatch = status => http.get(`/watch/${status}`);
 
 // 添加关注
 export const addWatch = (id) => http.post(`/watchPeople/${id}`);
