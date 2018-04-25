@@ -21,6 +21,8 @@ import PPTrack from '@/views/personalPage/PPTrack';
 
 import TCKIndex from '@/views/TCKIndex';
 
+import search from '@/views/searchPage';
+
 import service from '@/views/service';
 // const pathToRegexp = require('path-to-regexp');
 
@@ -46,6 +48,11 @@ export default new Router({
       path: '/activity',
       name: 'activity',
       component: activity,
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: search,
     },
     {
       path: '/service',

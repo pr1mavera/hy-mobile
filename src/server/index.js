@@ -13,6 +13,9 @@ export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 // 根据会议id获取门票
 export const getTicketsByActivityId = activityId => http.get(`/activityTickets/activity/${activityId}`);
 
+// 会议搜索
+export const getSearchList = (data) => http.post('/search/activity/conditionalQuery', null, null, {params :  data });
+
 // 获取用户基本信息
 export const getProfile = () => http.get('/user');
 // 根据id获取用户基本信息
