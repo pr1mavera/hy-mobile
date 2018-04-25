@@ -5,8 +5,15 @@
 </template>
 
 <script>
+import wxConfig from './config/wechat';
+
 export default {
   name: 'app',
+  watch: {
+    $route() {
+      wxConfig();
+    },
+  },
 };
 </script>
 
@@ -27,5 +34,11 @@ body {
 html, body, #app {
   height: 100%;
   -webkit-overflow-scrolling: touch;
+}
+img{
+  vertical-align: middle;
+}
+ul{
+  list-style: none;
 }
 </style>

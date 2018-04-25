@@ -57,3 +57,13 @@ export const addWatchCollect = (meetingId) => http.post(`/watch/${meetingId}`);
 
 // 取消会议收藏
 export const removeWatchCollect = (meetingId) =>http.delete(`/watch/${meetingId}`);
+// 获取验票签到成功列表
+export const signedRecord = (activityId) =>http.get(`/ticketsRecord/signedRecord/${activityId}`);
+// 获取签到信息
+export const signedInfo = (activityId, code) =>http.get(`/ticketsRecord/${activityId}/code/${code}`);
+// 确认签到
+export const confirmSign = (activityId, ticketId) =>http.post(`/ticketsRecord/${ticketId}/signIn/${activityId}`);
+
+// 获取微信签名
+export const wxConfig = url => http.get(`/wxConfig?url=${url}`);
+
