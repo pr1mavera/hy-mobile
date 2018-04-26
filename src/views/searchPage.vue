@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="searchPage">
       <div class="search-header">
         <button class="back" @click="goback()">
           <svg class="icon" aria-hidden="true">
@@ -62,7 +62,7 @@ export default {
 <style lang="less">
 @import '~vux/src/styles/1px.less';
 
-.search {
+.searchPage {
   background-color: #ffffff;
   min-height: 100vh;
   .search-header{
