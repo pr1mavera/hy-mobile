@@ -10,7 +10,7 @@
           <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-sousuo"></use>
           </svg>
-          <input type="text" v-model="searchVal" placeholder="搜索活动关键字">
+          <input ref='input' type="text" v-model="searchVal" placeholder="搜索活动关键字">
         </div>
         <button class="searchButton" :class="{'active':searchVal!='' }" @click="getList()">搜索</button>
       </div>
@@ -34,6 +34,7 @@ export default {
     };
   },
   mounted() {
+    this.$refs.input.focus();
   },
   methods: {
     async getList() {

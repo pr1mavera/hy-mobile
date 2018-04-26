@@ -130,7 +130,8 @@
               v-model="searchVal"
               type="text"
               placeholder="搜索会议关键字"
-              @on-change="changeHandler"
+              @focus="changeHandler"
+
             >
               <div >
               </div>
@@ -176,7 +177,9 @@ export default {
   },
   methods: {
     changeHandler() {
-
+      this.$router.push({
+        name: 'search',
+      });
     },
   },
 };

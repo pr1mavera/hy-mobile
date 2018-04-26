@@ -15,6 +15,7 @@ FastClick.attach(document.body); // 这儿是移动端消除300
 
 Vue.config.productionTip = false;
 
+
 /* eslint-disable no-new */
 new Vue({
   router,
