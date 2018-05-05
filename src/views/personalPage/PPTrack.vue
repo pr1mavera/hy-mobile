@@ -186,7 +186,9 @@ export default {
   },
   filters: {
     timeApart(value = '') {
-      const occur = new Date(value.replace(/-/g, '/')).getTime();
+      // eslint-disable-next-line
+      const val = value ? value : '';
+      const occur = new Date(val.replace(/-/g, '/')).getTime();
       const now = new Date().getTime();
       const dis = now - occur;
       let temp = '';

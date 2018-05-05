@@ -159,7 +159,10 @@ export default {
       return formatDate(temp, 'yyyy.MM.dd hh:mm');
     },
     adressFormat(value = '{}') {
-      let temp = JSON.parse(value);
+      const json1 = value.replace(/'/g, '"');
+      const json2 = json1.replace(/^"/, "'");
+      const json3 = json2.replace(/"$/, "'");
+      let temp = JSON.parse(json3);
       temp = Object.values(temp);
       temp = temp.join('');
       return temp;

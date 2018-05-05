@@ -9,20 +9,20 @@ Vue.http.defaults.withCredentials = true;
 const host = conf.publicPath;
 // const host = '//m.anjuke.com/live';
 
-Vue.http.interceptors.response.use((data) => {
-  debugger;
-  if (data.data.code && data.data.code !== 0) {
-    this.$vux.toast.text(data.data.msg, 'top');
-  }
-}, (error) => {
-  debugger;
-  if (error.response.status === 401) {
-    const paramsString = encodeURI(window.location.href);
-    window.location.href = `${error.response.data.loginUrl}?service=${paramsString}`;
-    this.$vux.toast.text(error.response.data.msg, 'top');
-  }
-  return Promise.reject(error);
-});
+// Vue.http.interceptors.response.use((data) => {
+//   debugger;
+//   if (data.data.code && data.data.code !== 0) {
+//     this.$vux.toast.text(data.data.msg, 'top');
+//   }
+// }, (error) => {
+//   debugger;
+//   if (error.response.status === 401) {
+//     const paramsString = encodeURI(window.location.href);
+//     window.location.href = `${error.response.data.loginUrl}?service=${paramsString}`;
+//     this.$vux.toast.text(error.response.data.msg, 'top');
+//   }
+//   return Promise.reject(error);
+// });
 
 export default {
   post: (url, data, error, option) =>

@@ -44,8 +44,12 @@ import activityList from '@/components/activityList';
 export default {
   data() {
     return {
-      activityIsPublish: [],
-      activityIsOver: [],
+      activityIsPublish: {
+        list: [],
+      },
+      activityIsOver: {
+        list: [],
+      },
       currentShowActivityIndex: 0,
     };
   },
