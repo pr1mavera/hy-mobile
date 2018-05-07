@@ -27,6 +27,7 @@ import service from '@/views/service';
 
 import ticketActivity from '@/views/ticketsRecord/activityList';
 import record from '@/views/ticketsRecord/record';
+
 // const pathToRegexp = require('path-to-regexp');
 
 // const re = pathToRegexp('/personalPage/:id*');
@@ -40,7 +41,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: home,
+      component: home, // 主页
     },
     {
       path: '/TCKIndex',
@@ -48,17 +49,17 @@ export default new Router({
       component: TCKIndex,
     },
     {
-      path: '/activity',
+      path: '/activity', // 活动
       name: 'activity',
       component: activity,
     },
     {
-      path: '/search',
+      path: '/search', // 搜索
       name: 'search',
       component: search,
     },
     {
-      path: '/service',
+      path: '/service', // 服务
       name: 'service',
       component: service,
     },

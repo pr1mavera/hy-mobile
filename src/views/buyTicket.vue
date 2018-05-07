@@ -119,6 +119,7 @@ export default {
       });
       this.setQuery(query);
     },
+    // 根据id添加相应的cont字段表示已经选择的门票个数
     countChangeWithId(id, val) { // 响应子组件事件方法
       const tickets = this.tickets.map((item) => {
         if (item.id === id) {
