@@ -55,6 +55,7 @@ export default {
   },
   mounted() {
     this.getActivityList();
+    this.getActivityListNew();
   },
   computed: {
     ...mapGetters([
@@ -63,11 +64,16 @@ export default {
     ]),
   },
   methods: {
+    getActivityListNew() {
+      
+    },
     async getActivityList() {
       const res1 = await getActivityMyWatch(1);
       this.activityIsPublish = res1.data;
       const res2 = await getActivityMyWatch(2);
-      this.activityIsOver = res2.data;
+      getActivityMyWatch('2?page=0').then((res) => {
+        this.activityIsOver.list = res.data;
+      });
       if (res1.code !== 0 || res2.code !== 0) {
         console.log('error in getActivityList');
       }
