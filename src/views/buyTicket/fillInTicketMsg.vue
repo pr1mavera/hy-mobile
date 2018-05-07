@@ -13,16 +13,16 @@
         <div class="userInputBuyer">
           <form method="post">
             <div class="inputItem">
-              <label class="title">姓名<i>*</i></label>
-              <input class="input input-hook" type="text" name="name" v-on:input="nameInput" id="firstFocus">
+              <label class="title">姓名<i>*</i><span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span></label>
+              <input class="input input-hook" type="text" name="name" v-on:input="nameInput" id="firstFocus" autocomplete='name'>
             </div>
             <div class="inputItem">
-              <label class="title">电话<i>*</i></label>
-              <input class="input input-hook" type="text" name="phone" v-on:input="phoneInput">
+              <label class="title">电话<i>*</i><span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span></label>
+              <input class="input input-hook" type="text" name="phone" v-on:input="phoneInput" autocomplete='tel-national'>
             </div>
             <div class="inputItem">
-              <label class="title">邮箱<i>*</i></label>
-              <input class="input input-hook" type="text" name="email" v-on:input="emailInput">
+              <label class="title">邮箱<i>*</i><span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span></label>
+              <input class="input input-hook" type="text" name="email" v-on:input="emailInput" autocomplete='email'>
             </div>
           </form>
         </div>
@@ -45,6 +45,11 @@ export default {
     return {
       BuyerFirstFocus: true,
       BuyerFirstEdit: true,
+      user: {
+        nameInfo: false,
+        phoneInfo: false,
+        emailInfo: false,
+      },
     };
   },
   created() {
@@ -91,8 +96,14 @@ export default {
         const inputItem = document.getElementsByClassName('input-hook');
         const editData = this.copy(this.firstEditData);
         editData.name = inputItem[0].value;
-        this.setFirstEditData(editData);
-        console.log('修改编辑name');
+        // 姓名不能为空
+        const userName = editData.name.replace(/\s+/g, '');
+        if (userName !== '') {
+          this.user.nameInfo = false;
+          this.setFirstEditData(editData);
+        } else {
+          this.user.nameInfo = true;
+        }
       }
     },
     phoneInput() {
@@ -100,8 +111,16 @@ export default {
         const inputItem = document.getElementsByClassName('input-hook');
         const editData = this.copy(this.firstEditData);
         editData.phone = inputItem[1].value;
-        this.setFirstEditData(editData);
-        console.log('修改编辑phone');
+        // 电话号码
+        const phoneNum = editData.phone.replace(/\s+/g, '');
+        const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+        if (phoneNum !== '' && editData.phone.match(regNum)) {
+          this.user.phoneInfo = false;
+          this.setFirstEditData(editData);
+        } else {
+          this.user.phoneInfo = true;
+        }
+        // console.log('修改编辑phone');
       }
     },
     emailInput() {
@@ -109,8 +128,16 @@ export default {
         const inputItem = document.getElementsByClassName('input-hook');
         const editData = this.copy(this.firstEditData);
         editData.email = inputItem[2].value;
-        this.setFirstEditData(editData);
-        console.log('修改编辑email');
+        // 邮箱
+        const userEmail = editData.email.replace(/\s+/g, '');
+        const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+        if (userEmail !== '' && editData.email.match(regEmail)) {
+          this.user.emailInfo = false;
+          this.setFirstEditData(editData);
+        } else {
+          this.user.emailInfo = true;
+        }
+        // console.log('修改编辑email');
       }
     },
     ...mapMutations({
@@ -159,6 +186,12 @@ export default {
           color: @text-color;
           i {
             color: #ff584e;
+          }
+          .info-msg{
+            display:inline-block;
+            color:red;
+            font-size:0.6rem;
+            padding-left:10px;
           }
         }
         .input {
