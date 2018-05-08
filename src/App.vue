@@ -9,6 +9,9 @@ import wxConfig from './config/wechat';
 
 export default {
   name: 'app',
+  created() {
+    wxConfig();
+  },
   watch: {
     $route() {
       wxConfig();

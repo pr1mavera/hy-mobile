@@ -12,12 +12,12 @@
       <li v-if='sigedList.length === 0'><divider>暂无信息</divider></li>
     </ul>
     <div class="btn_group">
-      <XButton @click='openScanQRCode'>扫码验票</XButton>
-      <XButton>签到码验票</XButton>
+      <XButton @click.native='openScanQRCode'>扫码验票</XButton>
+      <XButton @click.native='ticketInput=true;focus=1'>签到码验票</XButton>
     </div>
     <confirm
     v-model='ticketSucess'
-    title='2019w我的那科技卡到我空间大打的'
+    :title='ticketInfo.activity.activityTitle'
     confirm-text='确认签到'
     @on-confirm='confirmSign'
     >
@@ -25,23 +25,23 @@
       <div class="base_info_wrap">
         <div class="info_item">
           <label>姓名</label>
-          <span>接志蒙</span>
+          <span>{{ticketInfo.confereeName}}</span>
         </div>
         <div class="info_item">
           <label>电话</label>
-          <span>158012934014</span>
+          <span>{{ticketInfo.confereePhone}}</span>
         </div>
       </div>
       <div class="info_item">
         <label>邮箱</label>
-        <span>158012934014@qq.com</span>
+        <span>{{ticketInfo.confereeEmail}}</span>
       </div>
       <divider>详情</divider>
       <div>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-shijian"></use>
         </svg>
-        10月12日 10:00-10月13日 12:00
+        {{ticketInfo.activity.startTime}}
       </div>
       <div>
         <svg class="icon" aria-hidden="true">
@@ -51,11 +51,22 @@
       </div>
     </div>
     </confirm>
+     <confirm
+    v-model='ticketInput'
+    title='请输入签到码'
+    confirm-text='确认'
+    @on-confirm='checkSignIn(ticketNum)'
+    :close-on-confirm='false'
+    >
+    <group>
+      <x-input v-model='ticketNum' placeholder='请输入签到码' :focus='focus === 1'></x-input>
+    </group>  
+    </confirm>
   </div>
 </template>
 
 <script>
-import { XButton, Confirm, Divider } from 'vux';
+import { XButton, Confirm, Divider, XInput, Group } from 'vux';
 import { signedRecord, signedInfo, confirmSign } from '@/server';
 import defaultAvatar from '@/assets/vux_logo.png';
 
@@ -63,9 +74,12 @@ export default {
   data() {
     return {
       defaultAvatar,
+      focus: 0,
+      ticketInput: false,
       ticketSucess: false,
+      ticketNum: '',
       sigedList: [],
-      ticketInfo: {},
+      ticketInfo: { activity: {} },
       activityId: this.$route.params.id,
     };
   },
@@ -92,30 +106,39 @@ export default {
         }
       });
     },
+    checkSignIn(code) {
+      if (!code) {
+        this.$vux.toast.text('请填写正确签到码');
+      } else {
+        signedInfo(this.activityId, code).then((ticketInfo) => {
+          if (ticketInfo.code !== 0) {
+            this.$vux.alert.show({
+              title: '验票失败',
+              content: '失败可能原因：过期票、无效票、非本场活动门票、签到码输入有误，或网络异常，请重试验票！',
+              buttonText: '知道了',
+            });
+          } else {
+            const address = JSON.parse(ticketInfo.data.activity.activityAddress);
+            this.ticketInfo = ticketInfo.data;
+            this.ticketInfo.activity.address = address.province + address.city + address.address;
+            this.ticketSucess = true;
+          }
+        });
+      }
+    },
     openScanQRCode() {
       this.$wechat.scanQRCode({
         needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
         scanType: ['qrCode'], // 可以指定扫二维码还是一维码，默认二者都有
         success: (res) => {
           const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-          signedInfo(this.activityId, result).then((ticketInfo) => {
-            if (ticketInfo.code !== 0) {
-              this.$vux.alert.show({
-                title: '验票失败',
-                content: '失败可能原因：过期票、无效票、非本场活动门票、签到码输入有误，或网络异常，请重试验票！',
-                buttonText: '知道了',
-              });
-            } else {
-              this.ticketInfo = ticketInfo.data;
-              this.ticketSucess = true;
-            }
-          });
+          this.checkSignIn(result);
         },
       });
     },
   },
   components: {
-    XButton, Confirm, Divider,
+    XButton, Confirm, Divider, XInput, Group,
   },
   filter: {
     ticketStatus(source) {
@@ -205,6 +228,12 @@ export default {
         font-size: 18px;
       }
     }
+  }
+  .vux-x-input{
+    border: 1px solid #c0c0c0;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 14px;
   }
 }
 

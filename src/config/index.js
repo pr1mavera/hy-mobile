@@ -7,7 +7,7 @@
 import ENV from './env';
 
 const production = {
-  publicPath: 'http://huiyizhan.ourwill.cn/api',
+  publicPath: '/api',
 };
 
 const development = {

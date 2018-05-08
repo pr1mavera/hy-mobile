@@ -2,11 +2,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import FastClick from 'fastclick';
-import { AlertPlugin, ToastPlugin, ConfirmPlugin } from 'vux';
+import { WechatPlugin, AlertPlugin, ToastPlugin, ConfirmPlugin } from 'vux';
 import router from './router/index';
 import App from './App';
 import storeConfig from './store/index';
 
+Vue.use(WechatPlugin);
 Vue.use(AlertPlugin);
 Vue.use(ToastPlugin);
 Vue.use(ConfirmPlugin);
