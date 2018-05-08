@@ -65,7 +65,6 @@ export default {
   },
   methods: {
     getActivityListNew() {
-      
     },
     async getActivityList() {
       const res1 = await getActivityMyWatch(1);
