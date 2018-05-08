@@ -3,7 +3,7 @@
     <meetingHeader :colorStyle="colorStyle"></meetingHeader>
     <div class="scrollWrapper" ref="scrollWrapper">
       <div class="mainContainer">
-        <bannerWithTransBlur :userProfile="userProfile" :scrollY="scrollY"></bannerWithTransBlur>
+        <bannerWithTransBlur :userProfile="userProfile" :isCurrentUser="isCurrentUser"></bannerWithTransBlur>
         <tab
         class="tab"
         :line-width="2"
@@ -12,13 +12,13 @@
         bar-active-color="#2c7dfa"
         custom-bar-width="28px"
         >
-          <tab-item @on-item-click="onTabItemClick" selected>活动</tab-item>
-          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">参与</tab-item>
-          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">收藏</tab-item>
-          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">关注</tab-item>
-          <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">动态</tab-item>
+          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick">活动</tab-item>
+          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
+          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
+          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
+          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
         </tab>
-        <div class="routerBody clearfix" :style="`min-height: ${this.routerBodyMinHeight}px;`">
+        <div class="routerBody clearfix">
           <keep-alive>
             <router-view class="routerView"></router-view>
           </keep-alive>
@@ -34,10 +34,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { getProfile, getProfileById } from '@/server/index.js';
+import { getProfileById } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
-import { mapMutations, mapGetters } from 'vuex';
-import BScroll from 'better-scroll';
+import { mapGetters } from 'vuex';
 import meetingHeader from '@/components/meetingHeader';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
 
@@ -66,73 +65,61 @@ export default {
         filter: 'blur(1.2px)',
         transition: 'all .3s linear',
       },
-      pathMap: ['PPActivity', 'PPParticipate', 'PPCollection', 'PPFollow', 'PPTrack'],
-      userProfile: {},
+      pathMap: ['PPActivity', 'PPPartake', 'PPCollection', 'PPFollow', 'PPDynamic'],
+      userProfile: {
+        userStatistics: {},
+      },
       scrollY: 0,
-      routerBodyMinHeight: 0,
       nearNode: false,
     };
   },
   mounted() {
     this.getUserProfile();
-    this.setIDInQuery();
-    this.initScroll();
-    this.calculateHeight();
+    // this.setIDInQuery();
+  },
+  created() {
+    this.$nextTick(() => {
+      this.resetNavSelected();
+    });
   },
   computed: {
+    isCurrentUser() {
+      // eslint-disable-next-line
+      return Number(this.$route.params.id) === this.id ? true : false;
+    },
     ...mapGetters([
       'id',
-      'query',
     ]),
   },
   methods: {
     onTabItemClick(index) {
       this.$router.push({
         name: this.pathMap[index],
-        query: this.query,
+        params: {
+          id: this.$route.params.id,
+        },
       });
     },
-    setIDInQuery() {
-      if (this.$route.query.id) {
-        const reg = new RegExp('(^|&)id=([^&]*)');
-        const r = window.location.search.substr(1).match(reg);
-        this.setIdInQuery(r ? { id: decodeURIComponent(r[2]) } : {});
-      }
+    // setIDInQuery() {
+    //   if (this.$route.query.id) {
+    //     const reg = new RegExp('(^|&)id=([^&]*)');
+    //     const r = window.location.search.substr(1).match(reg);
+    //     this.setIdInQuery(r ? { id: decodeURIComponent(r[2]) } : {});
+    //   }
+    // },
+    resetNavSelected() {
+      const i = this.pathMap.indexOf(this.$route.name);
+      console.log(i);
+      document.getElementsByClassName('userCenterNavItem')[i].click();
     },
     async getUserProfile() {
       // eslint-disable-next-line
-      const res = this.$route.query.id ? await getProfileById(Number(this.$route.query.id)) : await getProfile();
+      const res = this.$route.params.id ? await getProfileById(Number(this.$route.params.id)) : await getProfileById(this.id);
       this.userProfile = res.data;
       if (res.code !== 0) {
         console.log('error in getUserProfile');
       }
     },
-    initScroll() {
-      this.scrollWrapper = new BScroll(this.$refs.scrollWrapper, {
-        bounce: true,
-        probeType: 3,
-        momentum: false,
-        // click: true,
-      });
-      this.scrollWrapper.on('scroll', (pos) => {
-        this.scrollY = -Math.round(pos.y);
-        // console.log(`当前滚动位置：${this.scrollY}`);
-      });
-      this.scrollWrapper.on('touchEnd', (pos) => {
-        this.scrollY = -Math.round(pos.y);
-        if (this.scrollY >= 20 && this.scrollY <= 110) {
-          this.scrollWrapper.scrollTo(0, -50, 400);
-        }
-      });
-    },
-    calculateHeight() {
-      const bannerH = document.getElementsByClassName('bannerWithTransBlur')[0].clientHeight;
-      const windowH = document.documentElement.clientHeight;
-      this.routerBodyMinHeight = windowH - bannerH - 44;
-    },
-    ...mapMutations({
-      setIdInQuery: 'SET_QUERY',
-    }),
   },
   components: {
     meetingHeader,
@@ -200,9 +187,11 @@ html, body, #app, #personalPage {
     top: 0;
     bottom: 0;
     width: 100%;
+    height: 100%;
     overflow: hidden;
     .mainContainer {
       overflow: scroll;
+      height: 100%;
       -webkit-overflow-scrolling: touch;
       .tab {
         .vux-tab-container {
@@ -219,6 +208,7 @@ html, body, #app, #personalPage {
       .routerBody {
         width: 100%;
         height: auto;
+        min-height: calc(~'100% - 330px');
         background-color: #f4f7fa;
         .routerView {
           padding-bottom: 90px;

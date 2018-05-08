@@ -12,12 +12,12 @@ import selectTicket from '@/views/buyTicket/selectTicket';
 import fillInTicketMsg from '@/views/buyTicket/fillInTicketMsg';
 import success from '@/views/buyTicket/success';
 
-import personalPage from '@/views/personalPage';
+import usercenter from '@/views/usercenter';
 import PPActivity from '@/views/personalPage/PPActivity';
-import PPParticipate from '@/views/personalPage/PPParticipate';
+import PPPartake from '@/views/personalPage/PPPartake';
 import PPCollection from '@/views/personalPage/PPCollection';
 import PPFollow from '@/views/personalPage/PPFollow';
-import PPTrack from '@/views/personalPage/PPTrack';
+import PPDynamic from '@/views/personalPage/PPDynamic';
 
 import TCKIndex from '@/views/TCKIndex';
 
@@ -86,7 +86,7 @@ export default new Router({
     {
       path: '/usercenter',
       name: 'usercenter',
-      component: personalPage,
+      component: usercenter,
       children: [
         {
           path: '/usercenter/',
@@ -98,24 +98,24 @@ export default new Router({
           name: 'PPActivity',
         },
         {
-          path: 'partake',
-          component: PPParticipate,
-          name: 'PPParticipate',
+          path: 'partake/:id?',
+          component: PPPartake,
+          name: 'PPPartake',
         },
         {
-          path: 'collection',
+          path: 'collection/:id?',
           component: PPCollection,
           name: 'PPCollection',
         },
         {
-          path: 'follow',
+          path: 'follow/:id?',
           component: PPFollow,
           name: 'PPFollow',
         },
         {
-          path: 'dynamic',
-          component: PPTrack,
-          name: 'PPTrack',
+          path: 'dynamic/:id?',
+          component: PPDynamic,
+          name: 'PPDynamic',
         },
       ],
     },

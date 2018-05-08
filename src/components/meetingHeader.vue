@@ -58,30 +58,30 @@
               <div class="line"></div>
             </div>
             <div class="list">
-              <div>
+              <a href="#" @click="clickToRouteByPathName('PPActivity')">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodehuiyi"></use>
                 </svg>
                 <span>我的会议</span>
-              </div>
-              <div>
+              </a>
+              <a href="#" @click="clickToRouteByPathName('PPPartake')">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodemenpiao"></use>
                 </svg>
                 <span>我的门票</span>
-              </div>
-              <div>
+              </a>
+              <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-guanlihoutai"></use>
                 </svg>
                 <span>管理后台</span>
-              </div>
-              <div>
+              </a>
+              <a href="#">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
                 <span>退出登录</span>
-              </div>
+              </a>
 
             </div>
           </div>
@@ -175,8 +175,11 @@ export default {
     XButton,
   },
   methods: {
-    changeHandler() {
-
+    changeHandler() {},
+    clickToRouteByPathName(name) {
+      this.$router.push({
+        name,
+      });
     },
   },
 };
@@ -288,10 +291,11 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
       }
       .list{
         margin-top: 20px;
-        &>div{
+        &>a{
+          display: block;
           height: 45px;
+          line-height: 45px;
           color:#5d6574;
-
         }
       }
     }
