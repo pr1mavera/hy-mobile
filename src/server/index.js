@@ -13,6 +13,9 @@ export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 // 根据会议id获取门票
 export const getTicketsByActivityId = activityId => http.get(`/activityTickets/activity/${activityId}`);
 
+// 会议搜索
+export const getSearchList = (data) => http.post('/search/activity/conditionalQuery', null, null, {params :  data });
+
 // 获取用户基本信息
 export const getProfile = () => http.get('/user');
 // 根据id获取用户基本信息
@@ -59,3 +62,13 @@ export const addWatchCollect = (meetingId) => http.post(`/watch/${meetingId}`);
 
 // 取消会议收藏
 export const removeWatchCollect = (meetingId) =>http.delete(`/watch/${meetingId}`);
+// 获取验票签到成功列表
+export const signedRecord = (activityId) =>http.get(`/ticketsRecord/signedRecord/${activityId}`);
+// 获取签到信息
+export const signedInfo = (activityId, code) =>http.get(`/ticketsRecord/${activityId}/code/${code}`);
+// 确认签到
+export const confirmSign = (activityId, ticketId) =>http.post(`/ticketsRecord/${ticketId}/signIn/${activityId}`);
+
+// 获取微信签名
+export const wxConfig = url => http.get(`/wxConfig?url=${url}`);
+

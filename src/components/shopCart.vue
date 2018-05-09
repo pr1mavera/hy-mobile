@@ -27,6 +27,7 @@ export default {
     ...mapGetters([
       'selTickets',
       'query',
+      'firstEditData',
     ]),
     totalPrice() { // 计算所选商品总价格
       let total = 0;
@@ -35,7 +36,7 @@ export default {
       });
       return total;
     },
-    totalCount() { // 计算所选商品总数
+    totalCount() { // 计算所选商品总数(传递给父组件)
       let count = 0;
       this.selTickets.forEach((ticket) => {
         count += ticket.count;
@@ -53,12 +54,52 @@ export default {
   },
   methods: {
     clickToNextRoute() {
-      // console.log(this.$route.name);
-      const nextRoute = this.$route.name === 'selectTicket' ? 'fillInTicketMsg' : 'success';
-      this.$router.push({
-        path: nextRoute,
-        query: this.query,
-      });
+      // const nextRoute = this.$route.name === 'selectTicket' ? 'fillInTicketMsg' : 'success';
+      // 跳转的时候添加判断
+      if (this.$route.name === 'selectTicket') {
+        // 判断是否选票
+        if (this.totalCount >= 1) {
+          this.$router.push({
+            path: 'fillInTicketMsg',
+            query: this.query,
+          });
+        } else {
+          console.log('请先选择门票');
+          this.$vux.alert.show({
+            title: '警告',
+            content: '请先选择门票！',
+            buttonText: '知道了',
+          });
+        }
+      } else if (this.$route.name === 'fillInTicketMsg') {
+        // 判断是否填写个人信息
+        if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '') {
+          this.$router.push({
+            path: 'success',
+            query: this.query,
+          });
+        } else {
+          this.$vux.alert.show({
+            title: '警告',
+            content: '请先完善个人信息',
+            buttonText: '知道了',
+          });
+        }
+      } else if (this.$route.name === 'success') {
+        // if (false) {
+        //   // 未审核
+        //   console.log('存在未选择的票');
+        // } else {
+        //   this.$router.push({
+        //     path: 'selectTicket',
+        //     query: this.query,
+        //   });
+        // }
+      }
+      // this.$router.push({
+      //   path: nextRoute,
+      //   query: this.query,
+      // });
     },
   },
 };

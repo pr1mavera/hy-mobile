@@ -2,12 +2,12 @@
 * @Author: 15620
 * @Date:   2018-01-15 15:25:00
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-03-28 16:53:28
+ * @Last Modified time: 2018-04-25 20:16:25
 */
 import ENV from './env';
 
 const production = {
-  publicPath: 'http://huiyizhan.ourwill.cn/api',
+  publicPath: '/api',
 };
 
 const development = {

@@ -21,7 +21,12 @@ import PPDynamic from '@/views/personalPage/PPDynamic';
 
 import TCKIndex from '@/views/TCKIndex';
 
+import search from '@/views/searchPage';
+
 import service from '@/views/service';
+
+import ticketActivity from '@/views/ticketsRecord/activityList';
+import record from '@/views/ticketsRecord/record';
 // const pathToRegexp = require('path-to-regexp');
 
 // const re = pathToRegexp('/personalPage/:id*');
@@ -48,6 +53,11 @@ export default new Router({
       component: activity,
     },
     {
+      path: '/search',
+      name: 'search',
+      component: search,
+    },
+    {
       path: '/service',
       name: 'service',
       component: service,
@@ -56,6 +66,16 @@ export default new Router({
       path: '/activity/:id',
       name: 'detail',
       component: detail,
+    },
+    {
+      path: '/ticketActivity',
+      name: 'buyTicket',
+      component: ticketActivity,
+    },
+    {
+      path: '/record/:id',
+      name: 'record',
+      component: record,
     },
     {
       path: '/buyTicket/:activityId',

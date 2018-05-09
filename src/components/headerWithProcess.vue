@@ -6,11 +6,13 @@
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <router-link tag="span" class="processItem" :to="{ path: 'fillInTicketMsg', name: 'fillInTicketMsg', query: this.query ? this.query : {}}">填写信息</router-link>
+      <!-- <router-link tag="span" class="processItem" :to="{ path: 'fillInTicketMsg', name: 'fillInTicketMsg', query: this.query ? this.query : {}}">填写信息</router-link> -->
+      <span tag="span" class="processItem" @click="toMsgFn">填写信息</span>
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-you2"></use>
       </svg>
-      <router-link tag="span" class="processItem" :to="{ path: 'success', name: 'success'}">购买成功</router-link>
+      <!-- <router-link tag="span" class="processItem" :to="{ path: 'success', name: 'success'}">购买成功</router-link> -->
+      <span tag="span" class="processItem" @click='toSuccessFn'>购买成功</span>
     </div>
   </div>
 </template>
@@ -23,13 +25,58 @@ export default {
     ...mapGetters([
       'activityId',
       'query',
+      'selTickets',
+      'firstEditData',
     ]),
     ticketTitle() {
       return this.title;
     },
+    totalCount() { // 计算所选商品总数(传递给父组件)
+      let count = 0;
+      this.selTickets.forEach((ticket) => {
+        count += ticket.count;
+      });
+      return count;
+    },
   },
   methods: {
-
+    // 判断是否选择门票之后跳转
+    toMsgFn() {
+      if (this.totalCount >= 1) {
+        this.$router.push({
+          path: 'fillInTicketMsg',
+          query: this.query,
+        });
+      } else {
+        console.log('请先选择门票');
+        this.$vux.alert.show({
+          title: '警告',
+          content: '请先选择门票！',
+          buttonText: '知道了',
+        });
+      }
+    },
+    // 判断个人信息是否完善之后跳转
+    toSuccessFn() {
+      if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '') {
+        this.$router.push({
+          path: 'success',
+          query: this.query,
+        });
+      } else if (this.$route.name === 'selectTicket') {
+        this.$vux.alert.show({
+          title: '警告',
+          content: '请先选择门票！',
+          buttonText: '知道了',
+        });
+      } else if (this.$route.name === 'fillInTicketMsg') {
+        this.$vux.alert.show({
+          title: '警告',
+          content: '请先完善个人信息！',
+          buttonText: '知道了',
+        });
+      }
+    },
   },
 };
 </script>
