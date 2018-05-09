@@ -154,7 +154,7 @@ html, body, #app, #personalPage {
     width: 100%;
     background-color: transparent;
     z-index: 999;
-    position: fixed;
+    position: absolute;
     &::after{
       content: '';
       position: absolute;
