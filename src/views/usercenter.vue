@@ -1,6 +1,6 @@
 <template>
   <div id="personalPage">
-    <meetingHeader :colorStyle="colorStyle"></meetingHeader>
+    <meetingHeader :colorStyle="colorStyle" @rightSliderClickToChangeTabFlag="ChangeCurrentTabIndex"></meetingHeader>
     <div class="scrollWrapper" ref="scrollWrapper">
       <div class="mainContainer">
         <bannerWithTransBlur :userProfile="userProfile" :isCurrentUser="isCurrentUser"></bannerWithTransBlur>
@@ -69,18 +69,17 @@ export default {
       userProfile: {
         userStatistics: {},
       },
-      scrollY: 0,
+      currentTabIndex: null,
       nearNode: false,
     };
   },
   mounted() {
+    this.currentTabIndex = this.pathMap.indexOf(this.$route.name);
     this.getUserProfile();
     // this.setIDInQuery();
   },
   created() {
-    this.$nextTick(() => {
-      this.resetNavSelected();
-    });
+
   },
   computed: {
     isCurrentUser() {
@@ -93,6 +92,7 @@ export default {
   },
   methods: {
     onTabItemClick(index) {
+      this.currentTabIndex = index;
       this.$router.push({
         name: this.pathMap[index],
         params: {
@@ -107,18 +107,31 @@ export default {
     //     this.setIdInQuery(r ? { id: decodeURIComponent(r[2]) } : {});
     //   }
     // },
+    ChangeCurrentTabIndex(tabFlag) {
+      this.currentTabIndex = tabFlag;
+      this.$nextTick(() => {
+        this.resetNavSelected();
+      });
+    },
     resetNavSelected() {
-      const i = this.pathMap.indexOf(this.$route.name);
-      console.log(i);
-      document.getElementsByClassName('userCenterNavItem')[i].click();
+      document.getElementsByClassName('userCenterNavItem')[this.currentTabIndex].click();
     },
     async getUserProfile() {
       // eslint-disable-next-line
-      const res = this.$route.params.id ? await getProfileById(Number(this.$route.params.id)) : await getProfileById(this.id);
+      const res = await getProfileById(Number(this.$route.params.id));
       this.userProfile = res.data;
+      this.$nextTick(() => {
+        this.resetNavSelected();
+      });
       if (res.code !== 0) {
         console.log('error in getUserProfile');
       }
+    },
+  },
+  watch: {
+    // eslint-disable-next-line
+    '$route.path' (newVal, oldVal) {
+      this.getUserProfile();
     },
   },
   components: {

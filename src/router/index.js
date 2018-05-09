@@ -90,7 +90,7 @@ export default new Router({
       children: [
         {
           path: '/usercenter/',
-          redirect: '/usercenter/activity',
+          redirect: '/usercenter/activity/:id?',
         },
         {
           path: 'activity/:id?',

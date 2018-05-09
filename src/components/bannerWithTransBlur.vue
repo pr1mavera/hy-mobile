@@ -8,7 +8,7 @@
     </div>
     <div class="title">
       <h1 class="titleItem name">{{this.userProfile.username}}</h1>
-      <p class="titleItem desc">{{this.userProfile.personalizedSignature}}</p>
+      <p class="titleItem desc">{{this.userProfile.personalizedSignature ? this.userProfile.personalizedSignature : '这个人很懒，什么都没有留下...'}}</p>
     </div>
     <x-button class="followBtn" v-if="!isCurrentUser">
       <svg class="icon" aria-hidden="true">

@@ -1,11 +1,10 @@
 import * as types from './ActionTypes';
 
 export const state = {
-  id: 1,
+  id: null,
   activityId: 14,
   tickets: [],
   selTickets: [],
-  query: {},
   firstEditData: {
     name: '',
     phone: 0,

@@ -67,15 +67,16 @@ export default {
   computed: {
     ...mapGetters([
       'id',
-      'query',
     ]),
   },
   methods: {
     async getActivityList() {
-      if (this.$route.query.id) {
-        const res = await getActivityListById(this.$route.query.id);
-        this.classifyActivityAndSetToDate(res.data);
-        if (res.code) {
+      if (this.$route.params.id) {
+        const res0 = await getActivityListById(this.$route.params.id, 1);
+        this.activityIsPublish = res0.data;
+        const res1 = await getActivityListById(this.$route.params.id, 3);
+        this.activityIsOver = res1.data;
+        if (res0.code !== 0 || res1.code !== 0) {
           console.log('error in getActivityList');
         }
       } else {
@@ -93,9 +94,10 @@ export default {
     onTabItemClick(index) {
       this.currentShowActivityIndex = index;
     },
-    classifyActivityAndSetToDate(list) {
-      this.activityIsPublish = list.filter(item => item.issueStatus === 1);
-      this.activityNotPublish = list.filter(item => item.issueStatus === 0);
+  },
+  watch: {
+    '$route.path'(newVal, oldVal) {
+      this.getActivityList();
     },
   },
   components: {

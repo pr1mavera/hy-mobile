@@ -32,16 +32,16 @@
               <use xlink:href="#icon-guanbi2"></use>
             </svg>
           </button>
-          <div class="noLogin" v-if="false">
-            <x-button type="" text="登录"></x-button>
-            <x-button type="" text="注册"></x-button>
+          <div class="noLogin" v-if="!isLogin">
+            <x-button type="" text="登录" link="http://login.ourwill.cn/login"></x-button>
+            <x-button type="" text="注册" link="http://login.ourwill.cn/register"></x-button>
           </div>
-          <div class="Login" v-else>
+          <div class="Login" v-if="isLogin">
             <span class="version">免费版</span>
             <div class="userInfo">
               <div>
-                <h1>张子涵</h1>
-                <p>694742588@qq.com</p>
+                <h1>{{this.userProfile.username}}</h1>
+                <p>{{this.userProfile.email ? this.userProfile.email : '未绑定邮箱'}}</p>
               </div>
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-you2"></use>
@@ -58,13 +58,13 @@
               <div class="line"></div>
             </div>
             <div class="list">
-              <a href="#" @click="clickToRouteByPathName('PPActivity')">
+              <a @click="clickToRouteByPathName('/usercenter/activity/', 0)">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodehuiyi"></use>
                 </svg>
                 <span>我的会议</span>
               </a>
-              <a href="#" @click="clickToRouteByPathName('PPPartake')">
+              <a @click="clickToRouteByPathName('/usercenter/partake/', 1)">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodemenpiao"></use>
                 </svg>
@@ -76,13 +76,12 @@
                 </svg>
                 <span>管理后台</span>
               </a>
-              <a href="#">
+              <a >
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
                 <span>退出登录</span>
               </a>
-
             </div>
           </div>
           <div class="router" >
@@ -143,7 +142,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { getProfileDetail } from '@/server/index.js';
 import { XHeader, Popup, TransferDom, XButton } from 'vux';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -161,6 +162,8 @@ export default {
       showMenu: false,
       showSearch: false,
       searchVal: '',
+      isLogin: false,
+      userProfile: {},
     };
   },
   directives: {
@@ -174,13 +177,39 @@ export default {
     Popup,
     XButton,
   },
+  mounted() {
+    this.getUserProfile();
+    // this.setIDInQuery();
+  },
+  computed: {
+    ...mapGetters([
+      'id',
+    ]),
+  },
   methods: {
-    changeHandler() {},
-    clickToRouteByPathName(name) {
-      this.$router.push({
-        name,
-      });
+    async getUserProfile() {
+      const res = await getProfileDetail();
+      if (res.code === -1) {
+        this.isLogin = false;
+      } else if (res.code === 0) {
+        this.isLogin = true;
+        this.setId(res.data.id);
+        this.userProfile = res.data;
+      } else {
+        console.log('error in getUserProfile');
+      }
     },
+    changeHandler() {},
+    clickToRouteByPathName(name, tabFlag) {
+      // console.log(this.id);
+      // debugger;
+      this.showMenu = false;
+      this.$router.push(name + this.id);
+      this.$emit('rightSliderClickToChangeTabFlag', tabFlag);
+    },
+    ...mapMutations({
+      setId: 'SET_ID',
+    }),
   },
 };
 </script>
@@ -242,6 +271,9 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
         justify-content: space-between;
         align-items: center;
         &>div{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           h1{
             color:#2b313c;
             font-size: 17px;
