@@ -85,30 +85,30 @@
             </div>
           </div>
           <div class="router" >
-            <div class="box">
+            <a href="http://huiyizhan.ourwill.cn/" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-shouye"></use>
               </svg>
               <span>首页</span>
-            </div>
-            <div class="box">
+            </a>
+            <a href="http://huiyizhan.ourwill.cn/meetingList" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-huodong"></use>
               </svg>
               <span>活动</span>
-            </div>
-            <div class="box">
+            </a>
+            <a href="http://huiyizhan.ourwill.cn/service" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-fuwu"></use>
               </svg>
               <span>服务</span>
-            </div>
-            <div class="box">
+            </a>
+            <a href="http://huiyizhan.ourwill.cn/price" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-jiage"></use>
               </svg>
               <span>价格</span>
-            </div>
+            </a>
           </div>
         </div>
       </popup>
