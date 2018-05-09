@@ -188,7 +188,6 @@ export default {
     ]),
   },
   methods: {
-<<<<<<< HEAD
     async getUserProfile() {
       const res = await getProfileDetail();
       if (res.code === -1) {
@@ -201,19 +200,15 @@ export default {
         console.log('error in getUserProfile');
       }
     },
-    changeHandler() {},
     clickToRouteByPathName(name, tabFlag) {
-      // console.log(this.id);
-      // debugger;
       this.showMenu = false;
       this.$router.push(name + this.id);
       this.$emit('rightSliderClickToChangeTabFlag', tabFlag);
-=======
+    },
     changeHandler() {
       this.$router.push({
         name: 'search',
       });
->>>>>>> 797f4df3f7b52b9e775ee69e5c59f25ee627b3fe
     },
     ...mapMutations({
       setId: 'SET_ID',
