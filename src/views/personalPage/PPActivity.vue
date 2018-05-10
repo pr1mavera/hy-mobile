@@ -96,7 +96,7 @@ export default {
     },
   },
   watch: {
-    '$route.path'() {
+    $route() {
       this.getActivityList();
     },
   },
