@@ -54,8 +54,8 @@
           <h1 class="title">
             简介
           </h1>
-          <div class="content">
-            <p>{{this.tableData.activityDescription}}</p>
+          <div class="content" >
+            <p v-html="this.tableData.activityDescription"></p>
           </div>
         </div>
         <div class="sectionStyle detailSchedule">
