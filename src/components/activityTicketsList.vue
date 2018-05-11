@@ -26,9 +26,9 @@
     </div>
     <div class="ticketsList">
       <ul>
-        <li v-for="(ticket, index) in activity.activityTickets" class="ticketsListLi" :key="index">
+        <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
           <span class="ticketState">待审核</span>
-          <p class="text">{{ticket.ticketName}}</p>
+          <p class="text">{{ticket.ticketsName}}</p>
           <p class="text">{{ticket.confereeName}}</p>
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
@@ -48,20 +48,31 @@
         <div class="popup popupTicket">
           <div class="popupTicketBox" id="popupTicketBox">
             <div class="popupTicketBoxContent">
-              <div class="hole" id="hole">
-                <div class="holeLeft"></div>
-                <div class="holeRight"></div>
+              <div class="activity">
+                <div class="content">
+                  <p class="title">{{activity.activityTitle}}</p>
+                  <p class="desc time">{{activity.startTime | timeFormat}} ~ {{activity.endTime | timeFormat}}</p>
+                  <p class="desc location">{{activity.activityAddress | adressFormat}}</p>
+                </div>
+                <div class="hole-block-top"></div>
+                <div class="hole hole-bottom-r"></div>
+                <div class="hole hole-bottom-l"></div>
               </div>
-              <p class="title">{{currentTicket.ticketName}}</p>
-              <p class="desc time">{{currentTicket.startTime | timeFormat}} ~ {{currentTicket.cutTime | timeFormat}}</p>
-              <p class="desc location">{{currentTicket.activityAddress | adressFormat}}</p>
-              <div class="line vux-1px-t"></div>
-              <p class="title ticketN">{{currentTicket.ticketName}}</p>
-              <img :src="currentTicket.QRcode" width=60%>
-              <p class="code vux-1px">{{currentTicket.getTicketCode}}</p>
-              <div class="massage">
-                <p class="name"><span>姓名</span> {{currentTicket.confereeName}}</p>
-                <p class="price"><span>票价</span> ￥{{currentTicket.ticketPrice}}</p>
+              <div class="ticket border-1px-t">
+                <div class="content">
+                  <p class="title ticketN">{{currentTicket.ticketsName}}</p>
+                  <div class="QRCodeBox">
+                    <qrcode value="https://vux.li?x-page=demo_qrcode"></qrcode>
+                  </div>
+                  <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
+                  <div class="massage">
+                    <p class="name"><span>姓名</span> {{currentTicket.confereeName}}</p>
+                    <p class="price"><span>票价</span> ￥{{currentTicket.ticketsPrice}}</p>
+                  </div>
+                </div>
+                <div class="hole hole-top-r"></div>
+                <div class="hole hole-top-l"></div>
+                <div class="hole-block-bottom"></div>
               </div>
             </div>
             <div class="close" @click="showTicket=false">
@@ -116,7 +127,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { TransferDom, Popup } from 'vux';
+import { TransferDom, Popup, Qrcode } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 
 export default {
@@ -173,12 +184,14 @@ export default {
   },
   components: {
     Popup,
+    Qrcode,
   },
 };
 </script>
 
 <style lang="less">
 @import '~vux/src/styles/1px.less';
+@import '../common/style/mixin.less';
 
 .activityTicketsList {
   .activityBanner {
@@ -250,8 +263,12 @@ export default {
           font-size: 14px;
         }
         .text {
-          font-size: 18px;
+          width: calc(~'100% - 58px');
+          font-size: 16px;
           line-height: 28px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .ticketOptionBtn {
           display: flex;
@@ -286,104 +303,158 @@ export default {
           position: relative;
           bottom: 0;
           width: 100%;
-          padding: 39px 31px 30px;
           border-radius: 4px;
           box-sizing: border-box;
           overflow: hidden;
+
+          // ================================================== hole ===================================================
           .hole {
             position: absolute;
+            overflow: hidden;
+          }
+          .hole-top-r {
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 50%;
+          }
+          .hole-top-l {
             top: 0;
             left: 0;
+            width: 50%;
+            height: 50%;
+          }
+          .hole-bottom-r {
+            bottom: 0;
+            right: 0;
+            width: 50%;
+            height: 50%;
+          }
+          .hole-bottom-l {
+            bottom: 0;
+            left: 0;
+            width: 50%;
+            height: 50%;
+          }
+          .hole-top-l::after {
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+          }
+          .hole-top-r::after {
+            top: 0;
+            right: 0;
+            transform: translate(50%, -50%);
+          }
+          .hole-bottom-l::after {
+            bottom: 0;
+            left: 0;
+            transform: translate(-50%, 50%);
+          }
+          .hole-bottom-r::after {
+            bottom: 0;
+            right: 0;
+            transform: translate(50%, 50%);
+          }
+          .hole-top-l::after, .hole-top-r::after, .hole-bottom-l::after, .hole-bottom-r::after {
+            position: absolute;
+            content: '';
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 5000px solid #ffffff;
+            z-index: 0;
+          }
+          .hole-block-top, .hole-block-bottom {
+            position: absolute;
+            left: 0;
             width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-            .holeLeft {
-              position: absolute;
-              width: 70%;
-              height: 100%;
-              left: 0;
-              overflow: hidden;
-              &:before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                transform: translate(-50%, -50%);
-                margin-top: 135px;
-                width: 20px;
-                height: 20px;
-                border: 1000px solid #ffffff;
-                border-radius: 50%;
-                z-index: 20px;
-              }
-            }
-            .holeRight {
-              position: absolute;
-              width: 200px;
-              height: 100%;
-              right: 0;
-              overflow: hidden;
-              &:after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                margin-left: 200px;
-                transform: translate(-50%, -50%);
-                margin-top: 135px;
-                width: 20px;
-                height: 20px;
-                border: 1000px solid #ffffff;
-                border-radius: 50%;
-                z-index: 20px;
-              }
-            }
+            height: 50%;
+            background-color: #ffffff;
           }
-          p {
-            color: #2B313C;
-            &.title {
-              font-size: 18px;
-              margin-bottom: 16px;
-              line-height: 20px;
-            }
-            &.desc {
-              font-size: 13px;
-              font-weight: 200;
-            }
-            &.ticketN {
-              text-align: center;
-              margin-bottom: 20px;
-            }
+          .hole-block-top {
+            top: 0;
           }
-          .line {
-            width: 100%;
-            margin-top: 20px;
-            padding-bottom: 20px;
+          .hole-block-bottom {
+            bottom: 0;
           }
-          img {
+          // ================================================== hole end ===================================================
+
+          .activity {
             position: relative;
-            display: block;
-            margin: 0 auto;
+            padding: 39px 31px 24px;
+            .content {
+              position: relative;
+              z-index: 10;
+              p {
+                color: #2B313C;
+                &.title {
+                  font-size: 18px;
+                  margin-bottom: 16px;
+                  line-height: 20px;
+                }
+                &.desc {
+                  font-size: 13px;
+                  font-weight: 200;
+                }
+                &.ticketN {
+                  text-align: center;
+                  margin-bottom: 20px;
+                }
+              }
+            }
           }
-          .code {
-            padding: 12px 19px;
-            width: 160px;
-            font-size: 14px;
-            text-align: center;
-            margin: 19px auto;
-          }
-          .massage {
-            display: flex;
-            justify-content: center;
-            p {
-              margin: 0 11px;
-              color: #5D6574;
-              font-size: 16px;
-              line-height: 16px;
-              span {
-                color: #9098A8;
+          .ticket {
+            position: relative;
+            padding: 24px 31px 30px;
+            &.border-1px-t:after {
+              margin: 0 25px;
+              width: calc(~'100% - 50px');
+            }
+            .content {
+              position: relative;
+              z-index: 10;
+              p {
+                color: #2B313C;
+                &.title {
+                  font-size: 18px;
+                  margin-bottom: 16px;
+                  line-height: 20px;
+                }
+                &.desc {
+                  font-size: 13px;
+                  font-weight: 200;
+                }
+                &.ticketN {
+                  text-align: center;
+                  margin-bottom: 20px;
+                }
+              }
+              .QRCodeBox {
+                position: relative;
+                margin: 0 auto;
+                width: 160px;
+              }
+              .code {
+                padding: 12px 19px;
+                width: 160px;
                 font-size: 14px;
+                text-align: center;
+                margin: 19px auto;
+              }
+              .massage {
+                display: flex;
+                justify-content: center;
+                p {
+                  margin: 0 11px;
+                  color: #5D6574;
+                  font-size: 16px;
+                  line-height: 16px;
+                  span {
+                    color: #9098A8;
+                    font-size: 14px;
+                  }
+                }
               }
             }
           }
