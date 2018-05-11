@@ -129,8 +129,7 @@ export default {
     },
   },
   watch: {
-    // eslint-disable-next-line
-    $route(newVal, oldVal) {
+    $route() {
       this.getUserProfile();
     },
   },
