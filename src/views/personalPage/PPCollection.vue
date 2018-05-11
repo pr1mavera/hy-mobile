@@ -44,18 +44,13 @@ import activityList from '@/components/activityList';
 export default {
   data() {
     return {
-      activityIsPublish: {
-        list: [],
-      },
-      activityIsOver: {
-        list: [],
-      },
+      activityIsPublish: [],
+      activityIsOver: [],
       currentShowActivityIndex: 0,
     };
   },
   mounted() {
     this.getActivityList();
-    this.getActivityListNew();
   },
   computed: {
     ...mapGetters([
@@ -64,15 +59,11 @@ export default {
     ]),
   },
   methods: {
-    getActivityListNew() {
-    },
     async getActivityList() {
       const res1 = await getActivityMyWatch(1);
       this.activityIsPublish = res1.data;
       const res2 = await getActivityMyWatch(2);
-      getActivityMyWatch('2?page=0').then((res) => {
-        this.activityIsOver.list = res.data;
-      });
+      this.activityIsOver.list = res2.data;
       if (res1.code !== 0 || res2.code !== 0) {
         console.log('error in getActivityList');
       }

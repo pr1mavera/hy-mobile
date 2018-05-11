@@ -76,7 +76,7 @@
                 </svg>
                 <span>管理后台</span>
               </a>
-              <a >
+              <a href="http://huiyizhan.ourwill.cn/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>

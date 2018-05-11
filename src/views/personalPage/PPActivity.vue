@@ -96,6 +96,7 @@ export default {
     },
   },
   watch: {
+    // eslint-disable-next-line
     '$route.path'(newVal, oldVal) {
       this.getActivityList();
     },

@@ -148,14 +148,16 @@ export default {
 <style lang="less">
 @import '../common/style/mixin.less';
 
-.header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 10;
-}
-.routerBody {
-  margin-top: 100px;
+.buyTicket {
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+  }
+  .routerBody {
+    margin-top: 100px;
+  }
 }
 
 </style>

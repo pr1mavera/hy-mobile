@@ -1,22 +1,22 @@
 <template>
-  <div>
+  <div class="ticketsRecordActivityList">
     <tab :line-width="2" custom-bar-width="60px">
       <tab-item selected>进行中</tab-item>
       <tab-item>已结束</tab-item>
     </tab>
     <div>
-      <bannerItem 
+      <bannerItem
         v-if='currentStatus === 1'
-        :activityBannerMobileUrl='item.activityBannerMobileUrl' 
-        :activityTitle='item.activityTitle' 
-        :key='inx' 
+        :activityBannerMobileUrl='item.activityBannerMobileUrl'
+        :activityTitle='item.activityTitle'
+        :key='inx'
         v-for='(item,inx) in activityList'
         @click.native="$router.push(`/record/${item.id}`)"/>
-      <bannerItem 
+      <bannerItem
         v-if='currentStatus === 3'
-        :activityBannerMobileUrl='item.activityBannerMobileUrl' 
-        :activityTitle='item.activityTitle' 
-        :key='inx' 
+        :activityBannerMobileUrl='item.activityBannerMobileUrl'
+        :activityTitle='item.activityTitle'
+        :key='inx'
         v-for='(item,inx) in endList'
         @click.native="$router.push(`/record/${item.id}`)"/>
     </div>
@@ -49,8 +49,10 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="less">
+.ticketsRecordActivityList {
   .vux-tab-warp{
     margin-bottom: 15px;
   }
+}
 </style>
