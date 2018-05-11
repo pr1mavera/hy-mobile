@@ -130,7 +130,7 @@ export default {
   },
   watch: {
     // eslint-disable-next-line
-    '$route.path' (newVal, oldVal) {
+    $route(newVal, oldVal) {
       this.getUserProfile();
     },
   },

@@ -1,66 +1,55 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
-import home from '@/views/home';
-
-import activity from '@/views/activity';
-
 import detail from '@/views/detail';
-
 import buyTicket from '@/views/buyTicket';
 import selectTicket from '@/views/buyTicket/selectTicket';
 import fillInTicketMsg from '@/views/buyTicket/fillInTicketMsg';
 import success from '@/views/buyTicket/success';
-
 import usercenter from '@/views/usercenter';
 import PPActivity from '@/views/personalPage/PPActivity';
 import PPPartake from '@/views/personalPage/PPPartake';
 import PPCollection from '@/views/personalPage/PPCollection';
 import PPFollow from '@/views/personalPage/PPFollow';
 import PPDynamic from '@/views/personalPage/PPDynamic';
-
-import TCKIndex from '@/views/TCKIndex';
-
 import search from '@/views/searchPage';
-
-import service from '@/views/service';
-
 import ticketActivity from '@/views/ticketsRecord/activityList';
 import record from '@/views/ticketsRecord/record';
-// const pathToRegexp = require('path-to-regexp');
+import NotFoundComponent from '@/views/404';
 
-// const re = pathToRegexp('/personalPage/:id*');
-// re.exec('/personalPage');
+// import TCKIndex from '@/views/TCKIndex';
+// import home from '@/views/home';
+// import service from '@/views/service';
+// import activity from '@/views/activity';
 
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: home,
-    },
-    {
-      path: '/TCKIndex',
-      name: 'TCKIndex',
-      component: TCKIndex,
-    },
-    {
-      path: '/activity',
-      name: 'activity',
-      component: activity,
-    },
+    // {
+    //   path: '/',
+    //   name: 'home',
+    //   component: home,
+    // },
+    // {
+    //   path: '/TCKIndex',
+    //   name: 'TCKIndex',
+    //   component: TCKIndex,
+    // },
+    // {
+    //   path: '/activity',
+    //   name: 'activity',
+    //   component: activity,
+    // },
+    // {
+    //   path: '/service',
+    //   name: 'service',
+    //   component: service,
+    // },
     {
       path: '/search',
       name: 'search',
       component: search,
-    },
-    {
-      path: '/service',
-      name: 'service',
-      component: service,
     },
     {
       path: '/activity/:id',
@@ -139,6 +128,7 @@ export default new Router({
         },
       ],
     },
+    { path: '*', name: '404', component: NotFoundComponent },
   ],
   base: '/web/',
 });

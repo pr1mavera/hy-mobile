@@ -96,8 +96,12 @@ export default {
     },
   },
   watch: {
+<<<<<<< HEAD
     // eslint-disable-next-line
     '$route.path'(newVal, oldVal) {
+=======
+    $route() {
+>>>>>>> 5873aedb73d46f356fa8d93782facef56f26b1be
       this.getActivityList();
     },
   },

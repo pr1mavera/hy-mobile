@@ -38,7 +38,7 @@
           </div>
           <div class="Login" v-if="isLogin">
             <span class="version">免费版</span>
-            <div class="userInfo">
+            <div class="userInfo">
               <div>
                 <h1>{{this.userProfile.username}}</h1>
                 <p>{{this.userProfile.email ? this.userProfile.email : '未绑定邮箱'}}</p>
