@@ -242,11 +242,12 @@ export default {
     FlexboxItem,
   },
   mounted() {
-    this.SET_ID(this.$route.params.id);
+    // debugger;
+    this.SET_ACTIVITY_ID(this.$route.params.id);
     this.getInfoById();
   },
   computed: {
-    ...mapState({ id: state => state.id }),
+    ...mapState({ id: state => state.activityId }),
     isSameYear() {
       if ((Object.keys(this.tableData).length > 1) && this.tableData.startTime &&
       (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
@@ -308,8 +309,9 @@ export default {
 
   },
   methods: {
-    ...mapMutations(['SET_ID']),
+    ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
+      // debugger;
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
@@ -350,6 +352,7 @@ export default {
       });
     },
     addWatchMeeting() {
+      // debugger;
       addWatchCollect(this.id).then((res) => {
         if (res && res.code === 0) {
           this.$vux.toast.text('收藏成功', 'top');
