@@ -12,11 +12,11 @@
         bar-active-color="#2c7dfa"
         custom-bar-width="28px"
         >
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick">活动</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
+          <tab-item :selected="currentTabIndex === 0"  @on-item-click="onTabItemClick">活动</tab-item>
+          <tab-item :selected="currentTabIndex === 1"  @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
+          <tab-item :selected="currentTabIndex === 2"  @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
+          <tab-item :selected="currentTabIndex === 3"  @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
+          <tab-item :selected="currentTabIndex === 4"  @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
         </tab>
         <div class="routerBody clearfix">
           <keep-alive>
@@ -74,6 +74,7 @@ export default {
     };
   },
   mounted() {
+    // debugger;
     this.currentTabIndex = this.pathMap.indexOf(this.$route.name);
     this.getUserProfile();
     // this.setIDInQuery();
@@ -84,6 +85,7 @@ export default {
   computed: {
     isCurrentUser() {
       // eslint-disable-next-line
+      // debugger;
       return Number(this.$route.params.id) === this.id ? true : false;
     },
     ...mapGetters([
@@ -92,6 +94,7 @@ export default {
   },
   methods: {
     onTabItemClick(index) {
+      // debugger;
       this.currentTabIndex = index;
       this.$router.push({
         name: this.pathMap[index],
@@ -110,19 +113,21 @@ export default {
     ChangeCurrentTabIndex(tabFlag) {
       this.currentTabIndex = tabFlag;
       this.$nextTick(() => {
-        this.resetNavSelected();
+        // debugger
+        // this.resetNavSelected();
       });
     },
-    resetNavSelected() {
-      document.getElementsByClassName('userCenterNavItem')[this.currentTabIndex].click();
-    },
+    // resetNavSelected() {
+    //   // document.getElementsByClassName('userCenterNavItem')[this.currentTabIndex].click();
+    // },
     async getUserProfile() {
       // eslint-disable-next-line
       const res = await getProfileById(Number(this.$route.params.id));
       this.userProfile = res.data;
-      this.$nextTick(() => {
-        this.resetNavSelected();
-      });
+      // this.$nextTick(() => {
+      //   debugger
+      //   // this.resetNavSelected();
+      // });
       if (res.code !== 0) {
         console.log('error in getUserProfile');
       }

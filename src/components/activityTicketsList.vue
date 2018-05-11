@@ -27,12 +27,12 @@
     <div class="ticketsList">
       <ul>
         <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
-          <span class="ticketState">待审核</span>
+          <span class="ticketState">{{ticket.ticketStatus | ticketFilter}}</span>
           <p class="text">{{ticket.ticketsName}}</p>
           <p class="text">{{ticket.confereeName}}</p>
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
-            <button class="item" type="button" name="button">下载门票</button>
+            <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
           </div>
         </li>
@@ -129,7 +129,8 @@
 <script type="text/ecmascript-6">
 import { TransferDom, Popup, Qrcode } from 'vux';
 import { formatDate } from '@/common/js/index.js';
-
+// import {getPDFTicket} from '@/server/index'
+import conf from '@/config/index';
 export default {
   props: {
     currentIndex: {
@@ -147,6 +148,21 @@ export default {
     };
   },
   methods: {
+    downloadTicket(ticket){
+      debugger
+      if(!ticket.id){
+        return this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
+      }
+      try{
+        let downloadLink = document.createElement('a');
+        downloadLink.download = ticket.ticketsName + '-门票';
+        downloadLink.href = `${conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
+        downloadLink.click();
+        this.$vux.toast.text('正在下载','top');
+      } catch (err) {
+        console.log(err);
+      }
+    },
     clickToShowTicket(ticket) {
       this.showTicket = true;
       this.currentTicket = ticket;
@@ -156,6 +172,7 @@ export default {
       // });
     },
     clickToShowEdit(ticket) {
+      // debugger;
       this.showEdit = true;
       this.currentTicket = ticket;
     },
@@ -165,6 +182,21 @@ export default {
     //   return (value.notPassOrOver ? '已失效' : '未通过');
     //   return (value.isCheck ? '已出票' : '待审核');
     // }
+    ticketFilter(val){
+      if(val === 0){
+        return '未生成'
+      }else if(val === 1){
+        return '未签到'
+      }else if(val === 2){
+        return '已签到'
+      }else if(val === 3){
+        return '待审核'
+      }else if(val === 4){
+        return '审核未通过'
+      }else if(val === 9){
+        return '已退票'
+      }
+    },
     timeFormat(value = '') {
       const temp = new Date(value.replace(/-/g, '/'));
       return formatDate(temp, 'yyyy.MM.dd hh:mm');

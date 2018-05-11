@@ -12,7 +12,8 @@ export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 
 // 根据会议id获取门票
 export const getTicketsByActivityId = activityId => http.get(`/activityTickets/activity/${activityId}`);
-
+//下载门票
+// export const getPDFTicket = ticketId => http.get(`/ticketsRecord/getPDFTicket/${ticketId}`);
 // 会议搜索
 export const getSearchList = (data) => http.post('/search/activity/conditionalQuery', null, null, {params :  data });
 
@@ -71,3 +72,5 @@ export const confirmSign = (activityId, ticketId) =>http.post(`/ticketsRecord/${
 
 // 获取微信签名
 export const wxConfig = url => http.get(`/wxConfig?url=${url}`);
+
+
