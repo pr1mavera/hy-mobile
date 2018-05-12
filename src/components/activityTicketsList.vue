@@ -129,8 +129,8 @@
 <script type="text/ecmascript-6">
 import { TransferDom, Popup, Qrcode } from 'vux';
 import { formatDate } from '@/common/js/index.js';
-// import {getPDFTicket} from '@/server/index'
-import conf from '@/config/index';
+import Conf from '@/config/index';
+
 export default {
   props: {
     currentIndex: {
@@ -148,19 +148,19 @@ export default {
     };
   },
   methods: {
-    downloadTicket(ticket){
-      debugger
-      if(!ticket.id){
-        return this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
-      }
-      try{
-        let downloadLink = document.createElement('a');
-        downloadLink.download = ticket.ticketsName + '-门票';
-        downloadLink.href = `${conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
-        downloadLink.click();
-        this.$vux.toast.text('正在下载','top');
-      } catch (err) {
-        console.log(err);
+    downloadTicket(ticket) {
+      if (!ticket.id) {
+        this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
+      } else {
+        try {
+          const downloadLink = document.createElement('a');
+          downloadLink.download = ticket.ticketsName + '门票';
+          downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
+          downloadLink.click();
+          this.$vux.toast.text('正在下载','top');
+        } catch (err) {
+          console.log(err);
+        }
       }
     },
     clickToShowTicket(ticket) {
@@ -183,18 +183,20 @@ export default {
     //   return (value.isCheck ? '已出票' : '待审核');
     // }
     ticketFilter(val){
-      if(val === 0){
+      if (val === 0) {
         return '未生成'
-      }else if(val === 1){
+      } else if (val === 1) {
         return '未签到'
-      }else if(val === 2){
+      } else if (val === 2) {
         return '已签到'
-      }else if(val === 3){
+      } else if (val === 3) {
         return '待审核'
-      }else if(val === 4){
+      } else if (val === 4) {
         return '审核未通过'
-      }else if(val === 9){
+      } else if (val === 9) {
         return '已退票'
+      } else {
+        return''
       }
     },
     timeFormat(value = '') {

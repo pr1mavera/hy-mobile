@@ -44,7 +44,7 @@ export default {
       type: Object,
     },
     isCurrentUser: {
-      type: Boolean,
+      type: Number,
     },
   },
   data() {

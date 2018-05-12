@@ -86,7 +86,7 @@ export default {
     isCurrentUser() {
       // eslint-disable-next-line
       // debugger;
-      return Number(this.$route.params.id) === this.id ? true : false;
+      return Number(this.$route.params.id) === this.id ? 1 : 0;
     },
     ...mapGetters([
       'id',
