@@ -58,7 +58,7 @@ export default new Router({
     },
     {
       path: '/ticketActivity',
-      name: 'buyTicket',
+      name: 'ticketActivity',
       component: ticketActivity,
     },
     {

@@ -117,7 +117,7 @@ export default {
     }
     .desc {
       font-size: 12px;
-      opacity: .7;
+      opacity: .8;
     }
   }
   .followBtn {
@@ -146,9 +146,12 @@ export default {
     justify-content: center;
     font-size: 14px;
     font-weight: lighter;
-    opacity: .8;
+    // opacity: .8;
     .item {
       margin: 8px 30px;
+      P{
+        color: #e6e6e6;
+      }
     }
   }
 }

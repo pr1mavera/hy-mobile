@@ -78,7 +78,7 @@
               <div class="timeLine-container">
                 <div v-for="itm in item.scheduleDetail " class="timeLine">
                   <div class="left">
-                    <p class="hour">{{itm.time}} - {{itm.time}}</p>
+                    <p class="hour">{{itm.themeDate[0] | timeFormatExceptTime}}-{{itm.themeDate[1] | timeFormatExceptTime}}</p>
                     <p class="day">{{item.startDate | timeFormatExceptHour2}}</p>
                   </div>
                   <div class="right">
@@ -299,6 +299,10 @@ export default {
     timeFormatExceptHour2(value = '') {
       const temp = new Date(value.replace(/-/g, '/'));
       return formatDate(temp, 'yyyy/MM/dd');
+    },
+    timeFormatExceptTime(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'hh:mm');
     },
     adressFormat(value = '{}') {
       let temp = JSON.parse(value);
@@ -571,6 +575,7 @@ export default {
                   width: 40px;
                   height: 40px;
                   border-radius: 50%;
+                  background-color:#ddd;
                   img{
                     width: 40px;
                     height: 40px;
