@@ -54,8 +54,8 @@
           <h1 class="title">
             简介
           </h1>
-          <div class="content">
-            <p>{{this.tableData.activityDescription}}</p>
+          <div class="content" >
+            <p v-html="this.tableData.activityDescription"></p>
           </div>
         </div>
         <div class="sectionStyle detailSchedule">
@@ -78,7 +78,7 @@
               <div class="timeLine-container">
                 <div v-for="itm in item.scheduleDetail " class="timeLine">
                   <div class="left">
-                    <p class="hour">{{itm.time}} - {{itm.time}}</p>
+                    <p class="hour">{{itm.themeDate[0] | timeFormatExceptTime}}-{{itm.themeDate[1] | timeFormatExceptTime}}</p>
                     <p class="day">{{item.startDate | timeFormatExceptHour2}}</p>
                   </div>
                   <div class="right">
@@ -242,11 +242,12 @@ export default {
     FlexboxItem,
   },
   mounted() {
-    this.SET_ID(this.$route.params.id);
+    // debugger;
+    this.SET_ACTIVITY_ID(this.$route.params.id);
     this.getInfoById();
   },
   computed: {
-    ...mapState({ id: state => state.id }),
+    ...mapState({ id: state => state.activityId }),
     isSameYear() {
       if ((Object.keys(this.tableData).length > 1) && this.tableData.startTime &&
       (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
@@ -299,6 +300,10 @@ export default {
       const temp = new Date(value.replace(/-/g, '/'));
       return formatDate(temp, 'yyyy/MM/dd');
     },
+    timeFormatExceptTime(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'hh:mm');
+    },
     adressFormat(value = '{}') {
       let temp = JSON.parse(value);
       temp = Object.values(temp);
@@ -308,8 +313,9 @@ export default {
 
   },
   methods: {
-    ...mapMutations(['SET_ID']),
+    ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
+      // debugger;
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
@@ -350,6 +356,7 @@ export default {
       });
     },
     addWatchMeeting() {
+      // debugger;
       addWatchCollect(this.id).then((res) => {
         if (res && res.code === 0) {
           this.$vux.toast.text('收藏成功', 'top');
@@ -568,6 +575,7 @@ export default {
                   width: 40px;
                   height: 40px;
                   border-radius: 50%;
+                  background-color:#ddd;
                   img{
                     width: 40px;
                     height: 40px;

@@ -18,14 +18,14 @@
     <div class="activityListView" v-if="currentShowActivityIndex === 0">
       <ul>
         <li v-for="(activity, index) in ticketsIsValid" class="activityTicketsListLi" :key="index">
-          <activityTicketsList :currentIndex="currentShowActivityIndex" :activity="activity"></activityTicketsList>
+          <activityTicketsList @update="getActivityTicketsList" :currentIndex="currentShowActivityIndex" :activity="activity"></activityTicketsList>
         </li>
       </ul>
     </div>
     <div class="activityListView" v-if="currentShowActivityIndex === 1">
       <ul>
         <li v-for="(activity, index) in ticketsIsInvalid" class="activityTicketsListLi" :key="index">
-          <activityTicketsList :currentIndex="currentShowActivityIndex" :activity="activity"></activityTicketsList>
+          <activityTicketsList @update="getActivityTicketsList" :currentIndex="currentShowActivityIndex" :activity="activity"></activityTicketsList>
         </li>
       </ul>
     </div>
@@ -56,6 +56,7 @@ export default {
     this.getActivityTicketsList();
   },
   computed: {
+
     getInvalidTicketTotalCount() {
       let count = 0;
       this.ticketsIsInvalid.forEach((item) => {
