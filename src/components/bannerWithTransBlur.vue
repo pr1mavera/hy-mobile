@@ -73,11 +73,11 @@ export default {
   text-align: center;
   overflow-y: hidden;
   .bannerBg {
-    position: fixed;
+    // position: fixed;
     width: 100%;
     height: 300px;
     top: 0;
-    z-index: -1;
+    // z-index: -1;
     img {
       width: 100%;
       height: 100%;
