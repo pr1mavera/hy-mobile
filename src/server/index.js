@@ -14,6 +14,9 @@ export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 export const getTicketsByActivityId = activityId => http.get(`/activityTickets/activity/${activityId}`);
 //下载门票
 // export const getPDFTicket = ticketId => http.get(`/ticketsRecord/getPDFTicket/${ticketId}`);
+//修改门票
+export const updateTicket = (id, data) => http.put(`/ticketsRecord/${id}`,data);
+
 // 会议搜索
 export const getSearchList = (data) => http.post('/search/activity/conditionalQuery', null, null, {params :  data });
 

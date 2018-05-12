@@ -62,7 +62,7 @@
                 <div class="content">
                   <p class="title ticketN">{{currentTicket.ticketsName}}</p>
                   <div class="QRCodeBox">
-                    <qrcode value="https://vux.li?x-page=demo_qrcode"></qrcode>
+                    <qrcode :value="currentTicket.ticketLinkUrl"></qrcode>
                   </div>
                   <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
                   <div class="massage">
@@ -96,23 +96,32 @@
           <div class="popupEditBox">
             <p class="title">修改门票</p>
             <div class="inputContent">
-              <form action="index.html" method="post">
+              <form>
+                <group>
+                  <x-input title="" v-model="ticketForm.confereeName" :min="1" :max="10"></x-input>
+                </group>
+                <group>
+                  <x-input title="" type v-model="ticketForm.confereePhone"></x-input>
+                </group>
+                <group>
+                  <x-input title="" v-model="ticketForm.confereeEmail"></x-input>
+                </group>
                 <!-- 姓名输入框 -->
-                <div class="inputItem userInput">
-                  <input type="text" placeholder="姓名">
-                </div>
+                <!-- <div class="inputItem userInput">
+                  <input type="text" placeholder="姓名" v-model="ticketForm.confereeName">
+                </div> -->
                 <!-- 手机号输入框 -->
-                <div class="inputItem userInput">
-                  <input type="number" placeholder="手机号">
-                </div>
+                <!-- <div class="inputItem userInput">
+                  <input type="number" placeholder="手机号" v-model="ticketForm.confereePhone">
+                </div> -->
                 <!-- 邮箱输入框 -->
-                <div class="inputItem userInput">
-                  <input type="email" placeholder="邮箱">
-                </div>
+                <!-- <div class="inputItem userInput">
+                  <input type="email" placeholder="邮箱" v-model="ticketForm.confereeEmail">
+                </div> -->
               </form>
             </div>
             <!-- 主按钮 -->
-            <button class="loginBtn">确认</button>
+            <button class="loginBtn" @click="updateTicket">确认</button>
             <div class="close" @click="showEdit=false">
               <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-guanbi2"></use>
@@ -127,9 +136,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { TransferDom, Popup, Qrcode } from 'vux';
+import { TransferDom, Popup, Qrcode, XInput, Group } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';
+import { updateTicket } from '@/server';
 
 export default {
   props: {
@@ -145,9 +155,41 @@ export default {
       showTicket: false,
       showEdit: false,
       currentTicket: {},
+      ticketForm: {
+        id: '',
+        confereeName: '',
+        confereePhone: '',
+        confereeEmail: '',
+      },
     };
   },
   methods: {
+    updateTicket() {
+      const data = { ...this.ticketForm };
+      const len = data.confereeName.length;
+      const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+      const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (len === 0) {
+        this.$vux.toast.text('姓名不能为空', 'top');
+      } else if (len > 10) {
+        this.$vux.toast.text('姓名在10个字符', 'top');
+      } else if (!regNum.test(data.confereePhone)) {
+        this.$vux.toast.text('手机号码格式不正确', 'top');
+      } else if (!regEmail.test(data.confereeEmail)) {
+        this.$vux.toast.text('邮箱格式不正确', 'top');
+      } else {
+        updateTicket(data.id, data).then((res) => {
+          if (res.code === 0) {
+            this.$vux.toast.text('修改成功', 'top');
+            this.$emit('update');
+            this.showEdit = false;
+          } else {
+            this.$vux.toast.text('修改失败', 'top');
+          }
+        });
+      }
+      // return;
+    },
     downloadTicket(ticket) {
       if (!ticket.id) {
         this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
@@ -164,6 +206,7 @@ export default {
       }
     },
     clickToShowTicket(ticket) {
+      // debugger
       this.showTicket = true;
       this.currentTicket = ticket;
       // this.$nextTick(() => {
@@ -174,7 +217,11 @@ export default {
     clickToShowEdit(ticket) {
       // debugger;
       this.showEdit = true;
-      this.currentTicket = ticket;
+      this.ticketForm.id = ticket.id;
+      this.ticketForm.confereeName = ticket.confereeName;
+      this.ticketForm.confereePhone = ticket.confereePhone;
+      this.ticketForm.confereeEmail = ticket.confereeEmail;
+      // const ticketForm = this.ticketForm;
     },
   },
   filters: {
@@ -218,6 +265,8 @@ export default {
   components: {
     Popup,
     Qrcode,
+    XInput,
+    Group,
   },
 };
 </script>
