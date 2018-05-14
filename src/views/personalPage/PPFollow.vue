@@ -20,7 +20,7 @@
       <swiper @on-index-change="handlerHeight(check)" id="swiper" class="swiper" v-model="check"  :show-dots="false">
         <swiper-item >
           <div class="tab-swiper vux-center" v-for="(item, index) in wTableData">
-            <div class="flex-box" >
+            <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
               </div>

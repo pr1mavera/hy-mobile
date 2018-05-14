@@ -70,12 +70,12 @@
                 </svg>
                 <span>我的门票</span>
               </a>
-              <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
+              <!-- <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-guanlihoutai"></use>
+                  <use xlink:href="#icon-gbannerBguanlihoutai"></use>
                 </svg>
                 <span>管理后台</span>
-              </a>
+              </a> -->
               <a href="http://huiyizhan.ourwill.cn/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
@@ -130,7 +130,6 @@
               type="text"
               placeholder="搜索会议关键字"
               @focus="changeHandler"
-
             >
               <!-- <div >
               </div>
