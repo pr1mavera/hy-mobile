@@ -33,6 +33,7 @@
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
             <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
+            <button class="item" type="button" name="button" @click="downloadTicket2(ticket,activity)">下2</button>
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
           </div>
         </li>
@@ -205,6 +206,23 @@ export default {
         }
       }
     },
+    // downloadTicket2(ticket, activity) {
+    downloadTicket2() {
+      debugger;
+      // const [ticketsName, cTime, confereeName, , ticketLinkUrl] = ticket;
+      // const [activityAddress] = activity;
+      // eslint-disable-next-line
+      let canvas = document.createElement('CANVAS');
+      canvas.setAttribute('height', 786);
+      canvas.setAttribute('width', 1837);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#213C67';
+      ctx.fillRect(0, 0, 156, 786);
+      // 这里绘画~  212，213行 用到时解开注释；
+
+      // 生成
+      this.downLoadImage(canvas, '2');
+    },
     clickToShowTicket(ticket) {
       // debugger
       this.showTicket = true;
@@ -222,6 +240,12 @@ export default {
       this.ticketForm.confereePhone = ticket.confereePhone;
       this.ticketForm.confereeEmail = ticket.confereeEmail;
       // const ticketForm = this.ticketForm;
+    },
+    downLoadImage(canvas, name) {
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL();
+      a.download = name;
+      a.click();
     },
   },
   filters: {
