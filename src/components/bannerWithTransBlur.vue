@@ -70,6 +70,7 @@ export default {
   width: 100%;
   height: 286px;
   color: #ffffff;
+  margin-top: -45px;
   text-align: center;
   overflow-y: hidden;
   .bannerBg {
