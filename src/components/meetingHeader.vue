@@ -423,7 +423,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
     width: 100%;
     background-color: transparent;
     z-index: 499;
-    position: absolute;
+    // position: absolute;
     &::after{
       content: '';
       position: absolute;

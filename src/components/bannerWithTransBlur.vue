@@ -70,6 +70,7 @@ export default {
   width: 100%;
   height: 286px;
   color: #ffffff;
+  margin-top: -45px;
   text-align: center;
   overflow-y: hidden;
   .bannerBg {
@@ -78,6 +79,10 @@ export default {
     height: 300px;
     top: 0;
     z-index: -1;
+    &::after {
+      content: '';
+      clear: both;
+    }
     img {
       width: 100%;
       height: 100%;
