@@ -98,7 +98,7 @@
             <div class="main-container" v-for="item in tableData.activityGuests">
               <div class="left">
                 <div class="avator">
-                  <img :src="item.guestAvatar" alt="">
+                  <img :src="item.guestAvatarUrl" alt="">
                 </div>
               </div>
               <div class="right">
@@ -123,7 +123,7 @@
               <h2>{{item[0].partnerType}}</h2>
               <flexbox :gutter='0' class="container" >
                 <flexbox-item :span='1/3' class="box" v-for="(itm ,index) in item" :key="index">
-                  <img :src="itm.logoPics">
+                  <img :src="itm.logoUrl">
                 </flexbox-item>
               </flexbox>
             </div>

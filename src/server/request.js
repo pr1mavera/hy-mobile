@@ -7,6 +7,7 @@ Vue.use(AjaxPlugin);
 Vue.http.defaults.withCredentials = true;
 
 const host = conf.publicPath;
+
 // const host = '//m.anjuke.com/live';
 
 // Vue.http.interceptors.response.use((data) => {
