@@ -1,7 +1,7 @@
 <template>
   <div class="activityList" @click='$router.push("/activity/"+activity.id)'>
     <div class="listImg">
-      <img :src="activity.activityBannerUrl">
+      <img :src="activity.activityBannerMobileUrl">
     </div>
     <div class="listContent">
       <p class="name">{{activity.activityTitle}}</p>

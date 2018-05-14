@@ -16,8 +16,8 @@
       </svg>
       关注
     </x-button>
-    <div class="fillBox" v-if="isCurrentUser"></div>
-    <div class="attribute">
+    <!-- <div class="fillBox" v-if="isCurrentUser"></div> -->
+    <div class="attribute" v-if="isCurrentUser">
       <div class="item">
         <p>{{this.userProfile.userStatistics.activityCount}}</p>
         <p>会议</p>
@@ -142,6 +142,11 @@ export default {
     margin-top: 192px;
   }
   .attribute {
+    width: 100%;
+    position: absolute;
+    bottom:0;
+    left:50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     font-size: 14px;

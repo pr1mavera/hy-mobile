@@ -47,9 +47,11 @@
 
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex';
-import { getActivityListById, getActivityList, getActivityListIsOver } from '@/server/index.js';
+import { getActivityListById, getActivityList, getActivityListIsOver, getProfile } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import activityList from '@/components/activityList';
+// import { constants } from 'zlib';
+// import { mapState } from 'vuex';
 
 export default {
   data() {
@@ -60,6 +62,9 @@ export default {
       currentShowActivityIndex: 0,
     };
   },
+  created() {
+
+  },
   mounted() {
     // this.setId(this.$route.params.id);
     this.getActivityList();
@@ -68,27 +73,63 @@ export default {
     ...mapGetters([
       'id',
     ]),
+    // ...mapState({ userId: state => state.id }),
   },
   methods: {
+    // ...mapMutations(['SET_ID']),
     async getActivityList() {
-      if (this.$route.params.id) {
-        const res0 = await getActivityListById(this.$route.params.id, 1);
-        this.activityIsPublish = res0.data;
-        const res1 = await getActivityListById(this.$route.params.id, 3);
-        this.activityIsOver = res1.data;
-        if (res0.code !== 0 || res1.code !== 0) {
-          console.log('error in getActivityList');
+      const user = await getProfile();
+      if (user.code === 0) {
+        // 判断是否是当前用户
+        const userId = user.data.id;
+        const id = parseInt(this.$route.params.id, 10);
+        if (userId === id) {
+          this.getSelfActivity();
+        } else {
+          this.getOtherActivity();
         }
       } else {
-        const res0 = await getActivityList(0);
+        this.$vux.toast.text('获取当前用户信息失败', 'top');
+      }
+    },
+    async getOtherActivity() {
+      const res0 = await getActivityListById(this.$route.params.id, 0);
+      if (res0.code === 0) {
         this.activityNotPublish = res0.data;
-        const res1 = await getActivityList(1);
+      } else {
+        console.log(res0.msg);
+      }
+      const res1 = await getActivityListById(this.$route.params.id, 1);
+      if (res1.code === 0) {
         this.activityIsPublish = res1.data;
-        const res2 = await getActivityListIsOver();
+      } else {
+        console.log(res1.msg);
+      }
+      const res2 = await getActivityListById(this.$route.params.id, 3);
+      if (res2.code === 0) {
         this.activityIsOver = res2.data;
-        if (res0.code !== 0 || res1.code !== 0 || res2.code !== 0) {
-          console.log('error in getActivityList');
-        }
+      } else {
+        console.log(res2.msg);
+      }
+    },
+    async getSelfActivity() {
+      const res0 = await getActivityList(0);
+      if (res0.code === 0) {
+        this.activityNotPublish = res0.data;
+      } else {
+        console.log(res0.msg);
+      }
+      const res1 = await getActivityList(1);
+      if (res1.code === 0) {
+        this.activityIsPublish = res1.data;
+      } else {
+        console.log(res1.msg);
+      }
+      const res2 = await getActivityListIsOver();
+      if (res2.code === 0) {
+        this.activityIsOver = res2.data;
+      } else {
+        console.log(res2.msg);
       }
     },
     onTabItemClick(index) {

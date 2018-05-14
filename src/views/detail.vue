@@ -58,7 +58,7 @@
             <p v-html="this.tableData.activityDescription"></p>
           </div>
         </div>
-        <div class="sectionStyle detailSchedule">
+        <div class="sectionStyle detailSchedule" v-if="activitySchedulesOBJ && activitySchedulesOBJ.length>0">
           <h1 class="title">
             日程
           </h1>
@@ -90,7 +90,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailGuests">
+        <div class="sectionStyle detailGuests" v-if="activitySchedulesOBJ && tableData.activityGuests.length>0">
           <h1 class="title">
             嘉宾
           </h1>
@@ -114,7 +114,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailSupport">
+        <div class="sectionStyle detailSupport" v-if="partnersOBJ && partnersOBJ.length>0">
           <h1 class="title">
             合作支持
           </h1>
@@ -129,7 +129,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailContact">
+        <div class="sectionStyle detailContact" v-if="tableData.activityContacts && tableData.activityContacts.length>0">
           <h1 class="title">
             联系方式
           </h1>
