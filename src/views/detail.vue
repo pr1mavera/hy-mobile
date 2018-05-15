@@ -75,10 +75,10 @@
                 </svg>
                 <span>{{item.startDate | timeFormatExceptHour}}</span>
               </div>
-              <div class="timeLine-container">
-                <div v-for="itm in item.scheduleDetail " class="timeLine">
+              <div class="timeLine-container" v-if="item.scheduleDetail && item.scheduleDetail instanceof Array && item.scheduleDetail.length > 0">
+                <div v-for="itm in item.scheduleDetail" class="timeLine">
                   <div class="left">
-                    <p class="hour">{{itm.themeDate[0] | timeFormatExceptTime}}-{{itm.themeDate[1] | timeFormatExceptTime}}</p>
+                    <p class="hour">{{itm.startTime}}-{{itm.endTime}}</p>
                     <p class="day">{{item.startDate | timeFormatExceptHour2}}</p>
                   </div>
                   <div class="right">
@@ -90,7 +90,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailGuests" v-if="activitySchedulesOBJ && tableData.activityGuests.length>0">
+        <div class="sectionStyle detailGuests" v-if="tableData.activityGuests && tableData.activityGuests.length>0">
           <h1 class="title">
             嘉宾
           </h1>
@@ -227,6 +227,8 @@ export default {
         activityBannerMobileUrl: '',
         activitySchedules: [],
         activityPartners: [],
+        activityContacts: [],
+        activityGuests: [],
       },
       isWatch: 0,
     };
@@ -249,6 +251,7 @@ export default {
   computed: {
     ...mapState({ id: state => state.activityId }),
     isSameYear() {
+      // debugger;
       if ((Object.keys(this.tableData).length > 1) && this.tableData.startTime &&
       (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
         return true;
