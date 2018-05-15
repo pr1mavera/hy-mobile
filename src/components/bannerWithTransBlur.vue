@@ -4,7 +4,7 @@
       <img src="http://p5zhgy42k.bkt.clouddn.com/test/14/20180410/1524643919513.jpg">
     </div>
     <div class="avatar">
-      <img src="@/views/personalPage/icon.png" width="64" height="64">
+      <img :src="this.userProfile.avatarUrl" width="64" height="64">
     </div>
     <div class="title">
       <h1 class="titleItem name">{{this.userProfile.username}}</h1>

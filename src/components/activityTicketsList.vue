@@ -33,7 +33,7 @@
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
             <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
-            <button class="item" type="button" name="button" @click="downloadTicket2(ticket,activity)">下2</button>
+            <button v-show="false" class="item" type="button" name="button" @click="downloadTicket2(ticket,activity)">下2</button>
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
           </div>
         </li>
@@ -208,7 +208,7 @@ export default {
     },
     // downloadTicket2(ticket, activity) {
     downloadTicket2() {
-      debugger;
+      // debugger;
       // const [ticketsName, cTime, confereeName, , ticketLinkUrl] = ticket;
       // const [activityAddress] = activity;
       // eslint-disable-next-line
