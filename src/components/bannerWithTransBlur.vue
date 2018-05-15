@@ -94,6 +94,7 @@ export default {
     img {
       border-radius: 50%;
       border: solid #6586cf 5px;
+      object-fit: cover;
     }
   }
   .title {

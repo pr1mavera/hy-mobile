@@ -24,9 +24,11 @@
 </template>
 
 <script>
-import { Tab, TabItem } from 'vux';
+import { mapGetters } from 'vuex';
+import { Tab, TabItem, AlertModule, Alert } from 'vux';
 import bannerItem from '@/components/bannerList';
-import { getActivityList } from '@/server';
+import { getActivityList, getProfile } from '@/server';
+
 
 export default {
   data() {
@@ -37,15 +39,40 @@ export default {
     };
   },
   created() {
-    getActivityList(1).then((res) => {
-      this.activityList = res.data.list;
-    });
-    getActivityList(3).then((res) => {
-      this.endList = res.data.list;
-    });
+    this.getActivityList();
+  },
+  computed: {
+    ...mapGetters([
+      'id',
+    ]),
+  },
+  methods: {
+    async getActivityList() {
+      const user = await getProfile();
+      if (user.code === 0) {
+        getActivityList(1).then((res) => {
+          this.activityList = res.data;
+        });
+        getActivityList(3).then((res) => {
+          this.endList = res.data;
+        });
+      } else {
+        this.noLogin();
+      }
+    },
+    noLogin() {
+      AlertModule.show({
+        title: '当前用户未登录！',
+        content: '前往登录？',
+        onHide() {
+          // console.log('Plugin: I\'m hiding now');
+          window.location.href = 'http://login.ourwill.cn/login';
+        },
+      });
+    },
   },
   components: {
-    Tab, TabItem, bannerItem,
+    Tab, TabItem, bannerItem, AlertModule, Alert,
   },
 };
 </script>
@@ -54,5 +81,8 @@ export default {
   .vux-tab-warp{
     margin-bottom: 15px;
   }
+}
+.weui-dialog__btn, .weui-dialog__btn_primary {
+  color: #2c7dfa;
 }
 </style>
