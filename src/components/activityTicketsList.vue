@@ -33,7 +33,7 @@
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
             <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
-            <button v-show="false" class="item" type="button" name="button" @click="downloadTicket2(ticket,activity)">下2</button>
+            <button v-show="true" class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button>
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
           </div>
         </li>
@@ -141,6 +141,7 @@ import { TransferDom, Popup, Qrcode, XInput, Group } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';
 import { updateTicket } from '@/server';
+import PDFTicketItem from '@/common/js/PDFTicketItem.js';
 
 export default {
   props: {
@@ -206,22 +207,135 @@ export default {
         }
       }
     },
-    // downloadTicket2(ticket, activity) {
-    downloadTicket2() {
+    downloadTicket2(ticket, activity) {
+    // downloadTicket2() {
       // debugger;
       // const [ticketsName, cTime, confereeName, , ticketLinkUrl] = ticket;
       // const [activityAddress] = activity;
       // eslint-disable-next-line
       let canvas = document.createElement('CANVAS');
+
+      // 初始化背景
       canvas.setAttribute('height', 786);
       canvas.setAttribute('width', 1837);
       const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 1837, 786);
       ctx.fillStyle = '#213C67';
       ctx.fillRect(0, 0, 156, 786);
       // 这里绘画~  212，213行 用到时解开注释；
 
+      // 绘制PDF默认标题
+      this.PDFDrawDefine(ctx);
+      // 绘制PDF会议门票基本信息
+      this.PDFDrawMsg(ctx, ticket, activity);
+
       // 生成
       this.downLoadImage(canvas, '2');
+    },
+    PDFDrawDefine(context) {
+      const startTimeTitle = new PDFTicketItem({
+        itemText: '开始时间',
+        x: 260,
+        y: 309,
+        font: '36px PingFangSC-Regular',
+      });
+      startTimeTitle.draw(context, '#999999');
+
+      const addressTitle = new PDFTicketItem({
+        itemText: '活动地址',
+        x: 736,
+        y: 309,
+        font: '36px PingFangSC-Regular',
+      });
+      addressTitle.draw(context, '#999999');
+
+      const attendeeTitle = new PDFTicketItem({
+        itemText: '参会人',
+        x: 260,
+        y: 562,
+        font: '36px PingFangSC-Regular',
+      });
+      attendeeTitle.draw(context, '#999999');
+
+      const ticketNameTitle = new PDFTicketItem({
+        itemText: '票名',
+        x: 736,
+        y: 562,
+        font: '36px PingFangSC-Regular',
+      });
+      ticketNameTitle.draw(context, '#999999');
+
+      // 画虚线
+      context.fillStyle = '#DDDDDD';
+      context.setLineDash([15, 5]);
+      context.lineWidth = .1;
+      context.moveTo(1243, 146);
+      context.lineTo(1243, 640);
+      context.stroke();
+      context.setLineDash([]);
+
+      const ticketNoticeOnLeft = new PDFTicketItem({
+        itemText: '请将此票保管好携带至会场',
+        x: 0,
+        y: 0,
+        font: '36px PingFangSC-Regular',
+      });
+      context.save();
+      context.translate(90, 609);
+      context.rotate(-90 * Math.PI / 180);
+      ticketNoticeOnLeft.draw(context, '#CADFFF');
+      context.restore();
+    },
+    PDFDrawMsg(context, ticket, activity) {
+      const activityName = new PDFTicketItem({
+        // itemText: activity.activityTitle,
+        itemText: '好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊',
+        x: 260,
+        y: 133,
+        font: '52px PingFangSC-Medium',
+      });
+      activityName.drawTextChangeLine(context, '#333333', 837);
+
+      const startTime = new PDFTicketItem({
+        itemText: ticket.cTime,
+        x: 260,
+        y: 374,
+        font: '42px PingFangSC-Medium',
+      });
+      startTime.drawTextChangeLine(context, '#333333', 417);
+
+      const address = new PDFTicketItem({
+        itemText: this.addressFormat(activity.activityAddress),
+        x: 737,
+        y: 374,
+        font: '42px PingFangSC-Medium',
+      });
+      address.drawTextChangeLine(context, '#333333', 417);
+
+      const attendee = new PDFTicketItem({
+        itemText: ticket.confereeName,
+        x: 260,
+        y: 630,
+        font: '42px PingFangSC-Medium',
+      });
+      attendee.drawTextChangeLine(context, '#333333', 417);
+
+      const ticketName = new PDFTicketItem({
+        itemText: ticket.ticketsName,
+        x: 737,
+        y: 630,
+        font: '42px PingFangSC-Medium',
+      });
+      ticketName.drawTextChangeLine(context, '#333333', 417);
+
+      const code = new PDFTicketItem({
+        itemText: ticket.signCode,
+        x: 1442,
+        y: 613,
+        font: '62px SFUIText-Medium',
+      });
+      code.draw(context, '#4D4D4D');
     },
     clickToShowTicket(ticket) {
       // debugger
@@ -246,6 +360,15 @@ export default {
       a.href = canvas.toDataURL();
       a.download = name;
       a.click();
+    },
+    addressFormat(value) {
+      const json1 = value.replace(/'/g, '"');
+      const json2 = json1.replace(/^"/, "'");
+      const json3 = json2.replace(/"$/, "'");
+      let temp = JSON.parse(json3);
+      temp = Object.values(temp);
+      temp = temp.join('');
+      return temp;
     },
   },
   filters: {
