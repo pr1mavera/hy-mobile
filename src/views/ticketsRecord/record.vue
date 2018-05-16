@@ -2,7 +2,7 @@
   <div id="record">
     <ul class="sign_list">
       <li class="sign_item" v-for='item in sigedList'>
-        <span class="avatar">      
+        <span class="avatar">
           <img :src="defaultAvatar" alt="" >
         </span>
         <span class="username">{{item.confereeName}}</span>
@@ -60,7 +60,7 @@
     >
     <group>
       <x-input v-model='ticketNum' placeholder='请输入签到码' :focus='focus === 1'></x-input>
-    </group>  
+    </group>
     </confirm>
   </div>
 </template>

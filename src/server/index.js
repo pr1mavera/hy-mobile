@@ -12,6 +12,10 @@ export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 
 // 根据会议id获取门票
 export const getTicketsByActivityId = activityId => http.get(`/activityTickets/activity/${activityId}`);
+//下载门票
+// export const getPDFTicket = ticketId => http.get(`/ticketsRecord/getPDFTicket/${ticketId}`);
+//修改门票
+export const updateTicket = (id, data) => http.put(`/ticketsRecord/${id}`,data);
 
 // 会议搜索
 export const getSearchList = (data) => http.post('/search/activity/conditionalQuery', null, null, {params :  data });
@@ -38,7 +42,7 @@ export const getActivityListIsOver = () => http.get('/activity/issueOver?page=0'
 // 根据用户ID获取会议列表(不分页)(未发布/已结束)
 export const getActivityListById = (id, status) => http.get(`/activity/userId?id=${id}&page=0&status=${status}`);
 // 根据主办方获取参与的会议(购票)
-export const getActivityMyJoin = () => http.get('/activity/myJoin');
+export const getActivityMyJoin = (isValid) => http.get(`/activity/myJoin?isValid=${isValid}`);
 // 根据状态获取当前登录人参与的会议的 票的信息（有效票—已失效）
 export const getActivityWithStatus = status => http.get(`/ticketsRecord/participation/${status}`);
 
@@ -71,4 +75,3 @@ export const confirmSign = (activityId, ticketId) =>http.post(`/ticketsRecord/${
 
 // 获取微信签名
 export const wxConfig = url => http.get(`/wxConfig?url=${url}`);
-

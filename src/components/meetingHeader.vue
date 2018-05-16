@@ -70,13 +70,13 @@
                 </svg>
                 <span>我的门票</span>
               </a>
-              <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
+              <!-- <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-guanlihoutai"></use>
+                  <use xlink:href="#icon-gbannerBguanlihoutai"></use>
                 </svg>
                 <span>管理后台</span>
-              </a>
-              <a @click="logOut">
+              </a> -->
+              <a href="http://huiyizhan.ourwill.cn/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
@@ -130,11 +130,10 @@
               type="text"
               placeholder="搜索会议关键字"
               @focus="changeHandler"
-
             >
-              <div >
+              <!-- <div >
               </div>
-            <input>
+            <input> -->
           </div>
         </div>
       </popup>
@@ -224,10 +223,6 @@ export default {
     ...mapMutations({
       setId: 'SET_ID',
     }),
-    // 退出登录
-    logOut() {
-      this.isLogin = false;
-    },
   },
 };
 </script>
@@ -439,7 +434,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
     width: 100%;
     background-color: transparent;
     z-index: 499;
-    position: absolute;
+    // position: absolute;
     &::after{
       content: '';
       position: absolute;

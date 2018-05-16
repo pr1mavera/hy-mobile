@@ -40,7 +40,7 @@ export default {
     async getList() {
       const query = {
         keyword: this.searchVal,
-        isMobile: true,
+        // isMobile: true,
       };
       const res = await getSearchList(query);
       if (res.code === 0) {
@@ -77,6 +77,8 @@ export default {
       flex-grow: 0;
       font-size: 15px;
       color: #2C7DFA;
+      background-color:#fff;
+      border:none;
 
     }
     div.input{
@@ -107,6 +109,8 @@ export default {
 
     }
     .searchButton{
+      background-color:#fff;
+      border:none;
       width: 60px;
       font-size: 15px;
       color: #B8BCC4;

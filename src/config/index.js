@@ -4,8 +4,8 @@
  * @Last Modified by: mikey.zhaopeng
  * @Last Modified time: 2018-04-25 20:16:25
 */
-import ENV from './env';
-
+// import ENV from './env';
+const env = process.env.NODE_ENV;
 const production = {
   publicPath: '/api',
 };
@@ -14,5 +14,5 @@ const development = {
   publicPath: 'http://huiyizhan.ourwill.cn/api',
 };
 
-const location = ENV === 'production' ? production : development;
+const location = env === 'production' ? production : development;
 export default location;

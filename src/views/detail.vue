@@ -54,11 +54,11 @@
           <h1 class="title">
             简介
           </h1>
-          <div class="content">
-            <p>{{this.tableData.activityDescription}}</p>
+          <div class="content" >
+            <p v-html="this.tableData.activityDescription"></p>
           </div>
         </div>
-        <div class="sectionStyle detailSchedule">
+        <div class="sectionStyle detailSchedule" v-if="activitySchedulesOBJ && activitySchedulesOBJ.length>0">
           <h1 class="title">
             日程
           </h1>
@@ -75,10 +75,10 @@
                 </svg>
                 <span>{{item.startDate | timeFormatExceptHour}}</span>
               </div>
-              <div class="timeLine-container">
-                <div v-for="itm in item.scheduleDetail " class="timeLine">
+              <div class="timeLine-container" v-if="item.scheduleDetail && item.scheduleDetail instanceof Array && item.scheduleDetail.length > 0">
+                <div v-for="itm in item.scheduleDetail" class="timeLine">
                   <div class="left">
-                    <p class="hour">{{itm.time}} - {{itm.time}}</p>
+                    <p class="hour">{{itm.startTime}}-{{itm.endTime}}</p>
                     <p class="day">{{item.startDate | timeFormatExceptHour2}}</p>
                   </div>
                   <div class="right">
@@ -90,7 +90,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailGuests">
+        <div class="sectionStyle detailGuests" v-if="tableData.activityGuests && tableData.activityGuests.length>0">
           <h1 class="title">
             嘉宾
           </h1>
@@ -98,7 +98,7 @@
             <div class="main-container" v-for="item in tableData.activityGuests">
               <div class="left">
                 <div class="avator">
-                  <img :src="item.guestAvatar" alt="">
+                  <img :src="item.guestAvatarUrl" alt="">
                 </div>
               </div>
               <div class="right">
@@ -114,7 +114,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailSupport">
+        <div class="sectionStyle detailSupport" v-if="partnersOBJ && partnersOBJ.length>0">
           <h1 class="title">
             合作支持
           </h1>
@@ -123,13 +123,13 @@
               <h2>{{item[0].partnerType}}</h2>
               <flexbox :gutter='0' class="container" >
                 <flexbox-item :span='1/3' class="box" v-for="(itm ,index) in item" :key="index">
-                  <img :src="itm.logoPics">
+                  <img :src="itm.logoUrl">
                 </flexbox-item>
               </flexbox>
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailContact">
+        <div class="sectionStyle detailContact" v-if="tableData.activityContacts && tableData.activityContacts.length>0">
           <h1 class="title">
             联系方式
           </h1>
@@ -227,6 +227,8 @@ export default {
         activityBannerMobileUrl: '',
         activitySchedules: [],
         activityPartners: [],
+        activityContacts: [],
+        activityGuests: [],
       },
       isWatch: 0,
     };
@@ -242,12 +244,14 @@ export default {
     FlexboxItem,
   },
   mounted() {
-    this.SET_ID(this.$route.params.id);
+    // debugger;
+    this.SET_ACTIVITY_ID(this.$route.params.id);
     this.getInfoById();
   },
   computed: {
-    ...mapState({ id: state => state.id }),
+    ...mapState({ id: state => state.activityId }),
     isSameYear() {
+      // debugger;
       if ((Object.keys(this.tableData).length > 1) && this.tableData.startTime &&
       (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
         return true;
@@ -299,6 +303,10 @@ export default {
       const temp = new Date(value.replace(/-/g, '/'));
       return formatDate(temp, 'yyyy/MM/dd');
     },
+    timeFormatExceptTime(value = '') {
+      const temp = new Date(value.replace(/-/g, '/'));
+      return formatDate(temp, 'hh:mm');
+    },
     adressFormat(value = '{}') {
       let temp = JSON.parse(value);
       temp = Object.values(temp);
@@ -308,8 +316,9 @@ export default {
 
   },
   methods: {
-    ...mapMutations(['SET_ID']),
+    ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
+      // debugger;
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
@@ -350,6 +359,7 @@ export default {
       });
     },
     addWatchMeeting() {
+      // debugger;
       addWatchCollect(this.id).then((res) => {
         if (res && res.code === 0) {
           this.$vux.toast.text('收藏成功', 'top');
@@ -568,6 +578,7 @@ export default {
                   width: 40px;
                   height: 40px;
                   border-radius: 50%;
+                  background-color:#ddd;
                   img{
                     width: 40px;
                     height: 40px;

@@ -1,8 +1,9 @@
 <template>
   <div id="personalPage">
-    <meetingHeader :colorStyle="colorStyle" @rightSliderClickToChangeTabFlag="ChangeCurrentTabIndex"></meetingHeader>
+
     <div class="scrollWrapper" ref="scrollWrapper">
       <div class="mainContainer">
+        <meetingHeader :colorStyle="colorStyle" @rightSliderClickToChangeTabFlag="ChangeCurrentTabIndex"></meetingHeader>
         <bannerWithTransBlur :userProfile="userProfile" :isCurrentUser="isCurrentUser"></bannerWithTransBlur>
         <tab
         class="tab"
@@ -12,11 +13,11 @@
         bar-active-color="#2c7dfa"
         custom-bar-width="28px"
         >
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick">活动</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
-          <tab-item class="userCenterNavItem" @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
+          <tab-item :selected="currentTabIndex === 0"  @on-item-click="onTabItemClick">活动</tab-item>
+          <tab-item :selected="currentTabIndex === 1"  @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
+          <tab-item :selected="currentTabIndex === 2"  @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
+          <tab-item :selected="currentTabIndex === 3"  @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
+          <tab-item :selected="currentTabIndex === 4"  @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
         </tab>
         <div class="routerBody clearfix">
           <keep-alive>
@@ -74,6 +75,7 @@ export default {
     };
   },
   mounted() {
+    // debugger;
     this.currentTabIndex = this.pathMap.indexOf(this.$route.name);
     this.getUserProfile();
     // this.setIDInQuery();
@@ -84,7 +86,8 @@ export default {
   computed: {
     isCurrentUser() {
       // eslint-disable-next-line
-      return Number(this.$route.params.id) === this.id ? true : false;
+      // debugger;
+      return Number(this.$route.params.id) === this.id ? 1 : 0;
     },
     ...mapGetters([
       'id',
@@ -92,6 +95,7 @@ export default {
   },
   methods: {
     onTabItemClick(index) {
+      // debugger;
       this.currentTabIndex = index;
       this.$router.push({
         name: this.pathMap[index],
@@ -110,27 +114,28 @@ export default {
     ChangeCurrentTabIndex(tabFlag) {
       this.currentTabIndex = tabFlag;
       this.$nextTick(() => {
-        this.resetNavSelected();
+        // debugger
+        // this.resetNavSelected();
       });
     },
-    resetNavSelected() {
-      document.getElementsByClassName('userCenterNavItem')[this.currentTabIndex].click();
-    },
+    // resetNavSelected() {
+    //   // document.getElementsByClassName('userCenterNavItem')[this.currentTabIndex].click();
+    // },
     async getUserProfile() {
       // eslint-disable-next-line
       const res = await getProfileById(Number(this.$route.params.id));
       this.userProfile = res.data;
-      this.$nextTick(() => {
-        this.resetNavSelected();
-      });
+      // this.$nextTick(() => {
+      //   debugger
+      //   // this.resetNavSelected();
+      // });
       if (res.code !== 0) {
         console.log('error in getUserProfile');
       }
     },
   },
   watch: {
-    // eslint-disable-next-line
-    $route(newVal, oldVal) {
+    $route() {
       this.getUserProfile();
     },
   },
@@ -148,53 +153,7 @@ html, body, #app, #personalPage {
   height: 100%;
 }
 #personalPage {
-  .meetingHeader{
-    padding: 0;
-    height: 45px;
-    width: 100%;
-    background-color: transparent;
-    z-index: 999;
-    position: absolute;
-    &::after{
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 1;
-      z-index: -1;
-    }
-    .vux-header-left{
-      left: 15px;
-      top: 50%;
-      margin-top: -9px;
-      .left{
-        font-size: 18px;
-        color: #ffffff;
-      }
-    }
-    .vux-header-right{
-      right: 15px;
-      top: 50%;
-      margin-top: -9px;
-      .right{
-        font-size: 18px;
-        color: #ffffff;
-      }
-    }
-    .vux-header-title{
-      height: 45px;
-      .title{
-        h1{
-          line-height: 45px;
-          font-size: 23px;
-          color: #ffffff;
-        }
-      }
-    }
 
-  }
   .scrollWrapper {
     position: absolute;
     top: 0;
@@ -206,6 +165,59 @@ html, body, #app, #personalPage {
       overflow: scroll;
       height: 100%;
       -webkit-overflow-scrolling: touch;
+      .header {
+        // position: absolute;
+        top: 0;
+        width: 100%;
+        height: 45px;
+        .meetingHeader{
+          padding: 0;
+          height: 45px;
+          width: 100%;
+          background-color: transparent;
+          z-index: 999;
+          // position: absolute;
+          &::after{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 1;
+            z-index: -1;
+          }
+          .vux-header-left{
+            left: 15px;
+            top: 50%;
+            margin-top: -9px;
+            .left{
+              font-size: 18px;
+              color: #ffffff;
+            }
+          }
+          .vux-header-right{
+            right: 15px;
+            top: 50%;
+            margin-top: -9px;
+            .right{
+              font-size: 18px;
+              color: #ffffff;
+            }
+          }
+          .vux-header-title{
+            height: 45px;
+            .title{
+              h1{
+                line-height: 45px;
+                font-size: 23px;
+                color: #ffffff;
+              }
+            }
+          }
+
+        }
+      }
       .tab {
         .vux-tab-container {
           .vux-tab {
