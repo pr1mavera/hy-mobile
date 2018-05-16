@@ -20,21 +20,23 @@ export const getSearchList = (data) => http.post('/search/activity/conditionalQu
 export const getProfile = () => http.get('/user');
 // 根据id获取用户基本信息
 export const getProfileById = id => http.get(`/user?id=${id}`);
+// 获取用户基本信息
+export const getProfileDetail = () => http.get('/user/detail');
 // 获取会议类别列表
 export const getActivityClass = () => http.get('/activity/getActivityType');
 // 获取会议列表(不分页)
 export const getAllActivityList = () => http.get(`/activity/getAll?page=0`);
-// 根据用户id获取会议列表(不分页)
-export const getActivityListById = id => http.get(`/activity/getAll?id=${id}&page=0`);
 
 // 获取关注人信息
 export const getWatchPeopleList = query => http.get(`/watchPeople/users`, null, { params: query });
 // 获取粉丝信息
 export const getFanList = query => http.get(`/watchPeople/fans`, null, { params: query });
 // 根据主办方获取会议列表(不分页)(未发布/发布中)
-export const getActivityList = status => http.get(`/activity/issue/${status}`);
-// 根据主办方获取已结束会议列表(不分页)(未发布/发布中)
-export const getActivityListIsOver = () => http.get('/activity/issueOver');
+export const getActivityList = status => http.get(`/activity/issue/${status}?page=0`);
+// 根据主办方获取已结束会议列表(不分页)
+export const getActivityListIsOver = () => http.get('/activity/issueOver?page=0');
+// 根据用户ID获取会议列表(不分页)(未发布/已结束)
+export const getActivityListById = (id, status) => http.get(`/activity/userId?id=${id}&page=0&status=${status}`);
 // 根据主办方获取参与的会议(购票)
 export const getActivityMyJoin = () => http.get('/activity/myJoin');
 // 根据状态获取当前登录人参与的会议的 票的信息（有效票—已失效）
@@ -46,7 +48,7 @@ export const getDynamicOfMeeting = (query) => http.get('/watch/dynamic', null, {
 // 个人中心获取关注人动态 人
 export const getDynamicOfPerson = (query) => http.get('/watchPeople/dynamic', null, { params: query});
 // 根据主办方获取收藏的会议
-export const getActivityMyWatch = status => http.get(`/watch/${status}`);
+export const getActivityMyWatch = status => http.get(`/watch/${status}?page=0`);
 
 // 添加关注
 export const addWatch = (id) => http.post(`/watchPeople/${id}`);

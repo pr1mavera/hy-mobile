@@ -20,7 +20,7 @@
       <swiper  @on-index-change="handlerHeight(check)" id="swiper2" class="swiper" v-model="check" height="100px" :show-dots="false">
         <swiper-item >
           <div class="tab-swiper vux-center"  v-for="item in meetingData">
-            <div class="flex-box" v-if="item.user">
+            <div class="flex-box" v-if="item.user" @click='$router.push("/activity/"+item.activityId)'>
               <div class="left">
                 <img :src="item.user.avatarUrl" alt="">
               </div>

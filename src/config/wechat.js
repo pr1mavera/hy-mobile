@@ -43,6 +43,7 @@ const jsApiList = [
 
 export default (callback) => {
   const url = encodeURIComponent(window.location.href.split('#')[0]);
+  console.log(Vue.wechat);
   if (window.navigator.userAgent.indexOf('MicroMessenger') > -1) {
     Vue.wechat.error((res) => {
       // document.body.innerHTML = res.errMsg;

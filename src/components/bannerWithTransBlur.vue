@@ -3,33 +3,31 @@
     <div class="bannerBg">
       <img src="http://p5zhgy42k.bkt.clouddn.com/test/14/20180410/1524643919513.jpg">
     </div>
-    <div class="avatar" :style="this.setAvatarByScrollY">
+    <div class="avatar">
       <img src="@/views/personalPage/icon.png" width="64" height="64">
     </div>
-    <div class="title" :style="this.setTitleByScrollY" :class="{'textAlignLeft': this.scrollY > 0}">
-      <!-- <h1 class="titleItem name">{{this.userProfile.nickname}}</h1> -->
-      <!-- <p class="titleItem desc">这个人很烂，什么都没有留下...</p> -->
+    <div class="title">
       <h1 class="titleItem name">{{this.userProfile.username}}</h1>
-      <p class="titleItem desc">{{this.scrollY}}</p>
+      <p class="titleItem desc">{{this.userProfile.personalizedSignature ? this.userProfile.personalizedSignature : '这个人很懒，什么都没有留下...'}}</p>
     </div>
-    <x-button class="followBtn" v-if="this.$route.query.id">
+    <x-button class="followBtn" v-if="!isCurrentUser">
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-icon-test"></use>
       </svg>
       关注
     </x-button>
-    <div class="fillBox" v-if="!this.$route.query.id"></div>
+    <div class="fillBox" v-if="isCurrentUser"></div>
     <div class="attribute">
       <div class="item">
-        <p>223</p>
+        <p>{{this.userProfile.userStatistics.activityCount}}</p>
         <p>会议</p>
       </div>
       <div class="item">
-        <p>3366</p>
+        <p>{{this.userProfile.userStatistics.fansCount}}</p>
         <p>粉丝</p>
       </div>
       <div class="item">
-        <p>160</p>
+        <p>{{this.userProfile.userStatistics.popularity}}</p>
         <p>人气</p>
       </div>
     </div>
@@ -45,8 +43,8 @@ export default {
     userProfile: {
       type: Object,
     },
-    scrollY: {
-      type: Number,
+    isCurrentUser: {
+      type: Boolean,
     },
   },
   data() {
@@ -54,41 +52,11 @@ export default {
       mul: 0,
     };
   },
+  created() {
+
+  },
   computed: {
-    setAvatarByScrollY() {
-      const mul = this.scrollY / 50;
-      let X = 50;
-      let Y = 56;
-      if (this.scrollY >= 0) {
-        if (mul <= 1) {
-          // eslint-disable-next-line
-          X = 50 + mul * 160;
-          // eslint-disable-next-line
-          Y = 56 + mul * 50;
-        } else if (mul >= 1) {
-          X = 50 + 160;
-          Y = 56 + 50;
-        }
-      }
-      return `top: ${Y}px; transform: translateX(-${X}%);`;
-    },
-    setTitleByScrollY() {
-      const mul = this.scrollY / 50;
-      let X = 50;
-      let Y = 136;
-      if (this.scrollY >= 0) {
-        if (mul <= 1) {
-          // eslint-disable-next-line
-          X = 50 + mul * (-20);
-          // eslint-disable-next-line
-          Y = 136 + mul * (-20);
-        } else if (mul >= 1) {
-          X = 50 + (-20);
-          Y = 136 + (-20);
-        }
-      }
-      return `top: ${Y}px; transform: translateX(-${X}%);`;
-    },
+
   },
   components: {
     XButton,
@@ -120,7 +88,7 @@ export default {
     position: absolute;
     top: 56px;
     left: 50%;
-    transform: translate(-50%, 0, 0);
+    transform: translate(-50%, 0);
     // transition: all cubic-bezier(0.4, 0, 0.6, 1) .2s;
     img {
       border-radius: 50%;

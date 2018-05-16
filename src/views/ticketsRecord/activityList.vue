@@ -38,10 +38,10 @@ export default {
   },
   created() {
     getActivityList(1).then((res) => {
-      this.activityList = res.data;
+      this.activityList = res.data.list;
     });
     getActivityList(3).then((res) => {
-      this.endList = res.data;
+      this.endList = res.data.list;
     });
   },
   components: {

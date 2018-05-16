@@ -1,37 +1,26 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
-import home from '@/views/home';
-
-import activity from '@/views/activity';
-
 import detail from '@/views/detail';
-
 import buyTicket from '@/views/buyTicket';
 import selectTicket from '@/views/buyTicket/selectTicket';
 import fillInTicketMsg from '@/views/buyTicket/fillInTicketMsg';
 import success from '@/views/buyTicket/success';
-
-import personalPage from '@/views/personalPage';
+import usercenter from '@/views/usercenter';
 import PPActivity from '@/views/personalPage/PPActivity';
-import PPParticipate from '@/views/personalPage/PPParticipate';
+import PPPartake from '@/views/personalPage/PPPartake';
 import PPCollection from '@/views/personalPage/PPCollection';
 import PPFollow from '@/views/personalPage/PPFollow';
-import PPTrack from '@/views/personalPage/PPTrack';
-
-import TCKIndex from '@/views/TCKIndex';
-
+import PPDynamic from '@/views/personalPage/PPDynamic';
 import search from '@/views/searchPage';
-
-import service from '@/views/service';
-
 import ticketActivity from '@/views/ticketsRecord/activityList';
 import record from '@/views/ticketsRecord/record';
 
 // const pathToRegexp = require('path-to-regexp');
 
-// const re = pathToRegexp('/personalPage/:id*');
-// re.exec('/personalPage');
+import TCKIndex from '@/views/TCKIndex';
+import home from '@/views/home';
+import service from '@/views/service';
+import activity from '@/views/activity';
 
 Vue.use(Router);
 
@@ -64,7 +53,7 @@ export default new Router({
       component: service,
     },
     {
-      path: '/activity/:id',
+      path: '/activity/:id', // 活动具体页面
       name: 'detail',
       component: detail,
     },
@@ -107,11 +96,11 @@ export default new Router({
     {
       path: '/usercenter',
       name: 'usercenter',
-      component: personalPage,
+      component: usercenter,
       children: [
         {
           path: '/usercenter/',
-          redirect: '/usercenter/activity',
+          redirect: '/usercenter/activity/:id?',
         },
         {
           path: 'activity/:id?',
@@ -119,27 +108,28 @@ export default new Router({
           name: 'PPActivity',
         },
         {
-          path: 'partake',
-          component: PPParticipate,
-          name: 'PPParticipate',
+          path: 'partake/:id?',
+          component: PPPartake,
+          name: 'PPPartake',
         },
         {
-          path: 'collection',
+          path: 'collection/:id?',
           component: PPCollection,
           name: 'PPCollection',
         },
         {
-          path: 'follow',
+          path: 'follow/:id?',
           component: PPFollow,
           name: 'PPFollow',
         },
         {
-          path: 'dynamic',
-          component: PPTrack,
-          name: 'PPTrack',
+          path: 'dynamic/:id?',
+          component: PPDynamic,
+          name: 'PPDynamic',
         },
       ],
     },
+    // { path: '*', name: '404', component: NotFoundComponent },
   ],
   base: '/web/',
 });

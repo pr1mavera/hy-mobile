@@ -8,23 +8,23 @@
       active-color="#2c7dfa"
       >
         <tab-item selected @on-item-click="onTabItemClick">
-          发布中({{activityIsPublish.list.length}})
+          发布中({{activityIsPublish.length}})
         </tab-item>
         <tab-item @on-item-click="onTabItemClick">
-          已结束({{activityIsOver.list.length}})
+          已结束({{activityIsOver.length}})
         </tab-item>
       </tab>
     </div>
     <div class="activityListView" v-if="currentShowActivityIndex === 0">
       <ul>
-        <li v-for="(activity, index) in activityIsPublish.list" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityIsPublish" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
     </div>
     <div class="activityListView" v-if="currentShowActivityIndex === 1">
       <ul>
-        <li v-for="(activity, index) in activityIsOver.list" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityIsOver" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
@@ -65,7 +65,6 @@ export default {
   },
   methods: {
     getActivityListNew() {
-      
     },
     async getActivityList() {
       const res1 = await getActivityMyWatch(1);

@@ -1,5 +1,5 @@
 <template>
-  <div class="activityList">
+  <div class="activityList" @click='$router.push("/activity/"+activity.id)'>
     <div class="listImg">
       <img :src="activity.activityBannerUrl">
     </div>

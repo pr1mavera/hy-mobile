@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { AjaxPlugin } from 'vux';
-import conf from '../config';
+import conf from '../config/index';
 
 Vue.use(AjaxPlugin);
 
