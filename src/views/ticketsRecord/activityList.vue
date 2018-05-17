@@ -1,6 +1,6 @@
 <template>
   <div class="ticketsRecordActivityList">
-    <tab :line-width="2" custom-bar-width="60px">
+    <tab v-show="tabView" :line-width="2" custom-bar-width="60px">
       <tab-item selected  @on-item-click="handleIndex">进行中</tab-item>
       <tab-item @on-item-click="handleIndex">已结束</tab-item>
     </tab>
@@ -33,6 +33,7 @@ import { getActivityList, getProfile } from '@/server';
 export default {
   data() {
     return {
+      tabView:false,
       currentStatus: 1, // 1:进行中 3：已结束
       activityList: [],
       endList: [],
@@ -51,6 +52,7 @@ export default {
       const user = await getProfile();
       if (user.code === 0) {
         getActivityList(this.currentStatus).then((res) => {
+          this.tabView = true;
           this.activityList = res.data;
           // console.log(this.activityList, 1);
         });
@@ -59,19 +61,19 @@ export default {
         //   // console.log(this.endList, 0)
         // });
       } else {
-        this.noLogin();
+        // this.noLogin();
       }
     },
-    noLogin() {
-      AlertModule.show({
-        title: '当前用户未登录！',
-        content: '前往登录？',
-        onHide() {
-          // console.log('Plugin: I\'m hiding now');
-          window.location.href = 'http://login.ourwill.cn/login';
-        },
-      });
-    },
+    // noLogin() {
+    //   AlertModule.show({
+    //     title: '当前用户未登录！',
+    //     content: '前往登录？',
+    //     onHide() {
+    //       // console.log('Plugin: I\'m hiding now');
+    //       window.location.href = 'http://login.ourwill.cn/login';
+    //     },
+    //   });
+    // },
     handleIndex(index) {
       if (index === 0) { // 进行中
         this.currentStatus = 1;

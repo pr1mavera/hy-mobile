@@ -33,7 +33,7 @@
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
             <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
-            <button v-show="true" class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button>
+            <button v-show="false" class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button>
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
           </div>
         </li>
@@ -215,7 +215,6 @@ export default {
       // const [activityAddress] = activity;
       // eslint-disable-next-line
       let canvas = document.createElement('CANVAS');
-
       // 初始化背景
       canvas.setAttribute('height', 786);
       canvas.setAttribute('width', 1837);
@@ -266,7 +265,6 @@ export default {
         font: '36px PingFangSC-Regular',
       });
       ticketNameTitle.draw(context, '#999999');
-
       // 画虚线
       context.fillStyle = '#DDDDDD';
       context.setLineDash([15, 5]);
