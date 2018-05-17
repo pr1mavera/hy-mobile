@@ -166,6 +166,7 @@ export default {
     };
   },
   methods: {
+    /* eslint-disable */
     updateTicket() {
       const data = { ...this.ticketForm };
       const len = data.confereeName.length;

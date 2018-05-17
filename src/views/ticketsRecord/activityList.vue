@@ -1,8 +1,8 @@
 <template>
   <div class="ticketsRecordActivityList">
     <tab :line-width="2" custom-bar-width="60px">
-      <tab-item selected>进行中</tab-item>
-      <tab-item>已结束</tab-item>
+      <tab-item selected  @on-item-click="handleIndex">进行中</tab-item>
+      <tab-item @on-item-click="handleIndex">已结束</tab-item>
     </tab>
     <div>
       <bannerItem
@@ -13,11 +13,11 @@
         v-for='(item,inx) in activityList'
         @click.native="$router.push(`/record/${item.id}`)"/>
       <bannerItem
-        v-if='currentStatus === 3'
+        v-if='currentStatus === 0'
         :activityBannerMobileUrl='item.activityBannerMobileUrl'
         :activityTitle='item.activityTitle'
         :key='inx'
-        v-for='(item,inx) in endList'
+        v-for='(item,inx) in activityList'
         @click.native="$router.push(`/record/${item.id}`)"/>
     </div>
   </div>
@@ -33,7 +33,7 @@ import { getActivityList, getProfile } from '@/server';
 export default {
   data() {
     return {
-      currentStatus: 1,
+      currentStatus: 1, // 1:进行中 3：已结束
       activityList: [],
       endList: [],
     };
@@ -50,12 +50,14 @@ export default {
     async getActivityList() {
       const user = await getProfile();
       if (user.code === 0) {
-        getActivityList(1).then((res) => {
+        getActivityList(this.currentStatus).then((res) => {
           this.activityList = res.data;
+          // console.log(this.activityList, 1);
         });
-        getActivityList(3).then((res) => {
-          this.endList = res.data;
-        });
+        // getActivityList(0).then((res) => {
+        //   this.endList = res.data;
+        //   // console.log(this.endList, 0)
+        // });
       } else {
         this.noLogin();
       }
@@ -69,6 +71,15 @@ export default {
           window.location.href = 'http://login.ourwill.cn/login';
         },
       });
+    },
+    handleIndex(index) {
+      if (index === 0) { // 进行中
+        this.currentStatus = 1;
+        this.getActivityList();
+      } else if (index === 1) { // 已结束
+        this.currentStatus = 0;
+        this.getActivityList();
+      }
     },
   },
   components: {

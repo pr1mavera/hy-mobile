@@ -207,6 +207,7 @@ export default {
         }
         .flex-box{
           display: flex;
+          display:-webkit-flex;
           justify-content: space-between;
           align-items: center;
           min-height: 95px;
