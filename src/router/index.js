@@ -58,7 +58,7 @@ export default new Router({
       component: detail,
     },
     {
-      path: '/ticketActivity',
+      path: '/ticketActivity', // 微信端嵌入页面（进行中，已结束）
       name: 'ticketActivity',
       component: ticketActivity,
     },
