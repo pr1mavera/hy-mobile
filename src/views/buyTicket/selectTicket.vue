@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import XNumberSetCount from '@/components/XNumberSetCount.vue';
 // import Vue from 'vue';
 import { mapMutations, mapGetters } from 'vuex';

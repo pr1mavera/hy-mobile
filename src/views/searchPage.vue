@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getSearchList } from '@/server/index.js';
 import activityList from '@/components/searchList';
 

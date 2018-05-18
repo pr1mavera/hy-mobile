@@ -141,7 +141,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getProfileDetail } from '@/server/index.js';
 import { XHeader, Popup, TransferDom, XButton } from 'vux';
 import { mapMutations, mapGetters } from 'vuex';

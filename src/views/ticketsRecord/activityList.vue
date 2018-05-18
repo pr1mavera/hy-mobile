@@ -33,7 +33,7 @@ import { getActivityList, getProfile } from '@/server';
 export default {
   data() {
     return {
-      tabView:false,
+      tabView: false,
       currentStatus: 1, // 1:进行中 3：已结束
       activityList: [],
       endList: [],

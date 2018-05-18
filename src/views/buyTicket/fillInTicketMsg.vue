@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { mapGetters, mapMutations } from 'vuex';
 import userInput3 from '@/components/userInput3.vue';
 import userInputBox from '@/components/userInputBox.vue';

@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { formatDate } from '@/common/js/index.js';
 
 export default {

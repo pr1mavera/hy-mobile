@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { mapMutations, mapGetters } from 'vuex';
 import { getTicketsByActivityId } from '@/server/index.js';
 import headerWithProcess from '@/components/headerWithProcess.vue';

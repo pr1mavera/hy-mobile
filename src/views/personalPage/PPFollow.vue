@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
 import { getWatchPeopleList, getFanList, addWatch, deleteWatch } from '@/server/index.js';
 

@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import userInput3 from '@/components/userInput3.vue';
 
 export default {

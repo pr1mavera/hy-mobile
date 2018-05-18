@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { AjaxPlugin, ToastPlugin } from 'vux';
 import conf from '../config/index';
-import { debug } from 'util';
+// import { debug } from 'util';
 
 Vue.use(AjaxPlugin);
 Vue.use(ToastPlugin);
@@ -12,25 +12,17 @@ const host = conf.publicPath;
 
 // const host = '//m.anjuke.com/live';
 
-Vue.http.interceptors.response.use((data) => {
-  // if (data.data.code && data.data.code !== 0) {
-  //   this.$vux.toast.text(data.data.msg, 'top');
-  // }
-  if (data.data.code == 0) {
-    return data;
-  }
-}, (error) => {
-  debugger;
+Vue.http.interceptors.response.use(data => data, (error) => {
   if (error.response.status === 401) {
     const paramsString = encodeURI(window.location.href);
-    if (paramsString.indexOf('ticketActivity')>-1) {
+    if (paramsString.indexOf('ticketActivity') > -1) {
       // const href='http://'+window.location.host;
       // console.log(this)
       Vue.$vux.toast.text(error.response.data.msg, 'top');
-      setTimeout(()=>{
+      setTimeout(() => {
         window.location.href = `${error.response.data.loginUrl}?service=${paramsString}`;
-      },500);
-    } 
+      }, 500);
+    }
   }
   return Promise.reject(error);
 });

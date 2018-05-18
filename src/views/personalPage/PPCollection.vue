@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { mapGetters } from 'vuex';
 import { getActivityMyWatch } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';

@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getBanner, getActivityHots, getActivityRecents } from '@/server/index.js';
 import meetingHeader from '@/components/meetingHeader';
 import activityList from '@/components/activityList';

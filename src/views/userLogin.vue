@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { Tab, TabItem } from 'vux';
 
 export default {
