@@ -21,8 +21,8 @@
       </div>
     </div>
     <div class="orderBtn">
-      <button class="btnItem" type="button" name="button" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
-      <button class="btnItem" type="button" name="button">返回首页</button>
+      <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
+      <button class="btnItem" type="button" name="button" @click="$router.push('/')">返回首页</button>
     </div>
   </div>
 </template>
@@ -93,6 +93,12 @@ export default {
       // purchaseTicket(this.activityId, this.userMsg).then((res) => {
       //   console.log(res);
       // });
+    },
+    ticketMsgFn() {
+      // 购买成功
+      if (this.feedback.code === 0) {
+        // 跳转查看门票
+      }
     },
   },
 };
