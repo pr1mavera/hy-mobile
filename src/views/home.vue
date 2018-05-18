@@ -71,10 +71,10 @@ export default {
     setSwiperList() {
       this.swiperList = this.bannerList.map(item => ({
         img: item.picUrl,
-        url: item.link.substring(4),
+        // url: item.link.substring(4),
+        url: item.link,
         title: item.title,
       }));
-      console.log(this.swiperList);
     },
   },
   components: {
