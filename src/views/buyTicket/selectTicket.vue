@@ -52,7 +52,7 @@ export default {
     ]),
   },
   methods: {
-    countChangeWithId(id, val) { // 响应子组件事件方法
+    countChangeWithId(id, val) { // 响应子组件事件方法 (门票的id及购买门票的数量)
       this.$emit('countChangeWithId', id, val);
     },
     ...mapMutations({

@@ -71,10 +71,10 @@ export default {
     setSwiperList() {
       this.swiperList = this.bannerList.map(item => ({
         img: item.picUrl,
-        url: item.link.substring(4),
+        // url: item.link.substring(4),
+        url: item.link,
         title: item.title,
       }));
-      console.log(this.swiperList);
     },
   },
   components: {
@@ -97,7 +97,6 @@ export default {
     background-color: #ffffff;
     // box-sizing: border-box;
     .homeContentWrapper {
-      padding-top: 44px;
       padding-bottom: 134px;
       .vux-slider > .vux-indicator > a > .vux-icon-dot, .vux-slider .vux-indicator-right > a > .vux-icon-dot {
         background-color: rgba(255, 255, 255, .5);

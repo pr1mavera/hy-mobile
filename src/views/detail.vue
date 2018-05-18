@@ -182,7 +182,7 @@
           </span> -->
           <span class="free" >免费</span>
         </div>
-        <div class="next" @click="goBuyTicket()">
+        <div class="next" @click="goBuyTicket('click')" ref="getTicket">
           <span>获取门票</span>
         </div>
       </div>
@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem } from 'vux';
+import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem, Alert } from 'vux';
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
 import meetingHeader from '@/components/meetingHeader';
@@ -242,6 +242,7 @@ export default {
     GridItem,
     Flexbox,
     FlexboxItem,
+    Alert,
   },
   mounted() {
     // debugger;
@@ -319,8 +320,10 @@ export default {
     ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
       // debugger;
+      // 获取会议详情
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
+      this.goBuyTicket();
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
       if (!(res1.code === 0 && res1) || !(res2.code === 0 && res2)) {
         console.log('error in getInfoById ');
@@ -351,12 +354,27 @@ export default {
         });
       }
     },
-    goBuyTicket() {
-      const id = this.id;
-      const nextRoute = `/buyTicket/${id}`;
-      this.$router.push({
-        path: nextRoute,
-      });
+    goBuyTicket(value) {
+      // 判断会议 是否结束
+      if (new Date(this.tableData.endTime) - new Date() > 0) {
+        this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
+        if (value) {
+          const id = this.id;
+          const nextRoute = `/buyTicket/${id}`;
+          this.$router.push({
+            path: nextRoute,
+          });
+        }
+      } else {
+        this.$refs.getTicket.style.backgroundColor = '#ccc';
+        // 会议已结束
+        if (value) {
+          this.$vux.alert.show({
+            title: '温馨提示',
+            content: '会议已结束，不能购票！',
+          });
+        }
+      }
     },
     addWatchMeeting() {
       // debugger;

@@ -1,6 +1,7 @@
 <template>
   <div class="buyTicket">
     <div class="header">
+      <!-- 购买门票进度 -->
       <headerWithProcess></headerWithProcess>
     </div>
     <div class="routerBody">
@@ -8,6 +9,7 @@
         <router-view @countChangeWithId="countChangeWithId"></router-view>
       </keep-alive>
     </div>
+    <!-- 总价和下一步 -->
     <shopCart v-if="this.$route.name !== 'success'"></shopCart>
   </div>
 </template>
@@ -120,7 +122,7 @@ export default {
       this.setQuery(query);
     },
     // 根据id添加相应的cont字段表示已经选择的门票个数
-    countChangeWithId(id, val) { // 响应子组件事件方法
+    countChangeWithId(id, val) { // (门票的id及购买门票的数量)
       const tickets = this.tickets.map((item) => {
         if (item.id === id) {
           // eslint-disable-next-line

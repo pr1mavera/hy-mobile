@@ -53,7 +53,7 @@ export default new Router({
       component: service,
     },
     {
-      path: '/activity/:id', // 活动具体页面
+      path: '/activity/:id', // 活动详情页面，可获取门票
       name: 'detail',
       component: detail,
     },
@@ -63,12 +63,12 @@ export default new Router({
       component: ticketActivity,
     },
     {
-      path: '/record/:id',
+      path: '/record/:id', // 扫码验票，签到码验票
       name: 'record',
       component: record,
     },
     {
-      path: '/buyTicket/:activityId',
+      path: '/buyTicket/:activityId', // 买票步骤
       name: 'buyTicket',
       component: buyTicket,
       children: [
@@ -77,24 +77,24 @@ export default new Router({
           redirect: '/buyTicket/:activityId/selectTicket',
         },
         {
-          path: 'selectTicket',
+          path: 'selectTicket', // 选择门票
           component: selectTicket,
           name: 'selectTicket',
         },
         {
-          path: 'fillInTicketMsg',
+          path: 'fillInTicketMsg', // 填写信息
           component: fillInTicketMsg,
           name: 'fillInTicketMsg',
         },
         {
-          path: 'success',
+          path: 'success', // 购买成功
           component: success,
           name: 'success',
         },
       ],
     },
     {
-      path: '/usercenter',
+      path: '/usercenter', // 我的会议
       name: 'usercenter',
       component: usercenter,
       children: [
@@ -103,27 +103,27 @@ export default new Router({
           redirect: '/usercenter/activity/:id?',
         },
         {
-          path: 'activity/:id?',
+          path: 'activity/:id?', // 活动
           component: PPActivity,
           name: 'PPActivity',
         },
         {
-          path: 'partake/:id?',
+          path: 'partake/:id?', // 参与
           component: PPPartake,
           name: 'PPPartake',
         },
         {
-          path: 'collection/:id?',
+          path: 'collection/:id?', // 收藏
           component: PPCollection,
           name: 'PPCollection',
         },
         {
-          path: 'follow/:id?',
+          path: 'follow/:id?', // 关注
           component: PPFollow,
           name: 'PPFollow',
         },
         {
-          path: 'dynamic/:id?',
+          path: 'dynamic/:id?', // 动态
           component: PPDynamic,
           name: 'PPDynamic',
         },
