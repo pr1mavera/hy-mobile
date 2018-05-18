@@ -2,16 +2,25 @@
   <div class="userInput-3">
     <form method="post">
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">姓名<i>*</i></label>
-        <input class="input input-hook" type="text" name="name" :value="setNameDefaultInput" v-on:input="userChangeEdit" id="firstFocus">
+        <label class="title" :class="setTitleSize">
+          姓名<i>*</i>
+          <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
+        </label>
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" v-model="ticketOwner.confereeName">
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">电话<i>*</i></label>
-        <input class="input input-hook" type="text" name="phone" :value="setPhoneDefaultInput" v-on:input="userChangeEdit">
+        <label class="title" :class="setTitleSize">
+          电话<i>*</i>
+          <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
+        </label>
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn" v-model="ticketOwner.confereePhone">
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">邮箱<i>*</i></label>
-        <input class="input input-hook" type="text" name="email" :value="setEmailDefaultInput" v-on:input="userChangeEdit">
+        <label class="title" :class="setTitleSize">
+          邮箱<i>*</i>
+          <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
+        </label>
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn" v-model="ticketOwner.confereeEmail">
       </div>
     </form>
   </div>
@@ -28,6 +37,20 @@ export default {
     index: {
       type: Number,
     },
+  },
+  data() {
+    return {
+      ticketOwner: {
+        confereeName: '', // 参与人（票面信息）
+        confereePhone: '', // 参与人手机
+        confereeEmail: '', // 参与人邮箱
+      },
+      user: { // 判断信息的正确性
+        nameInfo: false,
+        phoneInfo: false,
+        emailInfo: false,
+      },
+    };
   },
   computed: {
     ...mapGetters([
@@ -59,10 +82,28 @@ export default {
       return;
     },
   },
+  watch: {
+    // ticketOwner: {
+    //   handler(val) {
+    //     console.log(val, 123);
+    //   },
+    //   deep: true,
+    // },
+  },
   methods: {
-    userChangeEdit() {
+    ownerNameFn() {
       if (this.index === 0) {
-        this.$emit('userChangeEdit');
+        this.$emit('ticketOwnerFn', this.ticketOwner);
+      }
+    },
+    ownerPhoneFn() {
+      if (this.index === 0) {
+        this.$emit('ticketOwnerFn', this.ticketOwner);
+      }
+    },
+    ownerEmailFn() {
+      if (this.index === 0) {
+        this.$emit('ticketOwnerFn', this.ticketOwner);
       }
     },
   },
@@ -84,6 +125,12 @@ export default {
       color: @text-color;
       i {
         color: #ff584e;
+      }
+      .info-msg{
+        display:inline-block;
+        color:red;
+        font-size:0.6rem;
+        padding-left:10px;
       }
       &.titleSize-12 {
         font-size: 12px;

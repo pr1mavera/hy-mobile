@@ -4,7 +4,7 @@
       <li v-for="(ticket, index) in selectTicket" class="inputBoxItem" :key="index">
         <div class="boxTitle border-1px-b">{{index + 1}}.{{ticket.ticketName}}</div>
         <div class="boxContent">
-          <userInput-3 :titleSize="12" :index="index" @userChangeEdit="userChangeEdit"></userInput-3>
+          <userInput-3 :titleSize="12" :index="index" @ticketOwner="ticketOwner"></userInput-3>
         </div>
       </li>
     </ul>
@@ -16,16 +16,31 @@ import userInput3 from '@/components/userInput3.vue';
 
 export default {
   props: {
-    selectTicket: {
+    selectTicket: { // 所选门票的信息
       type: Array,
     },
   },
   computed: {
 
   },
+  data() {
+    return {
+      ticketsRecordList: [{  // 门票记录列表（必填）
+        ticketsId: '', // 门票模板id
+        confereeName: '', // 参与人（票面信息）
+        confereePhone: '', // 参与人手机
+        confereeEmail: '', // 参与人邮箱
+      }],
+    };
+  },
+  mounted() {
+  },
   methods: {
-    userChangeEdit() {
-      this.$emit('userChangeEdit');
+    // userChangeEdit() {
+    //   this.$emit('userChangeEdit');
+    // },
+    ticketOwner(msg) {
+      console.log(msg);
     },
   },
   components: {
