@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { purchaseTicket } from '@/server/index.js';
+// import { purchaseTicket, getProfileDetail } from '@/server/index.js';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -61,15 +61,16 @@ export default {
         //   QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
         // },
       },
-      userMsg: { // 卖家信息和门票信息
+      userMsg: { // 买家信息和门票信息
         buyer: '', // （必填）
         buyerPhone: '', // （必填）
         buyerEmail: '', // （必填）
-        ticketsRecordList: '', // 门票记录列表（必填）
-        ticketsId: '', // 门票模板id
-        confereeName: '', // 参与人
-        confereePhone: '', // 参与人手机
-        confereeEmail: '', // 参与人邮箱
+        ticketsRecordList: [{  // 门票记录列表（必填）
+          ticketsId: this.id, // 门票模板id
+          confereeName: '', // 参与人（票面信息）
+          confereePhone: '', // 参与人手机
+          confereeEmail: '', // 参与人邮箱
+        }],
       },
     };
   },
@@ -87,9 +88,13 @@ export default {
   },
   methods: {
     getData() {
+      // this.userMsg.ticketsRecordList[1].confereeName = this.firstEditData.name;
+      // this.userMsg.ticketsRecordList[2].confereePhone = this.firstEditData.phone;
+      // this.userMsg.ticketsRecordList[3].confereeEmail = this.firstEditData.email;
       this.userMsg.buyer = this.firstEditData.name;
       this.userMsg.buyerPhone = this.firstEditData.phone;
       this.userMsg.buyerEmail = this.firstEditData.email;
+      console.log(this.userMsg);
       // purchaseTicket(this.activityId, this.userMsg).then((res) => {
       //   console.log(res);
       // });
