@@ -136,7 +136,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { TransferDom, Popup, Qrcode, XInput, Group } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';

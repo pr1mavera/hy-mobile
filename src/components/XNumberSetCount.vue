@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { Group, XNumber } from 'vux';
 
 export default {

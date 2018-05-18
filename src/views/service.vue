@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import meetingHeader from '@/components/meetingHeader';
 import meetingFooter from '@/components/meetingFooter';
 import serviceCard from '@/components/serviceCard';

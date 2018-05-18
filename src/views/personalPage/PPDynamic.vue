@@ -71,7 +71,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
 // import BScroll from 'better-scroll';
 import { getDynamicOfMeeting, getDynamicOfPerson } from '@/server/index.js';

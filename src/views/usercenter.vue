@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getProfileById } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import { mapGetters } from 'vuex';

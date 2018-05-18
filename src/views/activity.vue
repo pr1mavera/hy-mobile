@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getAllActivityList, getActivityClass } from '@/server/index.js';
 import meetingHeader from '@/components/meetingHeader';
 import activityList from '@/components/activityList';

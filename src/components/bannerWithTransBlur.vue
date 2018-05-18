@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { XButton } from 'vux';
 
 export default {
