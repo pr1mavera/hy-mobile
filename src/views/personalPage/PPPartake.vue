@@ -76,6 +76,7 @@ export default {
     async getActivityTicketsList() {
       const res0 = await getActivityMyJoin(false);
       this.ticketsIsInvalid = res0.data;
+      debugger;
       const res1 = await getActivityMyJoin(true);
       this.ticketsIsValid = res1.data;
       if (res1.code !== 0 || res1.code !== 0) {

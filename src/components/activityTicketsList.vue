@@ -63,7 +63,7 @@
                 <div class="content">
                   <p class="title ticketN">{{currentTicket.ticketsName}}</p>
                   <div class="QRCodeBox">
-                    <qrcode :value="currentTicket.ticketLinkUrl"></qrcode>
+                    <qrcode :value="currentTicket.authCode"></qrcode>
                   </div>
                   <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
                   <div class="massage">
