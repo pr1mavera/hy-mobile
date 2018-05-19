@@ -1,11 +1,11 @@
 <template>
 <div class="banner-list-container">
   <div class="banner_list_item" v-if="this.activityBannerMobileUrl || this.activityTitle">
-    <img :src="activityBannerMobileUrl" alt="banenr">
+    <img :src="activityBannerMobileUrl" alt="banner">
     <p class="banner_item_footer">{{activityTitle}}</p>
   </div>
   <div class="banner_list_item" v-else>
-    <p class="banner_item_footer">暂无内容</p>
+    <p class="banner_item_footer"><divider>暂无信息</divider></p>
   </div>
 </div>
 </template>

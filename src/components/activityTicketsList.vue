@@ -28,7 +28,7 @@
       <ul>
         <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
           <span class="ticketState">{{ticket.ticketStatus | ticketFilter}}</span>
-          <p class="text">{{ticket.ticketsName}}</p>
+          <p class="text">{{ticket.ticketsName?ticket.ticketsName:'无'}}</p>
           <p class="text">{{ticket.confereeName}}</p>
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
@@ -61,9 +61,9 @@
               </div>
               <div class="ticket border-1px-t">
                 <div class="content">
-                  <p class="title ticketN">{{currentTicket.ticketsName}}</p>
+                  <p class="title ticketN">{{currentTicket.ticketsName?currentTicket.ticketsName:'无'}}</p>
                   <div class="QRCodeBox">
-                    <qrcode :value="currentTicket.ticketLinkUrl"></qrcode>
+                    <qrcode :value="currentTicket.authCode"></qrcode>
                   </div>
                   <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
                   <div class="massage">

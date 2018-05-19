@@ -25,9 +25,9 @@
                 <img :src="item.avatarUrl" alt="">
               </div>
               <div class="center">
-                  <h5>{{item.nickname}}</h5>
-                  <p>{{item.info}}</p>
-                  <div v-if="item.userStatistics" >
+                  <h5>{{item.nickname?item.nickname:item.username}}</h5>
+                  <p p-intro>{{item.info?item.info:'这个人很懒，但还是什么都没写...'}}</p>
+                  <div v-if="item.userStatistics">
                     <p>会议<span class="num" >{{item.userStatistics.activityCount }}</span></p>
                     <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
@@ -233,6 +233,13 @@ export default {
               color:#5d6574;
               font-size: 12px;
               padding: 2px 0;
+            }
+            p[p-intro]{
+              overflow : hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
             }
             &>div{
               display: flex;

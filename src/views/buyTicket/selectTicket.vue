@@ -41,7 +41,6 @@
 
 <script>
 import XNumberSetCount from '@/components/XNumberSetCount.vue';
-// import Vue from 'vue';
 import { mapMutations, mapGetters } from 'vuex';
 
 export default {
@@ -50,6 +49,10 @@ export default {
       'tickets',
       'selTickets',
     ]),
+  },
+  updated() {
+    // 页面跳转置顶
+    window.scroll(0, 0);
   },
   methods: {
     countChangeWithId(id, val) { // 响应子组件事件方法 (门票的id及购买门票的数量)

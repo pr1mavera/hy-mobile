@@ -44,6 +44,7 @@ export default {
       };
       const res = await getSearchList(query);
       if (res.code === 0) {
+        debugger;
         this.activityList = res.data.list;
       } else {
         console.log('error in getSearchlist');

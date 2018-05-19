@@ -23,49 +23,49 @@ import shopCart from '@/components/shopCart.vue';
 export default {
   data() {
     return {
-      ticketsList: [
-        {
-          id: 12,
-          ticketName: '门票1',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 0,
-          isCheck: true,
-        },
-        {
-          id: 13,
-          ticketName: '门票2',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 457,
-          isCheck: true,
-        },
-        {
-          id: 14,
-          ticketName: '门票3',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 75,
-          isCheck: true,
-        },
-        {
-          id: 15,
-          ticketName: '门票4',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 4,
-          isCheck: true,
-        },
-        {
-          id: 16,
-          ticketName: '门票5',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 26,
-          isCheck: true,
-        },
-      ],
-      ticketsData: [],
+      // ticketsList: [
+      //   {
+      //     id: 12,
+      //     ticketName: '门票1',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 0,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 13,
+      //     ticketName: '门票2',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 457,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 14,
+      //     ticketName: '门票3',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 75,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 15,
+      //     ticketName: '门票4',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 4,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 16,
+      //     ticketName: '门票5',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 26,
+      //     isCheck: true,
+      //   },
+      // ],
+      ticketsData: [], // 会议门票
     };
   },
   computed: {

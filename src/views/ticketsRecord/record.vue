@@ -221,6 +221,7 @@ export default {
     }
     .base_info_wrap{
       display: flex;
+      display: -webkit-flex;
     }
     .info_item{
       display: flex;

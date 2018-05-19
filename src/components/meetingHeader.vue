@@ -76,7 +76,7 @@
                 </svg>
                 <span>管理后台</span>
               </a> -->
-              <a href="http://huiyizhan.ourwill.cn/logout">
+              <a v-show="!this.userProfile.unionid" href="http://huiyizhan.ourwill.cn/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
@@ -205,6 +205,7 @@ export default {
       } else if (res.code === 0) {
         this.isLogin = true;
         this.setId(res.data.id);
+        // debugger;
         this.userProfile = res.data;
       } else {
         console.log('error in getUserProfile');
