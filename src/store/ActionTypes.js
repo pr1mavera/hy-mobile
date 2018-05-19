@@ -7,3 +7,4 @@ export const SET_SELTICKETS = 'SET_SELTICKETS';
 export const SET_QUERY = 'SET_QUERY';
 
 export const SET_FIRST_EDIT_DATA = 'SET_FIRST_EDIT_DATA';
+export const SET_LOGIN_URL = 'SET_LOGIN_URL';

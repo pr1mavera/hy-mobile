@@ -5,6 +5,7 @@ export const state = {
   activityId: 14,
   tickets: [],
   selTickets: [],
+  loginUrl: '',
   firstEditData: {
     name: '',
     phone: 0,
@@ -14,6 +15,9 @@ export const state = {
 
 /* eslint-disable no-param-reassign */
 export const mutations = {
+  [types.SET_LOGIN_URL](st, url) {
+    st.loginUrl = url;
+  },
   [types.SET_ID](st, data) {
     st.id = data;
   },
