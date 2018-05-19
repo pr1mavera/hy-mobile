@@ -76,8 +76,7 @@
                 </svg>
                 <span>管理后台</span>
               </a> -->
-              <!-- <a v-show="!this.userProfile.unionid" href="http://huiyizhan.ourwill.cn/logout"> -->
-              <a v-show="isLogin" href="http://huiyizhan.ourwill.cn/logout">
+              <a v-show="!this.userProfile.unionid" href="http://huiyizhan.ourwill.cn/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
