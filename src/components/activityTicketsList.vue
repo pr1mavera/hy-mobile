@@ -39,6 +39,7 @@
         </li>
       </ul>
     </div>
+    <!-- 查看门票 -->
     <div v-transfer-dom>
       <popup
         v-model="showTicket"
