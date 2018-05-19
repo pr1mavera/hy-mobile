@@ -43,13 +43,13 @@ import activityTicketsList from '@/components/activityTicketsList';
 export default {
   data() {
     return {
-      ticketsIsInvalid: [
+      ticketsIsInvalid: [ // 失效
         // ticketsRecords: [],
       ],
-      ticketsIsValid: [
+      ticketsIsValid: [ // 有效
         // ticketsRecords: [],
       ],
-      currentShowActivityIndex: 0,
+      currentShowActivityIndex: 0, // 0有效 1失效
     };
   },
   mounted() {
