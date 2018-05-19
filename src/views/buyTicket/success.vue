@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="orderBtn">
-      <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
+      <button v-show="false" class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
       <button class="btnItem" type="button" name="button" @click="$router.push('/')">返回首页</button>
     </div>
   </div>
