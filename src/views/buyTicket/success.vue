@@ -28,7 +28,7 @@
 </template>
 
 <script>
-// import { purchaseTicket, getProfileDetail } from '@/server/index.js';
+import { purchaseTicket } from '@/server/index.js';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -65,22 +65,15 @@ export default {
         buyer: '', // （必填）
         buyerPhone: '', // （必填）
         buyerEmail: '', // （必填）
-        ticketsRecordList: [{  // 门票记录列表（必填）
-          ticketsId: this.id, // 门票模板id
-          confereeName: '', // 参与人（票面信息）
-          confereePhone: '', // 参与人手机
-          confereeEmail: '', // 参与人邮箱
-        }],
+        ticketsRecordList: [],
       },
     };
   },
   computed: {
     ...mapGetters([
       'activityId',
-      'query',
-      'selTickets',
       'firstEditData',
-      'id',
+      'ticketsRecordList',
     ]),
   },
   mounted() {
@@ -88,16 +81,14 @@ export default {
   },
   methods: {
     getData() {
-      // this.userMsg.ticketsRecordList[1].confereeName = this.firstEditData.name;
-      // this.userMsg.ticketsRecordList[2].confereePhone = this.firstEditData.phone;
-      // this.userMsg.ticketsRecordList[3].confereeEmail = this.firstEditData.email;
       this.userMsg.buyer = this.firstEditData.name;
       this.userMsg.buyerPhone = this.firstEditData.phone;
       this.userMsg.buyerEmail = this.firstEditData.email;
-      console.log(this.userMsg);
-      // purchaseTicket(this.activityId, this.userMsg).then((res) => {
-      //   console.log(res);
-      // });
+      this.userMsg.ticketsRecordList = this.ticketsRecordList;
+      console.log(this.userMsg, 'success');
+      purchaseTicket(this.activityId, this.userMsg).then((res) => {
+        console.log(res, 123);
+      });
     },
     ticketMsgFn() {
       // 购买成功

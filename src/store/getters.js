@@ -5,3 +5,4 @@ export const selTickets = state => state.selTickets;
 export const query = state => state.query;
 
 export const firstEditData = state => state.firstEditData;
+export const ticketsRecordList = state => state.ticketsRecordList;

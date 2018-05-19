@@ -70,10 +70,14 @@ export default {
           tickets.push(ticket);
         }
       });
+      // debugger;
       return tickets;
     },
   },
   methods: {
+    ...mapMutations({
+      setFirstEditData: 'SET_FIRST_EDIT_DATA',
+    }),
     setFirstFocus() {
       if (this.BuyerFirstFocus) {
         document.getElementById('firstFocus').focus();
@@ -140,9 +144,6 @@ export default {
         // console.log('修改编辑email');
       }
     },
-    ...mapMutations({
-      setFirstEditData: 'SET_FIRST_EDIT_DATA',
-    }),
   },
   components: {
     userInput3,

@@ -5,11 +5,12 @@ export const state = {
   activityId: 14,
   tickets: [],
   selTickets: [],
-  firstEditData: {
+  firstEditData: { // 购票时买家信息
     name: '',
     phone: 0,
     email: '',
   },
+  ticketsRecordList: [], // 对象数组，门票id，及门票所有者信息
 };
 
 /* eslint-disable no-param-reassign */
@@ -31,5 +32,8 @@ export const mutations = {
   },
   [types.SET_FIRST_EDIT_DATA](st, EditData) {
     st.firstEditData = EditData;
+  },
+  [types.SET_TICKET_RECORD_LIST](st, ticketsRecordList) {
+    st.ticketsRecordList = ticketsRecordList;
   },
 };

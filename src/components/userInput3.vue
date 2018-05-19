@@ -6,45 +6,47 @@
           姓名<i>*</i>
           <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
         </label>
-        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" v-model="ticketOwner.confereeName">
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name'>
       </div>
       <div class="inputItem">
         <label class="title" :class="setTitleSize">
           电话<i>*</i>
           <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
         </label>
-        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn" v-model="ticketOwner.confereePhone">
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'>
       </div>
       <div class="inputItem">
         <label class="title" :class="setTitleSize">
           邮箱<i>*</i>
           <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
         </label>
-        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn" v-model="ticketOwner.confereeEmail">
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+/* eslint-disable */
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   props: {
-    titleSize: {
-      type: Number,
-    },
-    index: {
-      type: Number,
+    // titleSize: {
+    //   type: Number,
+    // },
+    // index: {
+    //   type: Number,
+    // },
+    value: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     },
   },
   data() {
     return {
-      ticketOwner: {
-        confereeName: '', // 参与人（票面信息）
-        confereePhone: '', // 参与人手机
-        confereeEmail: '', // 参与人邮箱
-      },
       user: { // 判断信息的正确性
         nameInfo: false,
         phoneInfo: false,
@@ -55,7 +57,17 @@ export default {
   computed: {
     ...mapGetters([
       'firstEditData',
+      'ticketsRecordList',
     ]),
+    // 双向绑定待更新的数据
+    ticketOwner: {
+      get: function() {
+        return this.value;
+      },
+      set: function(val) {
+        this.$emit('input', val);
+      }
+    },
     setTitleSize() {
       const className = `titleSize-${this.titleSize}`;
       return className;
@@ -82,30 +94,47 @@ export default {
       return;
     },
   },
-  watch: {
-    // ticketOwner: {
-    //   handler(val) {
-    //     console.log(val, 123);
-    //   },
-    //   deep: true,
-    // },
-  },
   methods: {
+    ...mapMutations({
+      setTicketsRecordList: 'SET_TICKET_RECORD_LIST'
+    }),
     ownerNameFn() {
-      if (this.index === 0) {
-        this.$emit('ticketOwnerFn', this.ticketOwner);
+      // 正则验证
+      const userName = this.$refs.name.value.replace(/\s+/g, '');
+      if (userName !== '') {
+        this.user.nameInfo = false;
+        this.ticketOwner.confereeName = userName;
+        const arr = this.$parent.ticketsOwnerList;
+        this.setTicketsRecordList(arr);
+      } else {
+        this.user.nameInfo = true;
       }
     },
     ownerPhoneFn() {
-      if (this.index === 0) {
-        this.$emit('ticketOwnerFn', this.ticketOwner);
-      }
+      // debugger;
+      const phone = this.$refs.phone.value.replace(/\s+/g, '');
+      const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+        if (phone !== '' && phone.match(regNum)) {
+          this.user.phoneInfo = false;
+          this.ticketOwner.confereePhone = phone;
+          // debugger;
+          this.setTicketsRecordList(this.$parent.ticketsOwnerList);
+        } else {
+          this.user.phoneInfo = true;
+        }
     },
     ownerEmailFn() {
-      if (this.index === 0) {
-        this.$emit('ticketOwnerFn', this.ticketOwner);
+      const email = this.$refs.email.value.replace(/\s+/g, '');
+      const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (email !== '' && email.match(regEmail)) {
+        this.user.emailInfo = false;
+        this.ticketOwner.confereeEmail = email;
+        this.setTicketsRecordList(this.$parent.ticketsOwnerList);
+      } else {
+        this.user.emailInfo = true;
       }
     },
+    
   },
 };
 </script>
