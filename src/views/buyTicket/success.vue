@@ -87,7 +87,7 @@ export default {
       this.userMsg.ticketsRecordList = this.ticketsRecordList;
       console.log(this.userMsg, 'success');
       purchaseTicket(this.activityId, this.userMsg).then((res) => {
-        if(res.code === 0){
+        if (res.code === 0) {
           this.QRcode = res.data.qrcodeTicketUrl;
           this.orderNum = res.data.orderNo;
           this.orderTime = res.data.createTime;

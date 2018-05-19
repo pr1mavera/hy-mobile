@@ -47,7 +47,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-weizhi"></use>
         </svg>
-        北京市朝阳区双榆树一街北里213号
+        {{ticketInfo.activity.address}}
       </div>
     </div>
     </confirm>
@@ -105,9 +105,9 @@ export default {
       confirmSign(this.activityId, this.ticketInfo.id).then((res) => {
         if (res.code !== 0) {
           this.$vux.toast.text(res.msg);
-          this.getSignedRecord();
         } else {
           this.$vux.toast.text(res.msg);
+          this.getSignedRecord();          
         }
       });
     },
