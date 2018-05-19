@@ -185,6 +185,7 @@
         <div class="next" @click="goBuyTicket('click')" ref="getTicket">
           <span>获取门票</span>
         </div>
+        <div id='url' style='display: none'>{{currentUrl}}</div>
       </div>
     </aside>
   </div>
@@ -202,6 +203,7 @@ export default {
   name: 'detail',
   data() {
     return {
+      currentUrl: location.href,
       colorStyle: {
         mainColor: '#ffffff',
         minorColor: '#ffffff',
@@ -323,7 +325,7 @@ export default {
       // 获取会议详情
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
-      this.goBuyTicket();
+      // this.goBuyTicket();
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
       if (!(res1.code === 0 && res1) || !(res2.code === 0 && res2)) {
         console.log('error in getInfoById ');
@@ -354,27 +356,84 @@ export default {
         });
       }
     },
-    goBuyTicket(value) {
-      // 判断会议 是否结束
-      if (new Date(this.tableData.endTime) - new Date() > 0) {
-        this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
-        if (value) {
-          const id = this.id;
-          const nextRoute = `/buyTicket/${id}`;
-          this.$router.push({
-            path: nextRoute,
-          });
-        }
+    /* eslint-disable */
+    copyToClipboard(elem) {
+      // create hidden text element, if it doesn't already exist
+      var targetId = "_hiddenCopyText_";
+      var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+      var origSelectionStart, origSelectionEnd;
+      if (isInput) {
+        // can just use the original source element for the selection and copy
+        target = elem;
+        origSelectionStart = elem.selectionStart;
+        origSelectionEnd = elem.selectionEnd;
       } else {
-        this.$refs.getTicket.style.backgroundColor = '#ccc';
-        // 会议已结束
-        if (value) {
-          this.$vux.alert.show({
-            title: '温馨提示',
-            content: '会议已结束，不能购票！',
-          });
-        }
+          // must use a temporary form element for the selection and copy
+          target = document.getElementById(targetId);
+          if (!target) {
+            var target = document.createElement("textarea");
+            target.style.position = "absolute";
+            target.style.left = "-9999px";
+            target.style.top = "0";
+            target.id = targetId;
+            document.body.appendChild(target);
+          }
+          target.textContent = elem.textContent;
       }
+      // select the content
+      var currentFocus = document.activeElement;
+      target.focus();
+      target.setSelectionRange(0, target.value.length);
+
+      // copy the selection
+      var succeed;
+      try {
+          succeed = document.execCommand("copy");
+      } catch(e) {
+          succeed = false;
+      }
+      // restore original focus
+      if (currentFocus && typeof currentFocus.focus === "function") {
+          currentFocus.focus();
+      }
+
+      if (isInput) {
+          // restore prior selection
+          elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+      } else {
+          // clear temporary content
+          target.textContent = "";
+      }
+      this.$vux.alert.show({
+        title: '温馨提示',
+        content: '链接已复制，请先到PC端购票',
+      });
+      return succeed;
+    },
+    /* eslint-enable */
+    goBuyTicket() {
+      const url = document.getElementById('url');
+      this.copyToClipboard(url);
+      // 判断会议 是否结束
+      // if (new Date(this.tableData.endTime) - new Date() > 0) {
+      //   this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
+      //   if (value) {
+      //     const id = this.id;
+      //     const nextRoute = `/buyTicket/${id}`;
+      //     this.$router.push({
+      //       path: nextRoute,
+      //     });
+      //   }
+      // } else {
+      //   this.$refs.getTicket.style.backgroundColor = '#ccc';
+      //   // 会议已结束
+      //   if (value) {
+      //     this.$vux.alert.show({
+      //       title: '温馨提示',
+      //       content: '会议已结束，不能购票！',
+      //     });
+      //   }
+      // }
     },
     addWatchMeeting() {
       // debugger;

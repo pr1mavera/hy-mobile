@@ -23,6 +23,8 @@ Vue.http.interceptors.response.use(data => data, (error) => {
         window.location.href = `${error.response.data.loginUrl}?service=${paramsString}`;
       }, 500);
     }
+  } else {
+    Vue.$vux.toast.text(error.response.data.msg, 'top');
   }
   return Promise.reject(error);
 });
