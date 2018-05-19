@@ -8,3 +8,4 @@ export const SET_QUERY = 'SET_QUERY';
 
 export const SET_FIRST_EDIT_DATA = 'SET_FIRST_EDIT_DATA';
 export const SET_TICKET_RECORD_LIST = 'SET_TICKET_RECORD_LIST';
+export const SET_LOGIN_URL = 'SET_LOGIN_URL';

@@ -1,7 +1,7 @@
 <template>
   <div id="record">
     <ul class="sign_list">
-      <li class="sign_item" v-for='item in sigedList'>
+      <li class="sign_item" v-for='(item,index) in sigedList' :key='index'>
         <span class="avatar">
           <img :src="defaultAvatar" alt="" >
         </span>
@@ -84,9 +84,7 @@ export default {
     };
   },
   created() {
-    signedRecord(this.activityId).then((res) => {
-      this.sigedList = res.data;
-    });
+
     // this.$vux.confirm.show({
     //   // 组件除show外的属性
     //   onCancel () {
@@ -97,10 +95,16 @@ export default {
     // })
   },
   methods: {
+    getSignedRecord() {
+      signedRecord(this.activityId).then((res) => {
+        this.sigedList = res.data;
+      });
+    },
     confirmSign() {
-      confirmSign(this.activityId, this.ticketInfo.ticketsId).then((res) => {
-        if (res.code === 0) {
+      confirmSign(this.activityId, this.ticketInfo.id).then((res) => {
+        if (res.code !== 0) {
           this.$vux.toast.text('签到成功');
+          this.getSignedRecord();
         } else {
           this.$vux.toast.text('签到失败');
         }
@@ -111,17 +115,18 @@ export default {
         this.$vux.toast.text('请填写正确签到码');
       } else {
         signedInfo(this.activityId, code).then((ticketInfo) => {
-          if (ticketInfo.code !== 0) {
+          if (ticketInfo.data) {
+            const address = JSON.parse(ticketInfo.data.activity.activityAddress);
+            this.ticketInfo = ticketInfo.data;
+            this.ticketInfo.activity.address = address.province + address.city + address.address;
+            this.ticketInput = false;
+            this.ticketSucess = true;
+          } else {
             this.$vux.alert.show({
               title: '验票失败',
               content: '失败可能原因：过期票、无效票、非本场活动门票、签到码输入有误，或网络异常，请重试验票！',
               buttonText: '知道了',
             });
-          } else {
-            const address = JSON.parse(ticketInfo.data.activity.activityAddress);
-            this.ticketInfo = ticketInfo.data;
-            this.ticketInfo.activity.address = address.province + address.city + address.address;
-            this.ticketSucess = true;
           }
         });
       }
