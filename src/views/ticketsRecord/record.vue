@@ -84,7 +84,8 @@ export default {
     };
   },
   created() {
-
+    document.title = this.$route.query.activity;
+    this.getSignedRecord();
     // this.$vux.confirm.show({
     //   // 组件除show外的属性
     //   onCancel () {
@@ -103,10 +104,10 @@ export default {
     confirmSign() {
       confirmSign(this.activityId, this.ticketInfo.id).then((res) => {
         if (res.code !== 0) {
-          this.$vux.toast.text('签到成功');
+          this.$vux.toast.text(res.msg);
           this.getSignedRecord();
         } else {
-          this.$vux.toast.text('签到失败');
+          this.$vux.toast.text(res.msg);
         }
       });
     },
@@ -122,6 +123,7 @@ export default {
             this.ticketInput = false;
             this.ticketSucess = true;
           } else {
+            this.ticketNum = '';
             this.$vux.alert.show({
               title: '验票失败',
               content: '失败可能原因：过期票、无效票、非本场活动门票、签到码输入有误，或网络异常，请重试验票！',
@@ -145,7 +147,7 @@ export default {
   components: {
     XButton, Confirm, Divider, XInput, Group,
   },
-  filter: {
+  filters: {
     ticketStatus(source) {
       switch (source) {
         case 0:
