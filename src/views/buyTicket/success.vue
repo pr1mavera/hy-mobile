@@ -46,9 +46,9 @@ export default {
       feedback: {
         code: 0,
         massage: {
-          orderNum: '41665212851523654',
-          orderTime: '2018-03-26 14:36:56',
-          QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
+          orderNum: '',
+          orderTime: '',
+          QRcode: '',
         },
         // code: 1,
         // massage: {
@@ -87,6 +87,11 @@ export default {
       this.userMsg.ticketsRecordList = this.ticketsRecordList;
       console.log(this.userMsg, 'success');
       purchaseTicket(this.activityId, this.userMsg).then((res) => {
+        if(res.code === 0){
+          this.QRcode = res.data.qrcodeTicketUrl;
+          this.orderNum = res.data.orderNo;
+          this.orderTime = res.data.createTime;
+        }
         console.log(res, 123);
       });
     },

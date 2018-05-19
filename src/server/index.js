@@ -13,7 +13,7 @@ export const getActivityInfoById = id => http.get(`/activity/detail/${id}`);
 // 根据会议id获取门票
 export const getTicketsByActivityId = activityId => http.get(`/activityTickets/activity/${activityId}`);
 // 购买门票
-export const purchaseTicket = (activityId, data) => http.post(`/trxOrder/addOrderTicket/${activityId}`, null, null, {params :  data });
+export const purchaseTicket = (activityId, data) => http.post(`/trxOrder/addOrderTicket/${activityId}`, data);
 //下载门票
 // export const getPDFTicket = ticketId => http.get(`/ticketsRecord/getPDFTicket/${ticketId}`);
 //修改门票

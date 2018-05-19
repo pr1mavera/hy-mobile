@@ -11,14 +11,14 @@
         :activityTitle='item.activityTitle'
         :key='inx'
         v-for='(item,inx) in activityList'
-        @click.native="$router.push(`/record/${item.id}`)"/>
+        @click.native="$router.push(`/record/${item.id}?activity=${item.activityTitle}`)"/>
       <bannerItem
         v-if='currentStatus === 0'
         :activityBannerMobileUrl='item.activityBannerMobileUrl'
         :activityTitle='item.activityTitle'
         :key='inx'
         v-for='(item,inx) in activityList'
-        @click.native="$router.push(`/record/${item.id}`)"/>
+        @click.native="$router.push(`/record/${item.id}?activity=${item.activityTitle}`)"/>
     </div>
   </div>
 </template>

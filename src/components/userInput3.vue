@@ -35,9 +35,9 @@ export default {
     // titleSize: {
     //   type: Number,
     // },
-    // index: {
-    //   type: Number,
-    // },
+    index: {
+      type: Number,
+    },
     value: {
       type: Object,
       default: function() {
@@ -103,9 +103,9 @@ export default {
       const userName = this.$refs.name.value.replace(/\s+/g, '');
       if (userName !== '') {
         this.user.nameInfo = false;
-        this.ticketOwner.confereeName = userName;
-        const arr = this.$parent.ticketsOwnerList;
-        this.setTicketsRecordList(arr);
+        const list = this.ticketsRecordList.slice(0);
+        list[this.index].confereeName = userName;
+        this.setTicketsRecordList(list);
       } else {
         this.user.nameInfo = true;
       }
@@ -116,9 +116,10 @@ export default {
       const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
         if (phone !== '' && phone.match(regNum)) {
           this.user.phoneInfo = false;
-          this.ticketOwner.confereePhone = phone;
+          const list = this.ticketsRecordList.slice(0);
+          list[this.index].confereePhone = phone;
           // debugger;
-          this.setTicketsRecordList(this.$parent.ticketsOwnerList);
+          this.setTicketsRecordList(list);
         } else {
           this.user.phoneInfo = true;
         }
@@ -128,8 +129,9 @@ export default {
       const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
       if (email !== '' && email.match(regEmail)) {
         this.user.emailInfo = false;
-        this.ticketOwner.confereeEmail = email;
-        this.setTicketsRecordList(this.$parent.ticketsOwnerList);
+        const list = this.ticketsRecordList.slice(0);
+          list[this.index].confereeEmail = email;
+          this.setTicketsRecordList(list);
       } else {
         this.user.emailInfo = true;
       }
