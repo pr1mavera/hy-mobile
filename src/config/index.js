@@ -11,7 +11,7 @@ const production = {
 };
 
 const development = {
-  publicPath: 'http://huiyizhan.ourwill.cn/api',
+  publicPath: 'http://hyzdev.ourwill.cn/api',
 };
 
 const location = env === 'production' ? production : development;

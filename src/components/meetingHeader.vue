@@ -207,7 +207,7 @@ export default {
         this.setId(res.data.id);
         // debugger;
         this.userProfile = res.data;
-        console.log(this.userProfile, 123);
+        // console.log(this.userProfile, 123);
       } else {
         console.log('error in getUserProfile');
       }

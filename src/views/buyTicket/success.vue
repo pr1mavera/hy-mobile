@@ -12,16 +12,16 @@
     <div class="msgContent" v-if="feedback.code !== 1">
       <p class="text" v-if="feedback.code === 0">您的订单及门票信息已下发到您的邮箱，请注意查收！若未收到邮件，请查看垃圾邮件是否屏蔽。</p>
       <p class="text" v-if="feedback.code === -1">您本次申请的门票需要组织者审核，审核结果将发送至您的邮箱，请注意查收。</p>
-      <p class="text">订单号：<span class="orderNum">{{feedback.massage.orderNum}}</span></p>
-      <p class="text">订票时间：<span class="orderTime">{{feedback.massage.orderTime}}</span></p>
+      <p class="text">订单号：<span class="orderNum">{{feedback.message.orderNum}}</span></p>
+      <p class="text">订票时间：<span class="orderTime">{{feedback.message.orderTime}}</span></p>
       <div class="QRbox">
-        <img :src="feedback.massage.QRcode" alt="二维码" width="150" height="150">
+        <img :src="feedback.message.QRcode" alt="二维码" width="150" height="150">
         <p class="QRtext">长按保存</p>
         <p class="QRtext">微信扫码领取电子票</p>
       </div>
     </div>
     <div class="orderBtn">
-      <button v-show="false" class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
+      <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
       <button class="btnItem" type="button" name="button" @click="$router.push('/')">返回首页</button>
     </div>
   </div>
@@ -45,17 +45,18 @@ export default {
       // 假数据
       feedback: {
         code: 0,
-        massage: {
-          orderNum: '',
-          orderTime: '',
-          QRcode: '',
+        message: {
+          orderNum: '', // 订单号
+          orderTime: '', // 订票时间
+          QRcode: '', // 二维码
+          overTime: '', // 二维码失效时间
         },
         // code: 1,
-        // massage: {
+        // message: {
         //   error: '',
         // },
         // code: -1,
-        // massage: {
+        // message: {
         //   orderNum: '518032490929310',
         //   orderTime: '2018-03-26 14:36:56',
         //   QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
@@ -88,9 +89,10 @@ export default {
       console.log(this.userMsg, 'success');
       purchaseTicket(this.activityId, this.userMsg).then((res) => {
         if (res.code === 0) {
-          this.QRcode = res.data.qrcodeTicketUrl;
-          this.orderNum = res.data.orderNo;
-          this.orderTime = res.data.createTime;
+          this.feedback.message.QRcode = res.data.qrcodeTicketUrl;
+          this.feedback.message.orderNum = res.data.orderNo;
+          this.feedback.message.orderTime = res.data.createTime;
+          this.feedback.message.overTime = res.data.overTime;
         }
         console.log(res, 123);
       });
