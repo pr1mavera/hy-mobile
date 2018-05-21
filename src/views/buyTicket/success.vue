@@ -24,11 +24,12 @@
       <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
       <button class="btnItem" type="button" name="button" @click="$router.push('/')">返回首页</button>
     </div>
+    <!-- <scan-tickets :activity="activityMsg" :currentTicket="currentTicket" :showTicket="showTicket"></scan-tickets> -->
   </div>
 </template>
 
 <script>
-import { purchaseTicket } from '@/server/index.js';
+import { purchaseTicket, getActivityMsg } from '@/server';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -68,6 +69,13 @@ export default {
         buyerEmail: '', // （必填）
         ticketsRecordList: [],
       },
+      showTicket: false,
+      activityMsg: {
+        activityTitle: '',
+      }, // 会议信息
+      currentTicket: {
+        ticketsName: '',
+      }, // 买票成功后返回信息
     };
   },
   computed: {
@@ -76,6 +84,8 @@ export default {
       'firstEditData',
       'ticketsRecordList',
     ]),
+  },
+  components: {
   },
   mounted() {
     this.getData();
@@ -86,7 +96,8 @@ export default {
       this.userMsg.buyerPhone = this.firstEditData.phone;
       this.userMsg.buyerEmail = this.firstEditData.email;
       this.userMsg.ticketsRecordList = this.ticketsRecordList;
-      console.log(this.userMsg, 'success');
+      // console.log(this.userMsg, 'success');
+      /* eslint-disable */
       purchaseTicket(this.activityId, this.userMsg).then((res) => {
         if (res.code === 0) {
           this.feedback.message.QRcode = res.data.qrcodeTicketUrl;
@@ -94,13 +105,21 @@ export default {
           this.feedback.message.orderTime = res.data.createTime;
           this.feedback.message.overTime = res.data.overTime;
         }
-        console.log(res, 123);
+        // console.log(res, 123);
       });
     },
     ticketMsgFn() {
-      // 购买成功
+      // 购买成功(等待审核，购票成功，购票失败)
       if (this.feedback.code === 0) {
+        // 获取会议信息
+        getActivityMsg(this.activityId).then(res => {
+          if (res.code === 0) {
+            this.activityMsg = res.data;
+            this.showTicket = true;
+          }
+        });
         // 跳转查看门票
+        // this.showTicket = true;
       }
     },
   },
