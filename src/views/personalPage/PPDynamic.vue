@@ -52,11 +52,11 @@
               <div class="center">
                 <!-- 别人关注你 -->
                 <div v-if="item.status">
-                  <h5>{{item.user.nickname}}<span class="gray">关注了你</span></h5>
+                  <h5>{{item.user.nickname?item.user.nickname:item.user.username}}<span class="gray">关注了你</span></h5>
                   <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
                 <div v-else>
-                  <h5>我<span class="gray">关注了</span>{{item.user.nickname}}</h5>
+                  <h5>我<span class="gray">关注了</span>{{item.user.nickname?item.user.nickname:item.user.username}}</h5>
                   <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
               </div>
@@ -161,6 +161,7 @@ export default {
     },
     getDynamicOfPersonList() {
       getDynamicOfPerson(this.queryPerson).then((res) => {
+        debugger;
         this.personData.push(...res.data.list);
         this.personTotal = res.data.total;
         if (res.data.pageNum < res.data.pages) {

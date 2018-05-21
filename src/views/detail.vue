@@ -412,6 +412,7 @@ export default {
     },
     /* eslint-enable */
     goBuyTicket() {
+      debugger
       const url = document.getElementById('url');
       this.copyToClipboard(url);
       // 判断会议 是否结束

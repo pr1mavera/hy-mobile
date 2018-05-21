@@ -60,10 +60,13 @@ export default {
   },
   methods: {
     async getActivityList() {
+
       const res1 = await getActivityMyWatch(1);
       this.activityIsPublish = res1.data;
+      // debugger;
       const res2 = await getActivityMyWatch(2);
-      this.activityIsOver.list = res2.data;
+      this.activityIsOver = res2.data;
+      debugger;
       if (res1.code !== 0 || res2.code !== 0) {
         console.log('error in getActivityList');
       }
