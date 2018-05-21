@@ -11,6 +11,7 @@ const production = {
 };
 
 const development = {
+  // publicPath: 'http://huiyizhan.ourwill.cn/api',
   publicPath: 'http://hyzdev.ourwill.cn/api',
 };
 
