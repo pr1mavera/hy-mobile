@@ -33,8 +33,8 @@
             </svg>
           </button>
           <div class="noLogin" v-if="!isLogin">
-            <x-button type="" text="登录" link="http://login.ourwill.cn/login"></x-button>
-            <x-button type="" text="注册" link="http://login.ourwill.cn/register"></x-button>
+            <x-button type="" text="登录" :link="loginUrl+'/login?service='+curUrl"></x-button>
+            <x-button type="" text="注册" :link="loginUrl+'/register?service='+curUrl"></x-button>
           </div>
           <div class="Login" v-if="isLogin">
             <span class="version">免费版</span>
@@ -76,7 +76,7 @@
                 </svg>
                 <span>管理后台</span>
               </a> -->
-              <a v-show="!this.userProfile.unionid" href="http://huiyizhan.ourwill.cn/logout">
+              <a v-show="!this.userProfile.unionid" href="/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
@@ -85,25 +85,25 @@
             </div>
           </div>
           <div class="router" >
-            <a href="http://huiyizhan.ourwill.cn/" class="box">
+            <a href="/" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-shouye"></use>
               </svg>
               <span>首页</span>
             </a>
-            <a href="http://huiyizhan.ourwill.cn/meetingList" class="box">
+            <a href="/meetingList" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-huodong"></use>
               </svg>
               <span>活动</span>
             </a>
-            <a href="http://huiyizhan.ourwill.cn/service" class="box">
+            <a href="/service" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-fuwu"></use>
               </svg>
               <span>服务</span>
             </a>
-            <a href="http://huiyizhan.ourwill.cn/price" class="box">
+            <a href="/price" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-jiage"></use>
               </svg>
@@ -143,6 +143,7 @@
 
 <script>
 import { getProfileDetail } from '@/server/index.js';
+import config from '@/config/index.js';
 import { XHeader, Popup, TransferDom, XButton } from 'vux';
 import { mapMutations, mapGetters } from 'vuex';
 
@@ -164,6 +165,8 @@ export default {
       searchVal: '',
       isLogin: false,
       userProfile: {},
+      loginUrl: '',
+      curUrl: '',
     };
   },
   directives: {
@@ -178,6 +181,8 @@ export default {
     XButton,
   },
   mounted() {
+    this.loginUrl = config.loginPath;
+    this.curUrl = window.location.href;
     this.getUserProfile();
     // this.setIDInQuery();
   },
