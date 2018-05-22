@@ -5,7 +5,7 @@
     </div>
     <div class="listContent">
       <p class="name">{{activity.activityTitle}}</p>
-      <p class="date">{{activity.startTime}}</p>
+      <p class="date">{{activity.startTime | timeFilter}}</p>
     </div>
   </div>
 </template>
@@ -17,6 +17,11 @@ export default {
       type: Object,
     },
   },
+  filters: {
+    timeFilter (val){
+      return val.replace(/\-/g,'/')
+    }
+  }
 };
 </script>
 

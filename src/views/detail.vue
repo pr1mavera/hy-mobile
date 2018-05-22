@@ -182,7 +182,7 @@
           </span> -->
           <span class="free" >免费</span>
         </div>
-        <div class="next" @click="goBuyTicket('click')" ref="getTicket">
+        <div :class="['next',tableData.validActivityTickets && (tableData.validActivityTickets.length === 0||!tableData.validActivityTickets) ?'next-no':'']" @click="goBuyTicket('click')" ref="getTicket">
           <span>获取门票</span>
         </div>
         <div id='url' style='display: none'>{{currentUrl}}</div>
@@ -231,6 +231,7 @@ export default {
         activityPartners: [],
         activityContacts: [],
         activityGuests: [],
+        validActivityTickets: []
       },
       isWatch: 0,
     };
@@ -782,6 +783,9 @@ export default {
           color: #ffffff;
 
         }
+      }
+      .next-no{
+        background-color: #9e9e9e;
       }
     }
   }
