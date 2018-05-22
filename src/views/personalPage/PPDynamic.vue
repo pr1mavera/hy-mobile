@@ -162,7 +162,7 @@ export default {
     },
     getDynamicOfPersonList() {
       getDynamicOfPerson(this.queryPerson).then((res) => {
-        debugger;
+        // debugger;
         // this.personData.push(...res.data.list);
         this.personData.push(...res.data);
         // this.personTotal = res.data.total;

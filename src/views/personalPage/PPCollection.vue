@@ -65,7 +65,7 @@ export default {
       // debugger;
       const res2 = await getActivityMyWatch(2);
       this.activityIsOver = res2.data;
-      debugger;
+      // debugger;
       if (res1.code !== 0 || res2.code !== 0) {
         console.log('error in getActivityList');
       }
