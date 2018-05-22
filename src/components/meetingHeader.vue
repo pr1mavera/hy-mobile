@@ -165,8 +165,8 @@ export default {
       searchVal: '',
       isLogin: false,
       userProfile: {},
-      loginUrl:'',
-      curUrl:''
+      loginUrl: '',
+      curUrl: '',
     };
   },
   directives: {
@@ -181,8 +181,8 @@ export default {
     XButton,
   },
   mounted() {
-    this.loginUrl=config.loginPath;
-    this.curUrl=window.location.href;
+    this.loginUrl = config.loginPath;
+    this.curUrl = window.location.href;
     this.getUserProfile();
     // this.setIDInQuery();
   },
@@ -427,7 +427,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
         color: #5d6574;
         width: calc(~'100% - 50px');
         outline: none;
-
+        border:none;
       }
     }
   }

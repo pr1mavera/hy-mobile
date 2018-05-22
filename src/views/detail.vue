@@ -2,7 +2,7 @@
   <div id="detail">
     <meetingHeader :colorStyle="colorStyle"></meetingHeader>
     <div class="main-container">
-      <banner :src="tableData.activityBannerMobileUrl"></banner>
+      <banner :src="tableData.activityBannerMobileUrl?tableData.activityBannerMobileUrl:''"></banner>
       <div class="container-title">
         <div class="company">
           <p>{{tableData.nickname}}</p>
@@ -231,7 +231,7 @@ export default {
         activityPartners: [],
         activityContacts: [],
         activityGuests: [],
-        validActivityTickets: []
+        validActivityTickets: [],
       },
       isWatch: 0,
     };

@@ -18,10 +18,10 @@ export default {
     },
   },
   filters: {
-    timeFilter (val){
-      return val.replace(/\-/g,'/')
-    }
-  }
+    timeFilter(val) {
+      return val.replace(/-/g, '/');
+    },
+  },
 };
 </script>
 

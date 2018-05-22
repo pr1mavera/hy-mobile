@@ -9,10 +9,10 @@
       v-model="check"
       >
         <tab-item selected @on-item-click="check=0">
-          收藏({{meetingTotal}})
+          收藏({{meetingData.length}})
         </tab-item>
         <tab-item @on-item-click="check=1">
-          关注({{personTotal}})
+          关注({{personData.length}})
         </tab-item>
       </tab>
     </div>
@@ -84,14 +84,14 @@ export default {
       meetingData: [],
       personData: [],
       queryMeeting: {
-        page: 1,
-        pageNum: 1,
-        pageSize: 10,
+        page: 0,
+        // pageNum: 1,
+        // pageSize: 10,
       },
       queryPerson: {
-        page: 1,
-        pageNum: 1,
-        pageSize: 10,
+        page: 0,
+        // pageNum: 1,
+        // pageSize: 10,
       },
       mboxNum: 0,
       pboxNum: 0,
@@ -141,18 +141,19 @@ export default {
     resetData() {
       this.meetingData = [];
       this.personData = [];
-      this.queryMeeting.pageNum = 1;
-      this.queryPerson.pageNum = 1;
+      // this.queryMeeting.pageNum = 1;
+      // this.queryPerson.pageNum = 1;
     },
     getDynamicOfMeetingList() {
       getDynamicOfMeeting(this.queryMeeting).then((res) => {
-        this.meetingData.push(...res.data.list);
-        this.meetingTotal = res.data.total;
-        if (res.data.pageNum < res.data.pages) {
-          this.mboxNum = res.data.pageNum * res.data.size;
-        } else {
-          this.mboxNum = res.data.total;
-        }
+        // this.meetingData.push(...res.data.list);
+        this.meetingData.push(...res.data);
+        // this.meetingTotal = res.data.total;
+        // if (res.data.pageNum < res.data.pages) {
+        //   this.mboxNum = res.data.pageNum * res.data.size;
+        // } else {
+        //   this.mboxNum = res.data.total;
+        // }
         // this.scrollWrapper.finishPullUp();
         // this.scrollWrapper.refresh();
         // document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
@@ -162,13 +163,14 @@ export default {
     getDynamicOfPersonList() {
       getDynamicOfPerson(this.queryPerson).then((res) => {
         debugger;
-        this.personData.push(...res.data.list);
-        this.personTotal = res.data.total;
-        if (res.data.pageNum < res.data.pages) {
-          this.pboxNum = res.data.pageNum * res.data.size;
-        } else {
-          this.pboxNum = res.data.total;
-        }
+        // this.personData.push(...res.data.list);
+        this.personData.push(...res.data);
+        // this.personTotal = res.data.total;
+        // if (res.data.pageNum < res.data.pages) {
+        //   this.pboxNum = res.data.pageNum * res.data.size;
+        // } else {
+        //   this.pboxNum = res.data.total;
+        // }
         // this.scrollWrapper.finishPullUp();
         // this.scrollWrapper.refresh();
         // document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
