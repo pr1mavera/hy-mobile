@@ -742,8 +742,10 @@ export default {
   footer{
     padding-bottom: 65px;
     background-color: #f3f4f8;
+    width:100%;
     height: 180px;
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;

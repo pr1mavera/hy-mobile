@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { purchaseTicket, getActivityMsg } from '@/server';
+import { purchaseTicket } from '@/server';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -69,13 +69,13 @@ export default {
         buyerEmail: '', // （必填）
         ticketsRecordList: [],
       },
-      showTicket: false,
-      activityMsg: {
-        activityTitle: '',
-      }, // 会议信息
-      currentTicket: {
-        ticketsName: '',
-      }, // 买票成功后返回信息
+      // showTicket: false,
+      // activityMsg: {
+      //   activityTitle: '',
+      // }, // 会议信息
+      // currentTicket: {
+      //   ticketsName: '',
+      // }, // 买票成功后返回信息
     };
   },
   computed: {
@@ -83,6 +83,7 @@ export default {
       'activityId',
       'firstEditData',
       'ticketsRecordList',
+      'id',
     ]),
   },
   components: {
@@ -111,15 +112,8 @@ export default {
     ticketMsgFn() {
       // 购买成功(等待审核，购票成功，购票失败)
       if (this.feedback.code === 0) {
-        // 获取会议信息
-        getActivityMsg(this.activityId).then(res => {
-          if (res.code === 0) {
-            this.activityMsg = res.data;
-            this.showTicket = true;
-          }
-        });
         // 跳转查看门票
-        // this.showTicket = true;
+        this.$router.push(`/usercenter/partake/${this.id}`);
       }
     },
   },
