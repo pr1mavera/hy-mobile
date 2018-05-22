@@ -326,7 +326,7 @@ export default {
       // 获取会议详情
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
-      // this.goBuyTicket();
+      this.goBuyTicket();
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
       if (!(res1.code === 0 && res1) || !(res2.code === 0 && res2)) {
         console.log('error in getInfoById ');
@@ -412,30 +412,29 @@ export default {
       return succeed;
     },
     /* eslint-enable */
-    goBuyTicket() {
-      debugger
-      const url = document.getElementById('url');
-      this.copyToClipboard(url);
+    goBuyTicket(value) {
+      // const url = document.getElementById('url');
+      // this.copyToClipboard(url);
       // 判断会议 是否结束
-      // if (new Date(this.tableData.endTime) - new Date() > 0) {
-      //   this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
-      //   if (value) {
-      //     const id = this.id;
-      //     const nextRoute = `/buyTicket/${id}`;
-      //     this.$router.push({
-      //       path: nextRoute,
-      //     });
-      //   }
-      // } else {
-      //   this.$refs.getTicket.style.backgroundColor = '#ccc';
-      //   // 会议已结束
-      //   if (value) {
-      //     this.$vux.alert.show({
-      //       title: '温馨提示',
-      //       content: '会议已结束，不能购票！',
-      //     });
-      //   }
-      // }
+      if (new Date(this.tableData.endTime) - new Date() > 0) {
+        this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
+        if (value) {
+          const id = this.id;
+          const nextRoute = `/buyTicket/${id}`;
+          this.$router.push({
+            path: nextRoute,
+          });
+        }
+      } else {
+        this.$refs.getTicket.style.backgroundColor = '#ccc';
+        // 会议已结束
+        if (value) {
+          this.$vux.alert.show({
+            title: '温馨提示',
+            content: '会议已结束，不能购票！',
+          });
+        }
+      }
     },
     addWatchMeeting() {
       // debugger;

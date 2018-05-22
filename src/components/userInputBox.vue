@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'ticketsRecordList',
+      'ticketsRecordList', // 门票所有者信息
     ]),
   },
   data() {

@@ -107,7 +107,7 @@ export default {
           this.$vux.toast.text(res.msg);
         } else {
           this.$vux.toast.text(res.msg);
-          this.getSignedRecord();          
+          this.getSignedRecord();
         }
       });
     },

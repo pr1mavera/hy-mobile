@@ -60,7 +60,6 @@ export default {
   },
   methods: {
     async getActivityList() {
-
       const res1 = await getActivityMyWatch(1);
       this.activityIsPublish = res1.data;
       // debugger;
