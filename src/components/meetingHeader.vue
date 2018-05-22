@@ -189,9 +189,9 @@ export default {
     userName() {
       const length = this.userProfile.username.length;
       if (length === 2) {
-        return this.userProfile.username ? this.userProfile.username.replace(/^(.).*(.)$/, '$1*') : '';
+        return this.userProfile.username ? this.userProfile.username.replace(/^(.).*(.)$/, '$1***') : '';
       } else if (length > 2) {
-        let name = this.userProfile.username[0] + '*' + this.userProfile.username[length-1]
+        let name = this.userProfile.username[0] + '***' + this.userProfile.username[length-1]
         return this.userProfile.username ? this.userProfile.username.replace(/^(.).*(.)$/, name) : '';
       }
     },
@@ -206,7 +206,7 @@ export default {
         this.isLogin = true;
         this.setId(res.data.id);
         this.userProfile = res.data;
-        // console.log(this.userProfile, 123);
+        console.log(this.userProfile, 123);
       } else {
         console.log('error in getUserProfile');
       }
@@ -250,6 +250,8 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
       position: absolute;
       top: 15px;
       right: 16px;
+      background:#fff;
+      border:none;
       .icon{
         width: 15px;
         height: 15px;
@@ -422,7 +424,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
         color: #5d6574;
         width: calc(~'100% - 50px');
         outline: none;
-
+        border:none;
       }
     }
   }
