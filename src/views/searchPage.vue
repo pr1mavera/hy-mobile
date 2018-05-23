@@ -16,7 +16,7 @@
       </div>
       <ul class="ul-container">
         <li v-for="(activity, index) in activityList" class="activityListLi vux-1px-b" :key="index">
-          <activityList :activity="activity"></activityList>
+          <searchList :activity="activity"></searchList>
         </li>
       </ul>
   </div>
@@ -24,7 +24,7 @@
 
 <script>
 import { getSearchList } from '@/server/index.js';
-import activityList from '@/components/searchList';
+import searchList from '@/components/searchList';
 
 export default {
   data() {
@@ -55,7 +55,7 @@ export default {
     },
   },
   components: {
-    activityList,
+    searchList,
   },
 };
 </script>

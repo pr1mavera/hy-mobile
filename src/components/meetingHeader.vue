@@ -22,7 +22,6 @@
             <use xlink:href="#icon-caidan"></use>
         </svg>
       </div>
-
     </x-header>
     <div v-transfer-dom>
       <popup v-model="showMenu" position="right" >
