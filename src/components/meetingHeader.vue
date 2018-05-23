@@ -205,7 +205,7 @@ export default {
     // 获取用户信息
     async getUserProfile() {
       const res = await getProfileDetail();
-      debugger;
+      // debugger;
       if (res.code === -1) {
         this.isLogin = false;
       } else if (res.code === 0) {
