@@ -28,6 +28,7 @@ export default {
       'selTickets',
       'query',
       'firstEditData',
+      'ticketsRecordList',
     ]),
     totalPrice() { // 计算所选商品总价格
       let total = 0;
@@ -73,7 +74,19 @@ export default {
         }
       } else if (this.$route.name === 'fillInTicketMsg') {
         // 判断是否填写个人信息
-        if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '') {
+        /* eslint-disable */
+        var judge = false;
+        debugger;
+        for (let i = 0; i < this.ticketsRecordList.length; i += 1) {
+          for(let j in this.ticketsRecordList[i]) {
+            if (this.ticketsRecordList[i][j] !== '') {
+              judge = true;
+            } else {
+              judge = false;
+            }
+          }
+        }
+        if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '' && judge) {
           this.$router.push({
             path: 'success',
             query: this.query,

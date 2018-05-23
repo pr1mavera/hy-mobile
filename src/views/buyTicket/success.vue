@@ -22,15 +22,16 @@
     </div>
     <div class="orderBtn">
       <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
-      <button class="btnItem" type="button" name="button" @click="$router.push('/')">返回首页</button>
+      <button class="btnItem" type="button" name="button" @click="backhomeFn">返回首页</button>
     </div>
     <!-- <scan-tickets :activity="activityMsg" :currentTicket="currentTicket" :showTicket="showTicket"></scan-tickets> -->
   </div>
 </template>
 
 <script>
-import { purchaseTicket } from '@/server';
+import { purchaseTicket, getProfileDetail } from '@/server';
 import { mapGetters } from 'vuex';
+import { AlertModule } from 'vux';
 
 export default {
   props: {
@@ -45,7 +46,7 @@ export default {
     return {
       // 假数据
       feedback: {
-        code: 0,
+        code: Number,
         message: {
           orderNum: '', // 订单号
           orderTime: '', // 订票时间
@@ -76,6 +77,9 @@ export default {
       // currentTicket: {
       //   ticketsName: '',
       // }, // 买票成功后返回信息
+      currentUser: {
+        id: '',
+      }, // 判断当前用户是否登录
     };
   },
   computed: {
@@ -87,9 +91,11 @@ export default {
     ]),
   },
   components: {
+    AlertModule,
   },
   mounted() {
     this.getData();
+    this.checkUser();
   },
   methods: {
     getData() {
@@ -105,17 +111,45 @@ export default {
           this.feedback.message.orderNum = res.data.orderNo;
           this.feedback.message.orderTime = res.data.createTime;
           this.feedback.message.overTime = res.data.overTime;
+          this.feedback.code = 0;
+        } else {
+          this.feedback.code = -1;
         }
         // console.log(res, 123);
       });
     },
+    checkUser() {
+      getProfileDetail().then(res => {
+        if (res.code === 0) {
+          this.currentUser.id = res.data.id;
+        }
+      })
+    }, 
     ticketMsgFn() {
+      // 判断用户是否登录
       // 购买成功(等待审核，购票成功，购票失败)
-      if (this.feedback.code === 0) {
+      if (this.feedback.code === 0 && this.currentUser.id) {
         // 跳转查看门票
         this.$router.push(`/usercenter/partake/${this.id}`);
+      } else {
+        AlertModule.show({
+        title: '当前用户未登录！',
+        content: '前往登录？',
+        onHide() {
+          // console.log('Plugin: I\'m hiding now');
+          window.location.href = 'http://login.ourwill.cn/login';
+        },
+      });
       }
     },
+    backhomeFn() {
+      // 判断用户是否登录
+      if (this.currentUser.id) {
+        this.$router.push('/');
+      } else {
+        window.location.href = 'login.ourwill.cn/login';
+      }
+    }
   },
 };
 </script>
