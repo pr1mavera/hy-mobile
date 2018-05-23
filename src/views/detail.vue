@@ -45,10 +45,10 @@
             简介
           </h1>
           <div class="content" >
-            <p v-html="this.tableData.activityDescription"></p>
+            <p v-html="tableData.activityDescription"></p>
           </div>
         </div>
-        <div class="sectionStyle detailSchedule" v-if="activitySchedulesOBJ && activitySchedulesOBJ.length>0">
+        <div class="sectionStyle detailSchedule" v-if="activitySchedulesOBJ && activitySchedulesOBJ.length>0 && tableData.scheduleStatus">
           <h1 class="title">
             日程
           </h1>
@@ -80,7 +80,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailGuests" v-if="tableData.activityGuests && tableData.activityGuests.length>0">
+        <div class="sectionStyle detailGuests" v-if="tableData.activityGuests && tableData.activityGuests.length>0 && tableData.guestStatus">
           <h1 class="title">
             嘉宾
           </h1>
@@ -104,7 +104,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailSupport" v-if="partnersOBJ && partnersOBJ.length>0">
+        <div class="sectionStyle detailSupport" v-if="partnersOBJ && partnersOBJ.length>0 && tableData.partnerStatus">
           <h1 class="title">
             合作支持
           </h1>
@@ -119,7 +119,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailContact" v-if="tableData.activityContacts && tableData.activityContacts.length>0">
+        <div class="sectionStyle detailContact" v-if="tableData.activityContacts && tableData.activityContacts.length>0 && tableData.contactStatus">
           <h1 class="title">
             联系方式
           </h1>
@@ -414,14 +414,6 @@ export default {
     /* eslint-enable */
     goBuyTicket(value) {
       // const url = document.getElementById('url');
-      const tickets = this.tableData.validActivityTickets;
-      if (tickets.length === 0 || !tickets) {
-        this.$vux.alert.show({
-          title: '温馨提示',
-          content: '本场会议门票已售完',
-        });
-        return;
-      }
       // this.copyToClipboard(url);
       // 判断会议 是否结束
       const time = this.tableData.endTime.replace(/-/g, '/');
@@ -442,7 +434,16 @@ export default {
             title: '温馨提示',
             content: '会议已结束，不能购票！',
           });
+          return;
         }
+      }
+      const tickets = this.tableData.validActivityTickets;
+      if (tickets.length === 0 || !tickets) {
+        this.$vux.alert.show({
+          title: '温馨提示',
+          content: '本场会议门票已售完',
+        });
+        // return;
       }
     },
     addWatchMeeting() {

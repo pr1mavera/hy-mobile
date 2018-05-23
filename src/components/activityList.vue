@@ -21,7 +21,7 @@ export default {
   },
   filters: {
     timeFilter(val) {
-      const temp = new Date(val);
+      const temp = new Date(val.replace(/-/g, '/'));
       return formatDate(temp, 'MM月dd日 hh:mm');
     },
   },
