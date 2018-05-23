@@ -205,9 +205,9 @@ export default {
     async getUserProfile() {
       const res = await getProfileDetail();
       // debugger;
-      if (res.code === -1) {
+      if (res && res.code && res.code === -1) {
         this.isLogin = false;
-      } else if (res.code === 0) {
+      } else if (res && res.code && res.code === 0) {
         this.isLogin = true;
         this.setId(res.data.id);
         this.userProfile = res.data;

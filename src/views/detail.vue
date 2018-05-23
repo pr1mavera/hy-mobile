@@ -336,26 +336,26 @@ export default {
             this.isWatch = 1;
           }
         });
-        this.$nextTick(() => {
-          MP().then((mp) => {
-            const map = new mp.Map('container');
-            let temp = JSON.parse(this.tableData.activityAddress);
-            const city = Object.values(temp)[0];
-            temp = Object.values(temp).join('');
-            map.centerAndZoom(temp, 12);
-            const myGeo = new mp.Geocoder();
-            // 将地址解析结果显示在地图上,并调整地图视野
-            myGeo.getPoint(temp, (point) => {
-              if (point) {
-                map.centerAndZoom(point, 16);
-                map.addOverlay(new mp.Marker(point));
-              } else {
-                console.log('您选择地址没有解析到结果!');
-              }
-            }, city);
-          });
-        });
       }
+      this.$nextTick(() => {
+        MP().then((mp) => {
+          const map = new mp.Map('container');
+          let temp = JSON.parse(this.tableData.activityAddress);
+          const city = Object.values(temp)[0];
+          temp = Object.values(temp).join('');
+          map.centerAndZoom(temp, 12);
+          const myGeo = new mp.Geocoder();
+          // 将地址解析结果显示在地图上,并调整地图视野
+          myGeo.getPoint(temp, (point) => {
+            if (point) {
+              map.centerAndZoom(point, 16);
+              map.addOverlay(new mp.Marker(point));
+            } else {
+              console.log('您选择地址没有解析到结果!');
+            }
+          }, city);
+        });
+      });
     },
     /* eslint-disable */
     copyToClipboard(elem) {
@@ -418,6 +418,14 @@ export default {
       // 判断会议 是否结束
       const time = this.tableData.endTime.replace(/-/g, '/');
       if (new Date(time) - new Date() > 0) {
+        const tickets = this.tableData.validActivityTickets;
+        if (tickets.length === 0 || !tickets) {
+          this.$vux.alert.show({
+            title: '温馨提示',
+            content: '本场会议门票已售完',
+          });
+          return;
+        }
         this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
         if (value) {
           const id = this.id;
@@ -434,16 +442,8 @@ export default {
             title: '温馨提示',
             content: '会议已结束，不能购票！',
           });
-          return;
+          // return;
         }
-      }
-      const tickets = this.tableData.validActivityTickets;
-      if (tickets.length === 0 || !tickets) {
-        this.$vux.alert.show({
-          title: '温馨提示',
-          content: '本场会议门票已售完',
-        });
-        // return;
       }
     },
     addWatchMeeting() {
