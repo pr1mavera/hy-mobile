@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { formatDate } from '@/common/js/index.js';
+
 export default {
   props: {
     activity: {
@@ -19,7 +21,8 @@ export default {
   },
   filters: {
     timeFilter(val) {
-      return val.replace(/-/g, '/');
+      const temp = new Date(val);
+      return formatDate(temp, 'MM月dd日 hh:mm');
     },
   },
 };

@@ -40,16 +40,6 @@
             <p v-else>{{tableData.endTime | timeFormat}}</p>
           </div>
         </div>
-        <div class="sectionStyle detailLocation">
-          <h1 class="title">
-            位置
-          </h1>
-          <div class="content">
-            <div id="container" >
-
-            </div>
-          </div>
-        </div>
         <div class="sectionStyle detailIntroduction">
           <h1 class="title">
             简介
@@ -164,6 +154,16 @@
                 </flexbox-item>
 
               </flexbox>
+            </div>
+          </div>
+        </div>
+        <div class="sectionStyle detailLocation">
+          <h1 class="title">
+            位置
+          </h1>
+          <div class="content">
+            <div id="container" >
+
             </div>
           </div>
         </div>
@@ -328,7 +328,7 @@ export default {
       this.tableData = res1.data;
       this.goBuyTicket();
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
-      if (!(res1.code === 0 && res1) || !(res2.code === 0 && res2)) {
+      if (!(res1 && res1.code === 0) || !(res2 && res2.code === 0)) {
         console.log('error in getInfoById ');
       } else {
         res2.data.forEach((e) => {
@@ -414,9 +414,18 @@ export default {
     /* eslint-enable */
     goBuyTicket(value) {
       // const url = document.getElementById('url');
+      const tickets = this.tableData.validActivityTickets;
+      if (tickets.length === 0 || !tickets) {
+        this.$vux.alert.show({
+          title: '温馨提示',
+          content: '本场会议门票已售完',
+        });
+        return;
+      }
       // this.copyToClipboard(url);
       // 判断会议 是否结束
-      if (new Date(this.tableData.endTime) - new Date() > 0) {
+      const time = this.tableData.endTime.replace(/-/g, '/');
+      if (new Date(time) - new Date() > 0) {
         this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
         if (value) {
           const id = this.id;
@@ -731,7 +740,7 @@ export default {
     }
   }
   footer{
-    margin-bottom: 65px;
+    padding-bottom: 65px;
     background-color: #f3f4f8;
     width:100%;
     height: 180px;
