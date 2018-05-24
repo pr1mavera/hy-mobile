@@ -31,8 +31,8 @@
           <p class="text">{{ticket.ticketsName?ticket.ticketsName:'无'}}</p>
           <p class="text">{{ticket.confereeName}}</p>
           <div class="ticketOptionBtn">
-            <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
-            <button class="item" type="button" name="button" @click="downloadTicket(ticket, activity)">下载门票</button>
+            <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
+            <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="downloadTicket(ticket, index)">下载门票</button>
             <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
           </div>
@@ -41,7 +41,7 @@
         </li>
       </ul> 
       <div v-transfer-dom>
-        <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadDog = true" @on-cancel="loadDog = false">
+        <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketsFn">
           <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
         </confirm>
       </div>
@@ -69,11 +69,22 @@
               </div>
               <div class="ticket border-1px-t">
                 <div class="content">
-                  <p class="title ticketN">{{currentTicket.ticketsName?currentTicket.ticketsName:'无'}}</p>
-                  <div class="QRCodeBox">
-                    <qrcode :value="currentTicket.authCode"></qrcode>
+                  <div v-if="currentTicket.ticketStatus === 3">
+                    <p class="examine-ticket">{{currentTicket.ticketsName?currentTicket.ticketsName:'无'}}</p>
+                    <p class="examine-title">门票审核中,请耐心等待</p>
+                    <div class="QRCodeBox" >
+                      <img width=100% height=100% id="" src="../assets/await-examine.png">
+                    </div>
+                    <p class="examine-desc">审核通知会以微信公众号或邮件的形式通知您，请注意查收</p>
                   </div>
-                  <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
+                  <div v-else>
+                    <p class="title ticketN">{{currentTicket.ticketsName?currentTicket.ticketsName:'无'}}</p>
+                    <div class="QRCodeBox">
+                      <qrcode :value="currentTicket.authCode"></qrcode>
+                    </div>
+                    <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
+                  </div>
+                  
                   <div class="massage">
                     <p class="name"><span>姓名</span> {{currentTicket.confereeName}}</p>
                     <p class="price"><span>票价</span> ￥{{currentTicket.ticketsPrice}}</p>
@@ -180,7 +191,7 @@ export default {
       }],
       loadConfirm: false, // 下载弹框
       selectLoadArray: [], // 下载类型
-      loadDog: false, // 弹框是否点击了确定
+      downTickets: {}, // 要下载的门票信息
     };
   },
   methods: {
@@ -214,28 +225,34 @@ export default {
     loadTypeFn(value) {
       this.selectLoadArray = value;
     },
-    // 下载门票pdf
-    downloadTicket(ticket, activity) {
-      this.loadConfirm = true;
-      if (this.loadDog) {
-        if (!ticket.id && this.selectLoadArray[0] === 1) {
-          this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
-        } else {
-          try {
-            const downloadLink = document.createElement('a');
-            downloadLink.download = `${ticket.ticketsName}门票`;
-            downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
-            downloadLink.click();
-            this.$vux.toast.text('正在下载', 'top');
-          } catch (err) {
-            console.log(err);
-          }
-        }
-        if (this.selectLoadArray[0] === 2) {
-          this.downloadTicket2(ticket, activity);
+    loadTicketsFn() {
+      const ticket = this.downTickets;
+      const activity = this.activity;
+      if (!ticket.id && this.selectLoadArray[0] === 1) {
+        this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
+      } else {
+        try {
+          const downloadLink = document.createElement('a');
+          downloadLink.download = `${ticket.ticketsName}门票`;
+          downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
+          downloadLink.click();
+          // this.$vux.toast.text('正在下载', 'top');
+        } catch (err) {
+          console.log(err);
         }
       }
-      
+      if (this.selectLoadArray[0] === 2) {
+        this.downloadTicket2(ticket, activity);
+      }
+    },
+    // 下载门票pdf
+    downloadTicket(ticket, index) {
+      if (ticket.ticketStatus !== 3) {
+        this.loadConfirm = true;
+        this.downTickets = this.activity.ticketsRecords[index];
+      } else {
+        return false;
+      }
     },
     // 下载门票png
     downloadTicket2(ticket, activity) {
@@ -373,8 +390,10 @@ export default {
     },
     clickToShowTicket(ticket) {
       // debugger
-      this.showTicket = true;
-      this.currentTicket = ticket;
+      if (ticket.ticketStatus !== 3) {
+        this.showTicket = true;
+        this.currentTicket = ticket;
+      }
       // this.$nextTick(() => {
       //   const popupTicketBoxHeight = document.getElementById('popupTicketBox').clientHeight;
       //   document.getElementById('hole').style.height = `${popupTicketBoxHeight}px`;
@@ -558,6 +577,10 @@ export default {
             border: 1px solid #2c7dfa;
             border-radius: 27px;
             background-color: #ffffff;
+            &.active{
+              color:rgb(144, 152, 168);
+              border: 1px solid rgb(144, 152, 168);
+            }
           }
         }
       }
@@ -710,6 +733,22 @@ export default {
                 position: relative;
                 margin: 0 auto;
                 width: 160px;
+              }
+              .examine-ticket{
+                text-align: center;
+                margin-bottom: 6px;
+              }
+              .examine-title{
+                color:#FF9044;
+                text-align: center;
+                margin: 0 auto;
+                width: 80%;
+              }
+              .examine-desc{
+                font-size: 14px;
+                text-align: center;
+                margin: 6px auto 16px;
+                width: 80%;
               }
               .code {
                 padding: 12px 19px;
