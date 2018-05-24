@@ -38,13 +38,13 @@
           </div>
           <!-- 下载png格式门票二维码 -->
           <qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>
-          <div v-transfer-dom>
-            <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketFn(ticket, activity)">
-              <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
-            </confirm>
-          </div>
         </li>
-      </ul>
+      </ul> 
+      <div v-transfer-dom>
+        <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadDog = true" @on-cancel="loadDog = false">
+          <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
+        </confirm>
+      </div>
     </div>
     <!-- 查看门票 -->
     <div v-transfer-dom>
@@ -180,6 +180,7 @@ export default {
       }],
       loadConfirm: false, // 下载弹框
       selectLoadArray: [], // 下载类型
+      loadDog: false, // 弹框是否点击了确定
     };
   },
   methods: {
@@ -213,28 +214,28 @@ export default {
     loadTypeFn(value) {
       this.selectLoadArray = value;
     },
-    // 下载门票
-    loadTicketFn(ticket, activity) {
-      if (!ticket.id && this.selectLoadArray[0] === 1) {
-        this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
-      } else {
-        try {
-          const downloadLink = document.createElement('a');
-          downloadLink.download = `${ticket.ticketsName}门票`;
-          downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
-          downloadLink.click();
-          this.$vux.toast.text('正在下载', 'top');
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      if (this.selectLoadArray[0] === 2) {
-        this.downloadTicket2(ticket, activity);
-      }
-    },
     // 下载门票pdf
     downloadTicket(ticket, activity) {
       this.loadConfirm = true;
+      if (this.loadDog) {
+        if (!ticket.id && this.selectLoadArray[0] === 1) {
+          this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
+        } else {
+          try {
+            const downloadLink = document.createElement('a');
+            downloadLink.download = `${ticket.ticketsName}门票`;
+            downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
+            downloadLink.click();
+            this.$vux.toast.text('正在下载', 'top');
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        if (this.selectLoadArray[0] === 2) {
+          this.downloadTicket2(ticket, activity);
+        }
+      }
+      
     },
     // 下载门票png
     downloadTicket2(ticket, activity) {
@@ -465,6 +466,9 @@ export default {
 .weui-cell:before{
   border-top:0px!important;
 }
+// .weui-mask{
+//   background: rgba(0,0,0,0.03)!important;
+// }
 .activityTicketsList {
   .activityBanner {
     width: 100%;
