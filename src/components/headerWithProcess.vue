@@ -19,7 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { getActivityInfoById } from '@/server'
+import { getActivityInfoById } from '@/server';
 
 export default {
   computed: {
@@ -41,21 +41,21 @@ export default {
       return count;
     },
   },
-  data () {
+  data() {
     return {
       activityTitle: '',
     };
   },
-  mounted () {
+  mounted() {
     this.getData();
   },
   methods: {
-    getData (){
-      getActivityInfoById(this.activityId).then(res => {
+    getData() {
+      getActivityInfoById(this.activityId).then((res) => {
         if (res.code === 0) {
           this.activityTitle = res.data.activityTitle;
         }
-      })
+      });
     },
     // 判断是否选择门票之后跳转
     toMsgFn() {

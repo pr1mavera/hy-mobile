@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { purchaseTicket, getProfileDetail } from '@/server';
+import { purchaseTicket } from '@/server';
 import { mapGetters } from 'vuex';
 import { AlertModule, Loading } from 'vux';
 
