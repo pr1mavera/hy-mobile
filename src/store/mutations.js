@@ -8,7 +8,7 @@ export const state = {
   loginUrl: '',
   firstEditData: { // 买家信息
     name: '',
-    phone: 0,
+    phone: '',
     email: '',
   },
   ticketsRecordList: [], // 对象数组，门票id，及门票所有者信息

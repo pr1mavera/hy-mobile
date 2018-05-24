@@ -85,7 +85,7 @@ export default {
             }
           }
         }
-        if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '' && judge) {
+        if (this.firstEditData.name !== '' && this.firstEditData.phone !== '' && this.firstEditData.email !== '' && judge) {
           this.$router.push({
             path: 'success',
             query: this.query,
