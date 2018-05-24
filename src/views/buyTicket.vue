@@ -1,6 +1,7 @@
 <template>
   <div class="buyTicket">
     <div class="header">
+      <!-- 购买门票进度 -->
       <headerWithProcess></headerWithProcess>
     </div>
     <div class="routerBody">
@@ -8,11 +9,12 @@
         <router-view @countChangeWithId="countChangeWithId"></router-view>
       </keep-alive>
     </div>
+    <!-- 总价和下一步 -->
     <shopCart v-if="this.$route.name !== 'success'"></shopCart>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { mapMutations, mapGetters } from 'vuex';
 import { getTicketsByActivityId } from '@/server/index.js';
 import headerWithProcess from '@/components/headerWithProcess.vue';
@@ -21,49 +23,49 @@ import shopCart from '@/components/shopCart.vue';
 export default {
   data() {
     return {
-      ticketsList: [
-        {
-          id: 12,
-          ticketName: '门票1',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 0,
-          isCheck: true,
-        },
-        {
-          id: 13,
-          ticketName: '门票2',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 457,
-          isCheck: true,
-        },
-        {
-          id: 14,
-          ticketName: '门票3',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 75,
-          isCheck: true,
-        },
-        {
-          id: 15,
-          ticketName: '门票4',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 4,
-          isCheck: true,
-        },
-        {
-          id: 16,
-          ticketName: '门票5',
-          totalNumber: 45,
-          sellStatus: 12,
-          ticketPrice: 26,
-          isCheck: true,
-        },
-      ],
-      ticketsData: [],
+      // ticketsList: [
+      //   {
+      //     id: 12,
+      //     ticketName: '门票1',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 0,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 13,
+      //     ticketName: '门票2',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 457,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 14,
+      //     ticketName: '门票3',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 75,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 15,
+      //     ticketName: '门票4',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 4,
+      //     isCheck: true,
+      //   },
+      //   {
+      //     id: 16,
+      //     ticketName: '门票5',
+      //     totalNumber: 45,
+      //     sellStatus: 12,
+      //     ticketPrice: 26,
+      //     isCheck: true,
+      //   },
+      // ],
+      ticketsData: [], // 会议门票
     };
   },
   computed: {
@@ -119,7 +121,8 @@ export default {
       });
       this.setQuery(query);
     },
-    countChangeWithId(id, val) { // 响应子组件事件方法
+    // 根据id添加相应的cont字段表示已经选择的门票个数
+    countChangeWithId(id, val) { // (门票的id及购买门票的数量)
       const tickets = this.tickets.map((item) => {
         if (item.id === id) {
           // eslint-disable-next-line

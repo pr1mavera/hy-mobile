@@ -14,60 +14,61 @@ import PPDynamic from '@/views/personalPage/PPDynamic';
 import search from '@/views/searchPage';
 import ticketActivity from '@/views/ticketsRecord/activityList';
 import record from '@/views/ticketsRecord/record';
-import NotFoundComponent from '@/views/404';
 
-// import TCKIndex from '@/views/TCKIndex';
-// import home from '@/views/home';
-// import service from '@/views/service';
-// import activity from '@/views/activity';
+// const pathToRegexp = require('path-to-regexp');
+
+import TCKIndex from '@/views/TCKIndex';
+import home from '@/views/home';
+import service from '@/views/service';
+import activity from '@/views/activity';
 
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: home,
-    // },
-    // {
-    //   path: '/TCKIndex',
-    //   name: 'TCKIndex',
-    //   component: TCKIndex,
-    // },
-    // {
-    //   path: '/activity',
-    //   name: 'activity',
-    //   component: activity,
-    // },
-    // {
-    //   path: '/service',
-    //   name: 'service',
-    //   component: service,
-    // },
     {
-      path: '/search',
+      path: '/',
+      name: 'home',
+      component: home, // 主页
+    },
+    {
+      path: '/TCKIndex',
+      name: 'TCKIndex',
+      component: TCKIndex,
+    },
+    {
+      path: '/activity', // 活动
+      name: 'activity',
+      component: activity,
+    },
+    {
+      path: '/search', // 搜索
       name: 'search',
       component: search,
     },
     {
-      path: '/activity/:id',
+      path: '/service', // 服务
+      name: 'service',
+      component: service,
+    },
+    {
+      path: '/activity/:id', // 活动详情页面，可获取门票
       name: 'detail',
       component: detail,
     },
     {
-      path: '/ticketActivity',
+      path: '/ticketActivity', // 主办方验票
       name: 'ticketActivity',
       component: ticketActivity,
     },
     {
-      path: '/record/:id',
+      path: '/record/:id', // 扫码验票，签到码验票
       name: 'record',
       component: record,
     },
     {
-      path: '/buyTicket/:activityId',
+      path: '/buyTicket/:activityId', // 买票步骤
       name: 'buyTicket',
       component: buyTicket,
       children: [
@@ -76,24 +77,24 @@ export default new Router({
           redirect: '/buyTicket/:activityId/selectTicket',
         },
         {
-          path: 'selectTicket',
+          path: 'selectTicket', // 选择门票
           component: selectTicket,
           name: 'selectTicket',
         },
         {
-          path: 'fillInTicketMsg',
+          path: 'fillInTicketMsg', // 填写信息
           component: fillInTicketMsg,
           name: 'fillInTicketMsg',
         },
         {
-          path: 'success',
+          path: 'success', // 购买成功
           component: success,
           name: 'success',
         },
       ],
     },
     {
-      path: '/usercenter',
+      path: '/usercenter', // 我的会议
       name: 'usercenter',
       component: usercenter,
       children: [
@@ -102,33 +103,33 @@ export default new Router({
           redirect: '/usercenter/activity/:id?',
         },
         {
-          path: 'activity/:id?',
+          path: 'activity/:id?', // 活动
           component: PPActivity,
           name: 'PPActivity',
         },
         {
-          path: 'partake/:id?',
+          path: 'partake/:id?', // 参与
           component: PPPartake,
           name: 'PPPartake',
         },
         {
-          path: 'collection/:id?',
+          path: 'collection/:id?', // 收藏
           component: PPCollection,
           name: 'PPCollection',
         },
         {
-          path: 'follow/:id?',
+          path: 'follow/:id?', // 关注
           component: PPFollow,
           name: 'PPFollow',
         },
         {
-          path: 'dynamic/:id?',
+          path: 'dynamic/:id?', // 动态
           component: PPDynamic,
           name: 'PPDynamic',
         },
       ],
     },
-    { path: '*', name: '404', component: NotFoundComponent },
+    // { path: '*', name: '404', component: NotFoundComponent },
   ],
   base: '/web/',
 });

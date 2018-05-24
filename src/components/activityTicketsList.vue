@@ -28,16 +28,25 @@
       <ul>
         <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
           <span class="ticketState">{{ticket.ticketStatus | ticketFilter}}</span>
-          <p class="text">{{ticket.ticketsName}}</p>
+          <p class="text">{{ticket.ticketsName?ticket.ticketsName:'无'}}</p>
           <p class="text">{{ticket.confereeName}}</p>
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
-            <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
+            <button class="item" type="button" name="button" @click="downloadTicket(ticket, activity)">下载门票</button>
+            <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
+          </div>
+          <!-- 下载png格式门票二维码 -->
+          <qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>
+          <div v-transfer-dom>
+            <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketFn(ticket, activity)">
+              <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
+            </confirm>
           </div>
         </li>
       </ul>
     </div>
+    <!-- 查看门票 -->
     <div v-transfer-dom>
       <popup
         v-model="showTicket"
@@ -60,9 +69,9 @@
               </div>
               <div class="ticket border-1px-t">
                 <div class="content">
-                  <p class="title ticketN">{{currentTicket.ticketsName}}</p>
+                  <p class="title ticketN">{{currentTicket.ticketsName?currentTicket.ticketsName:'无'}}</p>
                   <div class="QRCodeBox">
-                    <qrcode :value="currentTicket.ticketLinkUrl"></qrcode>
+                    <qrcode :value="currentTicket.authCode"></qrcode>
                   </div>
                   <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
                   <div class="massage">
@@ -135,11 +144,12 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
-import { TransferDom, Popup, Qrcode, XInput, Group } from 'vux';
+<script>
+import { TransferDom, Popup, Qrcode, XInput, Group, Checklist, Confirm } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';
 import { updateTicket } from '@/server';
+import PDFTicketItem from '@/common/js/PDFTicketItem.js';
 
 export default {
   props: {
@@ -161,9 +171,19 @@ export default {
         confereePhone: '',
         confereeEmail: '',
       },
+      downloadArray: [{
+        key: 1,
+        value: 'pdf',
+      }, {
+        key: 2,
+        value: 'png',
+      }],
+      loadConfirm: false, // 下载弹框
+      selectLoadArray: [], // 下载类型
     };
   },
   methods: {
+    /* eslint-disable */
     updateTicket() {
       const data = { ...this.ticketForm };
       const len = data.confereeName.length;
@@ -190,8 +210,12 @@ export default {
       }
       // return;
     },
-    downloadTicket(ticket) {
-      if (!ticket.id) {
+    loadTypeFn(value) {
+      this.selectLoadArray = value;
+    },
+    // 下载门票
+    loadTicketFn(ticket, activity) {
+      if (!ticket.id && this.selectLoadArray[0] === 1) {
         this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
       } else {
         try {
@@ -204,6 +228,147 @@ export default {
           console.log(err);
         }
       }
+      if (this.selectLoadArray[0] === 2) {
+        this.downloadTicket2(ticket, activity);
+      }
+    },
+    // 下载门票pdf
+    downloadTicket(ticket, activity) {
+      this.loadConfirm = true;
+    },
+    // 下载门票png
+    downloadTicket2(ticket, activity) {
+    // downloadTicket2() {
+      // debugger;
+      // const [ticketsName, cTime, confereeName, , ticketLinkUrl] = ticket;
+      // const [activityAddress] = activity;
+      // eslint-disable-next-line
+      let canvas = document.createElement('CANVAS');
+      // 初始化背景
+      canvas.setAttribute('height', 786);
+      canvas.setAttribute('width', 1837);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 1837, 786);
+      ctx.fillStyle = '#213C67';
+      ctx.fillRect(0, 0, 156, 786);
+      // 这里绘画~  212，213行 用到时解开注释；
+
+      // 绘制PDF默认标题
+      this.PDFDrawDefine(ctx);
+      // 绘制PDF会议门票基本信息
+      this.PDFDrawMsg(ctx, ticket, activity);
+
+      // 生成
+      this.downLoadImage(canvas, '2');
+    },
+    PDFDrawDefine(context) {
+      const startTimeTitle = new PDFTicketItem({
+        itemText: '开始时间',
+        x: 260,
+        y: 309,
+        font: '36px PingFangSC-Regular',
+      });
+      startTimeTitle.draw(context, '#999999');
+
+      const addressTitle = new PDFTicketItem({
+        itemText: '活动地址',
+        x: 736,
+        y: 309,
+        font: '36px PingFangSC-Regular',
+      });
+      addressTitle.draw(context, '#999999');
+
+      const attendeeTitle = new PDFTicketItem({
+        itemText: '参会人',
+        x: 260,
+        y: 562,
+        font: '36px PingFangSC-Regular',
+      });
+      attendeeTitle.draw(context, '#999999');
+
+      const ticketNameTitle = new PDFTicketItem({
+        itemText: '票名',
+        x: 736,
+        y: 562,
+        font: '36px PingFangSC-Regular',
+      });
+      ticketNameTitle.draw(context, '#999999');
+      // 画虚线
+      context.fillStyle = '#DDDDDD';
+      context.setLineDash([15, 5]);
+      context.lineWidth = .1;
+      context.moveTo(1243, 146);
+      context.lineTo(1243, 640);
+      context.stroke();
+      context.setLineDash([]);
+
+      const ticketNoticeOnLeft = new PDFTicketItem({
+        itemText: '请将此票保管好携带至会场',
+        x: 0,
+        y: 0,
+        font: '36px PingFangSC-Regular',
+      });
+      context.save();
+      context.translate(90, 609);
+      context.rotate(-90 * Math.PI / 180);
+      ticketNoticeOnLeft.draw(context, '#CADFFF');
+      context.restore();
+    },
+    PDFDrawMsg(context, ticket, activity) {
+      const activityName = new PDFTicketItem({
+        itemText: activity.activityTitle,
+        // itemText: '好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊',
+        x: 260,
+        y: 133,
+        font: '52px PingFangSC-Medium',
+      });
+      activityName.drawTextChangeLine(context, '#333333', 837);
+
+      const startTime = new PDFTicketItem({
+        itemText: ticket.cTime,
+        x: 260,
+        y: 374,
+        font: '42px PingFangSC-Medium',
+      });
+      startTime.drawTextChangeLine(context, '#333333', 417);
+
+      const address = new PDFTicketItem({
+        itemText: this.addressFormat(activity.activityAddress),
+        x: 737,
+        y: 374,
+        font: '42px PingFangSC-Medium',
+      });
+      address.drawTextChangeLine(context, '#333333', 417);
+
+      const attendee = new PDFTicketItem({
+        itemText: ticket.confereeName,
+        x: 260,
+        y: 630,
+        font: '42px PingFangSC-Medium',
+      });
+      attendee.drawTextChangeLine(context, '#333333', 417);
+
+      const ticketName = new PDFTicketItem({
+        itemText: ticket.ticketsName,
+        x: 737,
+        y: 630,
+        font: '42px PingFangSC-Medium',
+      });
+      ticketName.drawTextChangeLine(context, '#333333', 417);
+
+      // 绘制二维码
+      const value = 'ticketCode' + ticket.id;
+      const img = this.$refs[value][0].$el.childNodes[2];
+      context.drawImage(img, 1372, 150, 300, 300);
+
+      const code = new PDFTicketItem({
+        itemText: ticket.signCode,
+        x: 1402,
+        y: 613,
+        font: '62px SFUIText-Medium',
+      });
+      code.draw(context, '#4D4D4D');
     },
     clickToShowTicket(ticket) {
       // debugger
@@ -222,6 +387,21 @@ export default {
       this.ticketForm.confereePhone = ticket.confereePhone;
       this.ticketForm.confereeEmail = ticket.confereeEmail;
       // const ticketForm = this.ticketForm;
+    },
+    downLoadImage(canvas, name) {
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL();
+      a.download = name;
+      a.click();
+    },
+    addressFormat(value) {
+      const json1 = value.replace(/'/g, '"');
+      const json2 = json1.replace(/^"/, "'");
+      const json3 = json2.replace(/"$/, "'");
+      let temp = JSON.parse(json3);
+      temp = Object.values(temp);
+      temp = temp.join('');
+      return temp;
     },
   },
   filters: {
@@ -267,6 +447,8 @@ export default {
     Qrcode,
     XInput,
     Group,
+    Checklist,
+    Confirm,
   },
 };
 </script>
@@ -274,7 +456,15 @@ export default {
 <style lang="less">
 @import '~vux/src/styles/1px.less';
 @import '../common/style/mixin.less';
-
+.weui-cells:before{
+  border-top:0px!important;
+}
+.weui-cells:after{
+  border-bottom:0px!important;
+}
+.weui-cell:before{
+  border-top:0px!important;
+}
 .activityTicketsList {
   .activityBanner {
     width: 100%;

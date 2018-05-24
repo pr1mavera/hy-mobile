@@ -2,44 +2,84 @@
   <div class="userInput-3">
     <form method="post">
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">姓名<i>*</i></label>
-        <input class="input input-hook" type="text" name="name" :value="setNameDefaultInput" v-on:input="userChangeEdit" id="firstFocus">
+        <label class="title" :class="setTitleSize">
+          姓名<i>*</i>
+          <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
+        </label>
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name' :value="setNameDefaultInput">
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">电话<i>*</i></label>
-        <input class="input input-hook" type="text" name="phone" :value="setPhoneDefaultInput" v-on:input="userChangeEdit">
+        <label class="title" :class="setTitleSize">
+          电话<i>*</i>
+          <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
+        </label>
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone' :value="setPhoneDefaultInput">
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">邮箱<i>*</i></label>
-        <input class="input input-hook" type="text" name="email" :value="setEmailDefaultInput" v-on:input="userChangeEdit">
+        <label class="title" :class="setTitleSize">
+          邮箱<i>*</i>
+          <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
+        </label>
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email' :value="setEmailDefaultInput">
       </div>
     </form>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
-import { mapGetters } from 'vuex';
+<script>
+/* eslint-disable */
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   props: {
-    titleSize: {
-      type: Number,
-    },
+    // titleSize: {
+    //   type: Number,
+    // },
     index: {
       type: Number,
     },
+    value: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
+  },
+  data() {
+    return {
+      user: { // 判断信息的正确性
+        nameInfo: false,
+        phoneInfo: false,
+        emailInfo: false,
+      },
+    };
   },
   computed: {
     ...mapGetters([
       'firstEditData',
+      'ticketsRecordList',
     ]),
+    // 双向绑定待更新的数据
+    ticketOwner: {
+      get: function() {
+        return this.value;
+      },
+      set: function(val) {
+        this.$emit('input', val);
+      }
+    },
     setTitleSize() {
       const className = `titleSize-${this.titleSize}`;
       return className;
     },
+    // 第一张门票信息默认是买家信息
     setNameDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.name;
+      } else if (this.index && this.ticketsRecordList.length > 1){
+        return this.ticketsRecordList[this.index].confereeName;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -47,6 +87,10 @@ export default {
     setPhoneDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.phone;
+      } else if (this.index && this.ticketsRecordList.length > 1){
+        return this.ticketsRecordList[this.index].confereePhone;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -54,17 +98,64 @@ export default {
     setEmailDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.email;
+      } else if (this.index && this.ticketsRecordList.length > 1){
+        return this.ticketsRecordList[this.index].confereeEmail;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
     },
   },
   methods: {
-    userChangeEdit() {
-      if (this.index === 0) {
-        this.$emit('userChangeEdit');
+    ...mapMutations({
+      setTicketsRecordList: 'SET_TICKET_RECORD_LIST'
+    }),
+    ownerNameFn() {
+      // 正则验证
+      const userName = this.$refs.name.value.replace(/\s+/g, '');
+      const list = this.ticketsRecordList.slice(0);
+      if (userName !== '') {
+        this.user.nameInfo = false;
+        console.log(123);
+        list[this.index].confereeName = userName;
+        this.setTicketsRecordList(list);
+      } else {
+        this.user.nameInfo = true;
+        console.log(456);
+        list[this.index].confereeName = '';
+        this.setTicketsRecordList(list);
       }
     },
+    ownerPhoneFn() {
+      const phone = this.$refs.phone.value.replace(/\s+/g, '');
+      const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+      const list = this.ticketsRecordList.slice(0);
+        if (phone !== '' && phone.match(regNum)) {
+          this.user.phoneInfo = false;
+          list[this.index].confereePhone = phone;
+          this.setTicketsRecordList(list);
+        } else {
+          this.user.phoneInfo = true;
+          list[this.index].confereePhone = '';
+          this.setTicketsRecordList(list);
+        }
+    },
+    ownerEmailFn() {
+      const email = this.$refs.email.value.replace(/\s+/g, '');
+      const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      const list = this.ticketsRecordList.slice(0);
+      if (email !== '' && email.match(regEmail)) {
+        this.user.emailInfo = false;
+        list[this.index].confereeEmail = email;
+        this.setTicketsRecordList(list);
+      } else {
+        this.user.emailInfo = true;
+        list[this.index].confereeEmail = '';
+        this.setTicketsRecordList(list);
+      }
+    },
+    
   },
 };
 </script>
@@ -84,6 +175,12 @@ export default {
       color: @text-color;
       i {
         color: #ff584e;
+      }
+      .info-msg{
+        display:inline-block;
+        color:red;
+        font-size:0.6rem;
+        padding-left:10px;
       }
       &.titleSize-12 {
         font-size: 12px;

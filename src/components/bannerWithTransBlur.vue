@@ -4,11 +4,11 @@
       <img src="http://p5zhgy42k.bkt.clouddn.com/test/14/20180410/1524643919513.jpg">
     </div>
     <div class="avatar">
-      <img src="@/views/personalPage/icon.png" width="64" height="64">
+      <img :src="this.userProfile.avatarUrl" width="64" height="64">
     </div>
     <div class="title">
       <h1 class="titleItem name">{{this.userProfile.username}}</h1>
-      <p class="titleItem desc">{{this.userProfile.personalizedSignature ? this.userProfile.personalizedSignature : '这个人很懒，什么都没有留下...'}}</p>
+      <p class="titleItem desc">{{this.userProfile.info ? this.userProfile.info : '这个人很懒，什么都没有留下...'}}</p>
     </div>
     <x-button class="followBtn" v-if="!isCurrentUser">
       <svg class="icon" aria-hidden="true">
@@ -16,8 +16,8 @@
       </svg>
       关注
     </x-button>
-    <div class="fillBox" v-if="isCurrentUser"></div>
-    <div class="attribute">
+    <!-- <div class="fillBox" v-if="isCurrentUser"></div> -->
+    <div class="attribute" v-if="isCurrentUser">
       <div class="item">
         <p>{{this.userProfile.userStatistics.activityCount}}</p>
         <p>会议</p>
@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { XButton } from 'vux';
 
 export default {
@@ -70,14 +70,15 @@ export default {
   width: 100%;
   height: 286px;
   color: #ffffff;
+  margin-top: -45px;
   text-align: center;
   overflow-y: hidden;
   .bannerBg {
-    position: fixed;
+    // position: fixed;
     width: 100%;
     height: 300px;
     top: 0;
-    z-index: -1;
+    // z-index: -1;
     img {
       width: 100%;
       height: 100%;
@@ -93,6 +94,7 @@ export default {
     img {
       border-radius: 50%;
       border: solid #6586cf 5px;
+      object-fit: cover;
     }
   }
   .title {
@@ -142,6 +144,11 @@ export default {
     margin-top: 192px;
   }
   .attribute {
+    width: 100%;
+    position: absolute;
+    bottom:0;
+    left:50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     font-size: 14px;

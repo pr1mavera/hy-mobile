@@ -17,17 +17,17 @@
       </tab>
     </div>
     <div class="swiper-container">
-      <swiper @on-index-change="handlerHeight(check)" id="swiper" class="swiper" v-model="check"  :show-dots="false">
-        <swiper-item >
-          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData">
-            <div class="flex-box" >
+      <!--<swiper @on-index-change="handlerHeight(check)" id="swiper" class="swiper" v-model="check"  :show-dots="false">
+        <swiper-item >-->
+          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData" v-show="check===0">
+            <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
               </div>
               <div class="center">
-                  <h5>{{item.nickname}}</h5>
-                  <p>{{item.info}}</p>
-                  <div v-if="item.userStatistics" >
+                  <h5>{{item.nickname?item.nickname:item.username}}</h5>
+                  <p p-intro>{{item.info?item.info:'这个人很懒，但还是什么都没写...'}}</p>
+                  <div v-if="item.userStatistics">
                     <p>会议<span class="num" >{{item.userStatistics.activityCount }}</span></p>
                     <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
@@ -39,9 +39,9 @@
               </div>
             </div>
           </div>
-        </swiper-item>
-        <swiper-item >
-          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData">
+        <!--</swiper-item>
+        <swiper-item >-->
+          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData" v-show="check===1">
             <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
@@ -61,8 +61,8 @@
               </div>
             </div>
           </div>
-        </swiper-item>
-      </swiper>
+        <!--</swiper-item>
+      </swiper>-->
     </div>
     <div class="bottom">
       已经到底啦~
@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
 import { getWatchPeopleList, getFanList, addWatch, deleteWatch } from '@/server/index.js';
 
@@ -124,15 +124,15 @@ export default {
         }
       });
     },
-    handlerHeight(index) {
-      if (index === 0) {
-        document.getElementById('swiper').style.height = `${this.wTableData.length * 95}px`;
-        document.getElementById('swiper').firstChild.style.height = `${this.wTableData.length * 95}px`;
-      } else {
-        document.getElementById('swiper').style.height = `${this.fTableData.length * 95}px`;
-        document.getElementById('swiper').firstChild.style.height = `${this.fTableData.length * 95}px`;
-      }
-    },
+    // handlerHeight(index) {
+    //   if (index === 0) {
+    //     document.getElementById('swiper').style.height = `${this.wTableData.length * 95}px`;
+    //     document.getElementById('swiper').firstChild.style.height = `${this.wTableData.length * 95}px`;
+    //   } else {
+    //     document.getElementById('swiper').style.height = `${this.fTableData.length * 95}px`;
+    //     document.getElementById('swiper').firstChild.style.height = `${this.fTableData.length * 95}px`;
+    //   }
+    // },
     watchPeople(obj, index, swiper) {
       addWatch(obj.id).then((res) => {
         if (res.code === 0) {
@@ -197,9 +197,9 @@ export default {
       }
     }
   }
-  .swiper-container{
-    background-color: #ffffff;
-    .swiper{
+  // .swiper-container{
+  //   background-color: #ffffff;
+  //   .swiper{
       .tab-swiper.vux-center{
         padding: 0 20px;
         &:not(:last-child){
@@ -207,6 +207,7 @@ export default {
         }
         .flex-box{
           display: flex;
+          display:-webkit-flex;
           justify-content: space-between;
           align-items: center;
           min-height: 95px;
@@ -232,6 +233,13 @@ export default {
               color:#5d6574;
               font-size: 12px;
               padding: 2px 0;
+            }
+            p[p-intro]{
+              overflow : hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
             }
             &>div{
               display: flex;
@@ -270,8 +278,8 @@ export default {
           }
         }
       }
-    }
-  }
+  //   }
+  // }
   .bottom{
     text-align: center;
     color: #b8bcc4;

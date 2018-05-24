@@ -1,8 +1,9 @@
 <template>
   <div id="personalPage">
-    <meetingHeader :colorStyle="colorStyle" @rightSliderClickToChangeTabFlag="ChangeCurrentTabIndex"></meetingHeader>
+
     <div class="scrollWrapper" ref="scrollWrapper">
       <div class="mainContainer">
+        <meetingHeader :colorStyle="colorStyle" @rightSliderClickToChangeTabFlag="ChangeCurrentTabIndex"></meetingHeader>
         <bannerWithTransBlur :userProfile="userProfile" :isCurrentUser="isCurrentUser"></bannerWithTransBlur>
         <tab
         class="tab"
@@ -33,7 +34,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getProfileById } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import { mapGetters } from 'vuex';
@@ -152,53 +153,7 @@ html, body, #app, #personalPage {
   height: 100%;
 }
 #personalPage {
-  .meetingHeader{
-    padding: 0;
-    height: 45px;
-    width: 100%;
-    background-color: transparent;
-    z-index: 999;
-    position: absolute;
-    &::after{
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 1;
-      z-index: -1;
-    }
-    .vux-header-left{
-      left: 15px;
-      top: 50%;
-      margin-top: -9px;
-      .left{
-        font-size: 18px;
-        color: #ffffff;
-      }
-    }
-    .vux-header-right{
-      right: 15px;
-      top: 50%;
-      margin-top: -9px;
-      .right{
-        font-size: 18px;
-        color: #ffffff;
-      }
-    }
-    .vux-header-title{
-      height: 45px;
-      .title{
-        h1{
-          line-height: 45px;
-          font-size: 23px;
-          color: #ffffff;
-        }
-      }
-    }
 
-  }
   .scrollWrapper {
     position: absolute;
     top: 0;
@@ -210,6 +165,59 @@ html, body, #app, #personalPage {
       overflow: scroll;
       height: 100%;
       -webkit-overflow-scrolling: touch;
+      .header {
+        // position: absolute;
+        top: 0;
+        width: 100%;
+        height: 45px;
+        .meetingHeader{
+          padding: 0;
+          height: 45px;
+          width: 100%;
+          background-color: transparent;
+          z-index: 999;
+          // position: absolute;
+          &::after{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 1;
+            z-index: -1;
+          }
+          .vux-header-left{
+            left: 15px;
+            top: 50%;
+            margin-top: -9px;
+            .left{
+              font-size: 18px;
+              color: #ffffff;
+            }
+          }
+          .vux-header-right{
+            right: 15px;
+            top: 50%;
+            margin-top: -9px;
+            .right{
+              font-size: 18px;
+              color: #ffffff;
+            }
+          }
+          .vux-header-title{
+            height: 45px;
+            .title{
+              h1{
+                line-height: 45px;
+                font-size: 23px;
+                color: #ffffff;
+              }
+            }
+          }
+
+        }
+      }
       .tab {
         .vux-tab-container {
           .vux-tab {

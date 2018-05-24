@@ -1,28 +1,33 @@
 import Vue from 'vue';
-import { AjaxPlugin } from 'vux';
+import { AjaxPlugin, ToastPlugin } from 'vux';
 import conf from '../config/index';
+// import { debug } from 'util';
 
 Vue.use(AjaxPlugin);
+Vue.use(ToastPlugin);
 
 Vue.http.defaults.withCredentials = true;
 
 const host = conf.publicPath;
+
 // const host = '//m.anjuke.com/live';
 
-// Vue.http.interceptors.response.use((data) => {
-//   debugger;
-//   if (data.data.code && data.data.code !== 0) {
-//     this.$vux.toast.text(data.data.msg, 'top');
-//   }
-// }, (error) => {
-//   debugger;
-//   if (error.response.status === 401) {
-//     const paramsString = encodeURI(window.location.href);
-//     window.location.href = `${error.response.data.loginUrl}?service=${paramsString}`;
-//     this.$vux.toast.text(error.response.data.msg, 'top');
-//   }
-//   return Promise.reject(error);
-// });
+Vue.http.interceptors.response.use(data => data, (error) => {
+  if (error.response.status === 401) {
+    const paramsString = encodeURI(window.location.href);
+    if (paramsString.indexOf('ticketActivity') > -1) {
+      // const href='http://'+window.location.host;
+      // console.log(this)
+      Vue.$vux.toast.text(error.response.data.msg, 'top');
+      setTimeout(() => {
+        window.location.href = `${error.response.data.loginUrl}?service=${paramsString}`;
+      }, 500);
+    }
+  } else {
+    Vue.$vux.toast.text(error.response.data.msg, 'top');
+  }
+  return Promise.reject(error);
+});
 
 export default {
   post: (url, data, error, option) =>

@@ -1,8 +1,8 @@
 <template>
   <div id="record">
     <ul class="sign_list">
-      <li class="sign_item" v-for='item in sigedList'>
-        <span class="avatar">      
+      <li class="sign_item" v-for='(item,index) in sigedList' :key='index'>
+        <span class="avatar">
           <img :src="defaultAvatar" alt="" >
         </span>
         <span class="username">{{item.confereeName}}</span>
@@ -47,7 +47,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-weizhi"></use>
         </svg>
-        北京市朝阳区双榆树一街北里213号
+        {{ticketInfo.activity.address}}
       </div>
     </div>
     </confirm>
@@ -60,7 +60,7 @@
     >
     <group>
       <x-input v-model='ticketNum' placeholder='请输入签到码' :focus='focus === 1'></x-input>
-    </group>  
+    </group>
     </confirm>
   </div>
 </template>
@@ -84,9 +84,8 @@ export default {
     };
   },
   created() {
-    signedRecord(this.activityId).then((res) => {
-      this.sigedList = res.data;
-    });
+    document.title = this.$route.query.activity;
+    this.getSignedRecord();
     // this.$vux.confirm.show({
     //   // 组件除show外的属性
     //   onCancel () {
@@ -97,12 +96,18 @@ export default {
     // })
   },
   methods: {
+    getSignedRecord() {
+      signedRecord(this.activityId).then((res) => {
+        this.sigedList = res.data;
+      });
+    },
     confirmSign() {
-      confirmSign(this.activityId, this.ticketInfo.ticketsId).then((res) => {
-        if (res.code === 0) {
-          this.$vux.toast.text('签到成功');
+      confirmSign(this.activityId, this.ticketInfo.id).then((res) => {
+        if (res.code !== 0) {
+          this.$vux.toast.text(res.msg);
         } else {
-          this.$vux.toast.text('签到失败');
+          this.$vux.toast.text(res.msg);
+          this.getSignedRecord();
         }
       });
     },
@@ -111,17 +116,19 @@ export default {
         this.$vux.toast.text('请填写正确签到码');
       } else {
         signedInfo(this.activityId, code).then((ticketInfo) => {
-          if (ticketInfo.code !== 0) {
+          if (ticketInfo.data) {
+            const address = JSON.parse(ticketInfo.data.activity.activityAddress);
+            this.ticketInfo = ticketInfo.data;
+            this.ticketInfo.activity.address = address.province + address.city + address.address;
+            this.ticketInput = false;
+            this.ticketSucess = true;
+          } else {
+            this.ticketNum = '';
             this.$vux.alert.show({
               title: '验票失败',
               content: '失败可能原因：过期票、无效票、非本场活动门票、签到码输入有误，或网络异常，请重试验票！',
               buttonText: '知道了',
             });
-          } else {
-            const address = JSON.parse(ticketInfo.data.activity.activityAddress);
-            this.ticketInfo = ticketInfo.data;
-            this.ticketInfo.activity.address = address.province + address.city + address.address;
-            this.ticketSucess = true;
           }
         });
       }
@@ -140,7 +147,7 @@ export default {
   components: {
     XButton, Confirm, Divider, XInput, Group,
   },
-  filter: {
+  filters: {
     ticketStatus(source) {
       switch (source) {
         case 0:
@@ -216,6 +223,7 @@ export default {
     }
     .base_info_wrap{
       display: flex;
+      display: -webkit-flex;
     }
     .info_item{
       display: flex;

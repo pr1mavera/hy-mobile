@@ -4,28 +4,55 @@
       <li v-for="(ticket, index) in selectTicket" class="inputBoxItem" :key="index">
         <div class="boxTitle border-1px-b">{{index + 1}}.{{ticket.ticketName}}</div>
         <div class="boxContent">
-          <userInput-3 :titleSize="12" :index="index" @userChangeEdit="userChangeEdit"></userInput-3>
+          <userInput-3 :titleSize="12" :index="index" v-model="ticketsOwnerList[index]"></userInput-3>
         </div>
       </li>
     </ul>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import userInput3 from '@/components/userInput3.vue';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   props: {
-    selectTicket: {
+    selectTicket: { // 所选门票的信息
       type: Array,
     },
   },
   computed: {
-
+    ...mapGetters([
+      'ticketsRecordList', // 门票所有者信息
+    ]),
+  },
+  data() {
+    return {
+      ticketsOwnerList: [],
+    };
+  },
+  mounted() {
+    this.handelData();
   },
   methods: {
-    userChangeEdit() {
-      this.$emit('userChangeEdit');
+    // userChangeEdit() {
+    //   this.$emit('userChangeEdit');
+    // },
+    ...mapMutations({
+      setTicketsRecordList: 'SET_TICKET_RECORD_LIST',
+    }),
+    handelData() {
+      this.selectTicket = this.selectTicket ? this.selectTicket : [];
+      for (let i = 0; i < this.selectTicket.length; i += 1) {
+        const obj = {
+          ticketsId: this.selectTicket[i].id,
+          confereeName: '',
+          confereePhone: '',
+          confereeEmail: '',
+        };
+        this.ticketsOwnerList.push(obj);
+      }
+      this.setTicketsRecordList(this.ticketsOwnerList);
     },
   },
   components: {

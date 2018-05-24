@@ -1,5 +1,5 @@
 <template>
-  <div class="searchList">
+  <div class="searchList" @click='$router.push("/activity/"+activity.id)'>
     <div class="listImg">
       <img :src="activity.activityBannerMobile">
     </div>
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { formatDate } from '@/common/js/index.js';
 
 export default {
@@ -21,7 +21,7 @@ export default {
   },
   filters: {
     timeFormat(value = '') {
-      const temp = new Date(value);
+      const temp = new Date(value.replace(/-/g, '/'));
       return formatDate(temp, 'MM月dd日 hh:mm');
     },
   },

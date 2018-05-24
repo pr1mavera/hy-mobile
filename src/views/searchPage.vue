@@ -16,15 +16,15 @@
       </div>
       <ul class="ul-container">
         <li v-for="(activity, index) in activityList" class="activityListLi vux-1px-b" :key="index">
-          <activityList :activity="activity"></activityList>
+          <searchList :activity="activity"></searchList>
         </li>
       </ul>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getSearchList } from '@/server/index.js';
-import activityList from '@/components/searchList';
+import searchList from '@/components/searchList';
 
 export default {
   data() {
@@ -40,10 +40,11 @@ export default {
     async getList() {
       const query = {
         keyword: this.searchVal,
-        isMobile: true,
+        // isMobile: true,
       };
       const res = await getSearchList(query);
       if (res.code === 0) {
+        // debugger;
         this.activityList = res.data.list;
       } else {
         console.log('error in getSearchlist');
@@ -54,7 +55,7 @@ export default {
     },
   },
   components: {
-    activityList,
+    searchList,
   },
 };
 </script>
@@ -77,6 +78,8 @@ export default {
       flex-grow: 0;
       font-size: 15px;
       color: #2C7DFA;
+      background-color:#fff;
+      border:none;
 
     }
     div.input{
@@ -107,6 +110,8 @@ export default {
 
     }
     .searchButton{
+      background-color:#fff;
+      border:none;
       width: 60px;
       font-size: 15px;
       color: #B8BCC4;

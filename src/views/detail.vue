@@ -2,7 +2,7 @@
   <div id="detail">
     <meetingHeader :colorStyle="colorStyle"></meetingHeader>
     <div class="main-container">
-      <banner :src="tableData.activityBannerMobileUrl"></banner>
+      <banner :src="tableData.activityBannerMobileUrl?tableData.activityBannerMobileUrl:''"></banner>
       <div class="container-title">
         <div class="company">
           <p>{{tableData.nickname}}</p>
@@ -40,25 +40,15 @@
             <p v-else>{{tableData.endTime | timeFormat}}</p>
           </div>
         </div>
-        <div class="sectionStyle detailLocation">
-          <h1 class="title">
-            位置
-          </h1>
-          <div class="content">
-            <div id="container" >
-
-            </div>
-          </div>
-        </div>
         <div class="sectionStyle detailIntroduction">
           <h1 class="title">
             简介
           </h1>
           <div class="content" >
-            <p v-html="this.tableData.activityDescription"></p>
+            <p v-html="tableData.activityDescription"></p>
           </div>
         </div>
-        <div class="sectionStyle detailSchedule">
+        <div class="sectionStyle detailSchedule" v-if="activitySchedulesOBJ && activitySchedulesOBJ.length>0 && tableData.scheduleStatus">
           <h1 class="title">
             日程
           </h1>
@@ -75,10 +65,10 @@
                 </svg>
                 <span>{{item.startDate | timeFormatExceptHour}}</span>
               </div>
-              <div class="timeLine-container">
-                <div v-for="itm in item.scheduleDetail " class="timeLine">
+              <div class="timeLine-container" v-if="item.scheduleDetail && item.scheduleDetail instanceof Array && item.scheduleDetail.length > 0">
+                <div v-for="itm in item.scheduleDetail" class="timeLine">
                   <div class="left">
-                    <p class="hour">{{itm.themeDate[0] | timeFormatExceptTime}}-{{itm.themeDate[1] | timeFormatExceptTime}}</p>
+                    <p class="hour">{{itm.startTime}}-{{itm.endTime}}</p>
                     <p class="day">{{item.startDate | timeFormatExceptHour2}}</p>
                   </div>
                   <div class="right">
@@ -90,7 +80,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailGuests">
+        <div class="sectionStyle detailGuests" v-if="tableData.activityGuests && tableData.activityGuests.length>0 && tableData.guestStatus">
           <h1 class="title">
             嘉宾
           </h1>
@@ -98,7 +88,7 @@
             <div class="main-container" v-for="item in tableData.activityGuests">
               <div class="left">
                 <div class="avator">
-                  <img :src="item.guestAvatar" alt="">
+                  <img :src="item.guestAvatarUrl" alt="">
                 </div>
               </div>
               <div class="right">
@@ -114,7 +104,7 @@
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailSupport">
+        <div class="sectionStyle detailSupport" v-if="partnersOBJ && partnersOBJ.length>0 && tableData.partnerStatus">
           <h1 class="title">
             合作支持
           </h1>
@@ -123,13 +113,13 @@
               <h2>{{item[0].partnerType}}</h2>
               <flexbox :gutter='0' class="container" >
                 <flexbox-item :span='1/3' class="box" v-for="(itm ,index) in item" :key="index">
-                  <img :src="itm.logoPics">
+                  <img :src="itm.logoUrl">
                 </flexbox-item>
               </flexbox>
             </div>
           </div>
         </div>
-        <div class="sectionStyle detailContact">
+        <div class="sectionStyle detailContact" v-if="tableData.activityContacts && tableData.activityContacts.length>0 && tableData.contactStatus">
           <h1 class="title">
             联系方式
           </h1>
@@ -167,6 +157,16 @@
             </div>
           </div>
         </div>
+        <div class="sectionStyle detailLocation">
+          <h1 class="title">
+            位置
+          </h1>
+          <div class="content">
+            <div id="container" >
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <footer>
@@ -182,16 +182,17 @@
           </span> -->
           <span class="free" >免费</span>
         </div>
-        <div class="next" @click="goBuyTicket()">
+        <div :class="['next',tableData.validActivityTickets && (tableData.validActivityTickets.length === 0||!tableData.validActivityTickets) ?'next-no':'']" @click="goBuyTicket('click')" ref="getTicket">
           <span>获取门票</span>
         </div>
+        <div id='url' style='display: none'>{{currentUrl}}</div>
       </div>
     </aside>
   </div>
 </template>
 
 <script>
-import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem } from 'vux';
+import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem, Alert } from 'vux';
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
 import meetingHeader from '@/components/meetingHeader';
@@ -202,6 +203,7 @@ export default {
   name: 'detail',
   data() {
     return {
+      currentUrl: location.href,
       colorStyle: {
         mainColor: '#ffffff',
         minorColor: '#ffffff',
@@ -227,6 +229,9 @@ export default {
         activityBannerMobileUrl: '',
         activitySchedules: [],
         activityPartners: [],
+        activityContacts: [],
+        activityGuests: [],
+        validActivityTickets: [],
       },
       isWatch: 0,
     };
@@ -240,6 +245,7 @@ export default {
     GridItem,
     Flexbox,
     FlexboxItem,
+    Alert,
   },
   mounted() {
     // debugger;
@@ -249,6 +255,7 @@ export default {
   computed: {
     ...mapState({ id: state => state.activityId }),
     isSameYear() {
+      // debugger;
       if ((Object.keys(this.tableData).length > 1) && this.tableData.startTime &&
       (this.tableData.startTime.substr(0, 4) === this.tableData.endTime.substr(0, 4))) {
         return true;
@@ -316,10 +323,12 @@ export default {
     ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
       // debugger;
+      // 获取会议详情
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
+      this.goBuyTicket();
       const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
-      if (!(res1.code === 0 && res1) || !(res2.code === 0 && res2)) {
+      if (!(res1 && res1.code === 0) || !(res2 && res2.code === 0)) {
         console.log('error in getInfoById ');
       } else {
         res2.data.forEach((e) => {
@@ -348,6 +357,7 @@ export default {
         });
       }
     },
+    /* eslint-disable */
     copyToClipboard(elem) {
       // create hidden text element, if it doesn't already exist
       var targetId = "_hiddenCopyText_";
@@ -402,14 +412,39 @@ export default {
       return succeed;
     },
     /* eslint-enable */
-    goBuyTicket() {
-      const url = document.getElementById('url');
-      this.copyToClipboard(url);
-      // const id = this.id;
-      // const nextRoute = `/buyTicket/${id}`;
-      // this.$router.push({
-      //   path: nextRoute,
-      // });
+    goBuyTicket(value) {
+      // const url = document.getElementById('url');
+      // this.copyToClipboard(url);
+      // 判断会议 是否结束
+      const time = this.tableData.endTime.replace(/-/g, '/');
+      if (new Date(time) - new Date() > 0) {
+        this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
+        if (value) {
+          const id = this.id;
+          const nextRoute = `/buyTicket/${id}`;
+          this.$router.push({
+            path: nextRoute,
+          });
+        }
+      } else {
+        this.$refs.getTicket.style.backgroundColor = '#ccc';
+        // 会议已结束
+        if (value) {
+          this.$vux.alert.show({
+            title: '温馨提示',
+            content: '会议已结束，不能购票！',
+          });
+          return;
+        }
+      }
+      const tickets = this.tableData.validActivityTickets;
+      if (tickets.length === 0 || !tickets) {
+        this.$vux.alert.show({
+          title: '温馨提示',
+          content: '本场会议门票已售完',
+        });
+        // return;
+      }
     },
     addWatchMeeting() {
       // debugger;
@@ -706,10 +741,12 @@ export default {
     }
   }
   footer{
-    margin-bottom: 65px;
+    padding-bottom: 65px;
     background-color: #f3f4f8;
+    width:100%;
     height: 180px;
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -757,6 +794,9 @@ export default {
           color: #ffffff;
 
         }
+      }
+      .next-no{
+        background-color: #9e9e9e;
       }
     }
   }

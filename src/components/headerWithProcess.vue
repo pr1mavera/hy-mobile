@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { mapGetters } from 'vuex';
 
 export default {
@@ -27,6 +27,7 @@ export default {
       'query',
       'selTickets',
       'firstEditData',
+      'ticketsRecordList',
     ]),
     ticketTitle() {
       return this.title;
@@ -48,7 +49,6 @@ export default {
           query: this.query,
         });
       } else {
-        console.log('请先选择门票');
         this.$vux.alert.show({
           title: '警告',
           content: '请先选择门票！',
@@ -56,9 +56,20 @@ export default {
         });
       }
     },
+    /* eslint-disable */
     // 判断个人信息是否完善之后跳转
     toSuccessFn() {
-      if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '') {
+      var judge = false;
+      for (let i = 0; i < this.ticketsRecordList.length; i += 1) {
+        for(let j in this.ticketsRecordList[i]) {
+          if (this.ticketsRecordList[i][j] !== '') {
+            judge = true;
+          } else {
+            judge = false;
+          }
+        }
+      }
+      if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '' && judge) {
         this.$router.push({
           path: 'success',
           query: this.query,

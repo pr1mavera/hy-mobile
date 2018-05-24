@@ -1,20 +1,28 @@
 <template>
   <div class="activityList" @click='$router.push("/activity/"+activity.id)'>
     <div class="listImg">
-      <img :src="activity.activityBannerUrl">
+      <img :src="activity.activityBannerMobileUrl">
     </div>
     <div class="listContent">
       <p class="name">{{activity.activityTitle}}</p>
-      <p class="date">{{activity.startTime}}</p>
+      <p class="date">{{activity.startTime | timeFilter}}</p>
     </div>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
+import { formatDate } from '@/common/js/index.js';
+
 export default {
   props: {
     activity: {
       type: Object,
+    },
+  },
+  filters: {
+    timeFilter(val) {
+      const temp = new Date(val.replace(/-/g, '/'));
+      return formatDate(temp, 'MM月dd日 hh:mm');
     },
   },
 };

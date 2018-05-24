@@ -9,18 +9,18 @@
       v-model="check"
       >
         <tab-item selected @on-item-click="check=0">
-          收藏({{meetingTotal}})
+          收藏({{meetingData.length}})
         </tab-item>
         <tab-item @on-item-click="check=1">
-          关注({{personTotal}})
+          关注({{personData.length}})
         </tab-item>
       </tab>
     </div>
     <div class="swiper-container" >
-      <swiper  @on-index-change="handlerHeight(check)" id="swiper2" class="swiper" v-model="check" height="100px" :show-dots="false">
-        <swiper-item >
-          <div class="tab-swiper vux-center"  v-for="item in meetingData">
-            <div class="flex-box" v-if="item.user">
+      <!-- <swiper  @on-index-change="handlerHeight(check)" id="swiper2" class="swiper" v-model="check" height="100px" :show-dots="false">
+        <swiper-item > -->
+          <div class="tab-swiper vux-center" v-show='!check'  v-for="item in meetingData">
+            <div class="flex-box" v-if="item.user" @click='$router.push("/activity/"+item.activityId)'>
               <div class="left">
                 <img :src="item.user.avatarUrl" alt="">
               </div>
@@ -42,9 +42,9 @@
               </div>
             </div>
           </div>
-        </swiper-item>
-        <swiper-item >
-          <div class="tab-swiper vux-center" v-for="item in personData">
+        <!-- </swiper-item> -->
+        <!-- <swiper-item > -->
+          <div class="tab-swiper vux-center" v-show='check' v-for="item in personData">
             <div class="flex-box" v-if="item.user">
               <div class="left">
                 <img :src="item.user.avatarUrl" alt="">
@@ -52,18 +52,18 @@
               <div class="center">
                 <!-- 别人关注你 -->
                 <div v-if="item.status">
-                  <h5>{{item.user.nickname}}<span class="gray">关注了你</span></h5>
+                  <h5>{{item.user.nickname?item.user.nickname:item.user.username}}<span class="gray">关注了你</span></h5>
                   <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
                 <div v-else>
-                  <h5>我<span class="gray">关注了</span>{{item.user.nickname}}</h5>
+                  <h5>我<span class="gray">关注了</span>{{item.user.nickname?item.user.nickname:item.user.username}}</h5>
                   <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
               </div>
             </div>
           </div>
-        </swiper-item>
-      </swiper>
+        <!-- </swiper-item> -->
+      <!-- </swiper> -->
     </div>
     <div class="bottom" >
       已经到底啦~
@@ -71,9 +71,9 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
-import BScroll from 'better-scroll';
+// import BScroll from 'better-scroll';
 import { getDynamicOfMeeting, getDynamicOfPerson } from '@/server/index.js';
 
 export default {
@@ -84,14 +84,14 @@ export default {
       meetingData: [],
       personData: [],
       queryMeeting: {
-        page: 1,
-        pageNum: 1,
-        pageSize: 10,
+        page: 0,
+        // pageNum: 1,
+        // pageSize: 10,
       },
       queryPerson: {
-        page: 1,
-        pageNum: 1,
-        pageSize: 10,
+        page: 0,
+        // pageNum: 1,
+        // pageSize: 10,
       },
       mboxNum: 0,
       pboxNum: 0,
@@ -112,26 +112,26 @@ export default {
   },
   methods: {
     initScroll() {
-      this.scrollWrapper = new BScroll(this.$parent.$refs.scrollWrapper, {
-        bounce: true,
-        probeType: 3,
-        momentum: false,
-        // click: true,
-        pullUpLoad: {
-          threshold: 50,
-        },
-      });
+      // this.scrollWrapper = new BScroll(this.$parent.$refs.scrollWrapper, {
+      //   bounce: true,
+      //   probeType: 3,
+      //   momentum: false,
+      //   // click: true,
+      //   pullUpLoad: {
+      //     threshold: 50,
+      //   },
+      // });
 
-      this.scrollWrapper.on('pullingUp', () => {
-        console.log('上拉加载');
-        if (this.check === 0) {
-          this.queryMeeting.pageNum += 1;
-          this.getDynamicOfMeetingList();
-        } else {
-          this.queryPerson.pageNum += 1;
-          this.getDynamicOfPersonList();
-        }
-      });
+      // this.scrollWrapper.on('pullingUp', () => {
+      //   console.log('上拉加载');
+      //   if (this.check === 0) {
+      //     this.queryMeeting.pageNum += 1;
+      //     this.getDynamicOfMeetingList();
+      //   } else {
+      //     this.queryPerson.pageNum += 1;
+      //     this.getDynamicOfPersonList();
+      //   }
+      // });
     },
     initData() {
       this.resetData();
@@ -141,48 +141,51 @@ export default {
     resetData() {
       this.meetingData = [];
       this.personData = [];
-      this.queryMeeting.pageNum = 1;
-      this.queryPerson.pageNum = 1;
+      // this.queryMeeting.pageNum = 1;
+      // this.queryPerson.pageNum = 1;
     },
     getDynamicOfMeetingList() {
       getDynamicOfMeeting(this.queryMeeting).then((res) => {
-        this.meetingData.push(...res.data.list);
-        this.meetingTotal = res.data.total;
-        if (res.data.pageNum < res.data.pages) {
-          this.mboxNum = res.data.pageNum * res.data.size;
-        } else {
-          this.mboxNum = res.data.total;
-        }
-        this.scrollWrapper.finishPullUp();
-        this.scrollWrapper.refresh();
-        document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
-        document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
+        // this.meetingData.push(...res.data.list);
+        this.meetingData.push(...res.data);
+        // this.meetingTotal = res.data.total;
+        // if (res.data.pageNum < res.data.pages) {
+        //   this.mboxNum = res.data.pageNum * res.data.size;
+        // } else {
+        //   this.mboxNum = res.data.total;
+        // }
+        // this.scrollWrapper.finishPullUp();
+        // this.scrollWrapper.refresh();
+        // document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
+        // document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
       });
     },
     getDynamicOfPersonList() {
       getDynamicOfPerson(this.queryPerson).then((res) => {
-        this.personData.push(...res.data.list);
-        this.personTotal = res.data.total;
-        if (res.data.pageNum < res.data.pages) {
-          this.pboxNum = res.data.pageNum * res.data.size;
-        } else {
-          this.pboxNum = res.data.total;
-        }
-        this.scrollWrapper.finishPullUp();
-        this.scrollWrapper.refresh();
-        document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
-        document.getElementById('swiper2').firstChild.style.height = `${this.pboxNum * 95}px`;
+        // debugger;
+        // this.personData.push(...res.data.list);
+        this.personData.push(...res.data);
+        // this.personTotal = res.data.total;
+        // if (res.data.pageNum < res.data.pages) {
+        //   this.pboxNum = res.data.pageNum * res.data.size;
+        // } else {
+        //   this.pboxNum = res.data.total;
+        // }
+        // this.scrollWrapper.finishPullUp();
+        // this.scrollWrapper.refresh();
+        // document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
+        // document.getElementById('swiper2').firstChild.style.height = `${this.pboxNum * 95}px`;
       });
     },
-    handlerHeight(index) {
-      if (index === 0) {
-        document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
-        document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
-      } else {
-        document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
-        document.getElementById('swiper2').firstChild.style.height = `${this.pboxNum * 95}px`;
-      }
-    },
+    // handlerHeight(index) {
+    //   if (index === 0) {
+    //     document.getElementById('swiper2').style.height = `${this.mboxNum * 95}px`;
+    //     document.getElementById('swiper2').firstChild.style.height = `${this.mboxNum * 95}px`;
+    //   } else {
+    //     document.getElementById('swiper2').style.height = `${this.pboxNum * 95}px`;
+    //     document.getElementById('swiper2').firstChild.style.height = `${this.pboxNum * 95}px`;
+    //   }
+    // },
   },
   filters: {
     timeApart(value = '') {
@@ -233,9 +236,9 @@ export default {
       }
     }
   }
-  .swiper-container{
-    background-color: #ffffff;
-    .swiper{
+  // .swiper-container{
+  //   background-color: #ffffff;
+  //   .swiper{
       .tab-swiper.vux-center{
         padding: 0 20px;
         &:not(:last-child){
@@ -291,8 +294,8 @@ export default {
           }
         }
       }
-    }
-  }
+  //   }
+  // }
   .bottom{
     text-align: center;
     color: #b8bcc4;

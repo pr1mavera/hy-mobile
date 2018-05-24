@@ -22,7 +22,6 @@
             <use xlink:href="#icon-caidan"></use>
         </svg>
       </div>
-
     </x-header>
     <div v-transfer-dom>
       <popup v-model="showMenu" position="right" >
@@ -33,14 +32,14 @@
             </svg>
           </button>
           <div class="noLogin" v-if="!isLogin">
-            <x-button type="" text="登录" link="http://login.ourwill.cn/login"></x-button>
-            <x-button type="" text="注册" link="http://login.ourwill.cn/register"></x-button>
+            <x-button type="" text="登录" :link="loginUrl+'/login?service='+curUrl"></x-button>
+            <x-button type="" text="注册" :link="loginUrl+'/register?service='+curUrl"></x-button>
           </div>
           <div class="Login" v-if="isLogin">
             <span class="version">免费版</span>
             <div class="userInfo">
               <div>
-                <h1>{{this.userProfile.username}}</h1>
+                <h1>{{this.userProfile.nickname ? this.userProfile.nickname : this.userName}}</h1>
                 <p>{{this.userProfile.email ? this.userProfile.email : '未绑定邮箱'}}</p>
               </div>
               <svg class="icon" aria-hidden="true">
@@ -70,13 +69,13 @@
                 </svg>
                 <span>我的门票</span>
               </a>
-              <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
+              <!-- <a href="http://huiyizhan.ourwill.cn/manage#/dataCenter">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-guanlihoutai"></use>
+                  <use xlink:href="#icon-gbannerBguanlihoutai"></use>
                 </svg>
                 <span>管理后台</span>
-              </a>
-              <a href="http://huiyizhan.ourwill.cn/logout">
+              </a> -->
+              <a v-show="!this.userProfile.unionid" href="/logout">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-tuichudenglu"></use>
                 </svg>
@@ -85,25 +84,25 @@
             </div>
           </div>
           <div class="router" >
-            <a href="http://huiyizhan.ourwill.cn/" class="box">
+            <a href="/" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-shouye"></use>
               </svg>
               <span>首页</span>
             </a>
-            <a href="http://huiyizhan.ourwill.cn/meetingList" class="box">
+            <a href="/meetingList" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-huodong"></use>
               </svg>
               <span>活动</span>
             </a>
-            <a href="http://huiyizhan.ourwill.cn/service" class="box">
+            <a href="/service" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-fuwu"></use>
               </svg>
               <span>服务</span>
             </a>
-            <a href="http://huiyizhan.ourwill.cn/price" class="box">
+            <a href="/price" class="box">
               <svg  class="icon" aria-hidden="true">
                 <use xlink:href="#icon-jiage"></use>
               </svg>
@@ -130,7 +129,6 @@
               type="text"
               placeholder="搜索会议关键字"
               @focus="changeHandler"
-
             >
               <!-- <div >
               </div>
@@ -142,8 +140,9 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 import { getProfileDetail } from '@/server/index.js';
+import config from '@/config/index.js';
 import { XHeader, Popup, TransferDom, XButton } from 'vux';
 import { mapMutations, mapGetters } from 'vuex';
 
@@ -165,6 +164,8 @@ export default {
       searchVal: '',
       isLogin: false,
       userProfile: {},
+      loginUrl: '',
+      curUrl: '',
     };
   },
   directives: {
@@ -179,6 +180,8 @@ export default {
     XButton,
   },
   mounted() {
+    this.loginUrl = config.loginPath;
+    this.curUrl = window.location.href;
     this.getUserProfile();
     // this.setIDInQuery();
   },
@@ -186,16 +189,29 @@ export default {
     ...mapGetters([
       'id',
     ]),
+    /* eslint-disable */
+    userName() {
+      const length = this.userProfile.username.length;
+      if (length === 2) {
+        return this.userProfile.username ? this.userProfile.username.replace(/^(.).*(.)$/, '$1***') : '';
+      } else if (length > 2) {
+        let name = this.userProfile.username[0] + '***' + this.userProfile.username[length-1]
+        return this.userProfile.username ? this.userProfile.username.replace(/^(.).*(.)$/, name) : '';
+      }
+    },
   },
   methods: {
+    // 获取用户信息
     async getUserProfile() {
       const res = await getProfileDetail();
+      // debugger;
       if (res.code === -1) {
         this.isLogin = false;
       } else if (res.code === 0) {
         this.isLogin = true;
         this.setId(res.data.id);
         this.userProfile = res.data;
+        // console.log(this.userProfile, 123);
       } else {
         console.log('error in getUserProfile');
       }
@@ -239,6 +255,8 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
       position: absolute;
       top: 15px;
       right: 16px;
+      background:#fff;
+      border:none;
       .icon{
         width: 15px;
         height: 15px;
@@ -331,6 +349,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
           height: 45px;
           line-height: 45px;
           color:#5d6574;
+          cursor:pointer;
         }
       }
     }
@@ -410,7 +429,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
         color: #5d6574;
         width: calc(~'100% - 50px');
         outline: none;
-
+        border:none;
       }
     }
   }
@@ -423,7 +442,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
     width: 100%;
     background-color: transparent;
     z-index: 499;
-    position: absolute;
+    // position: absolute;
     &::after{
       content: '';
       position: absolute;
