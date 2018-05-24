@@ -156,6 +156,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { TransferDom, Popup, Qrcode, XInput, Group, Checklist, Confirm } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';
@@ -185,7 +186,7 @@ export default {
       downloadArray: [{
         key: 1,
         value: 'pdf',
-      }, {
+      },{
         key: 2,
         value: 'png',
       }],
@@ -248,7 +249,20 @@ export default {
     // 下载门票pdf
     downloadTicket(ticket, index) {
       if (ticket.ticketStatus !== 3) {
-        this.loadConfirm = true;
+        // this.loadConfirm = true;
+        if (!ticket.id) {
+          this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
+        } else {
+          try {
+            const downloadLink = document.createElement('a');
+            downloadLink.download = `${ticket.ticketsName}门票`;
+            downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
+            downloadLink.click();
+            // this.$vux.toast.text('正在下载', 'top');
+          } catch (err) {
+            console.log(err);
+          }
+        }
         this.downTickets = this.activity.ticketsRecords[index];
       } else {
         return false;
