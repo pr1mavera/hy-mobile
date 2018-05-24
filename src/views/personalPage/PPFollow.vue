@@ -71,6 +71,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
 import { getWatchPeopleList, getFanList, addWatch, deleteWatch } from '@/server/index.js';
 

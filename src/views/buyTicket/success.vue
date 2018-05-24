@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { purchaseTicket, getProfileDetail } from '@/server';
+import { purchaseTicket } from '@/server';
 import { mapGetters } from 'vuex';
 import { AlertModule, Loading } from 'vux';
 
@@ -89,7 +89,7 @@ export default {
       'activityId',
       'firstEditData',
       'ticketsRecordList',
-      'id',
+      'id', // 用户id
     ]),
   },
   components: {
@@ -98,7 +98,10 @@ export default {
   },
   mounted() {
     this.getData();
-    this.checkUser();
+  },
+  updated() {
+    // 页面跳转置顶
+    window.scroll(0, 0);
   },
   methods: {
     getData() {
@@ -123,16 +126,9 @@ export default {
         // console.log(res, 123);
       });
     },
-    checkUser() {
-      getProfileDetail().then(res => {
-        if (res.code === 0) {
-          this.currentUser.id = res.data.id;
-        }
-      })
-    }, 
     ticketMsgFn() { // 查看门票
       // 购买成功(购票成功，购票失败)
-      if (this.currentUser.id) {
+      if (this.id) {
         if (this.feedback.code === 0) {
           // 跳转查看门票
           this.$router.push(`/usercenter/partake/${this.id}`);
@@ -141,14 +137,19 @@ export default {
           this.$router.push(`/buyTicket/${this.activityId}/`);
         }
       } else {
-        AlertModule.show({
-          title: '当前用户未登录！',
-          content: '前往登录？',
-          onHide() {
-            // console.log('Plugin: I\'m hiding now');
-            window.location.href = 'http://login.ourwill.cn/login';
-          },
+        // 用户未登录
+        this.$vux.alert.show({
+          title: '提示',
+          content: '当前用户未登录，不能查看门票',
         });
+        // AlertModule.show({
+        //   title: '当前用户未登录！',
+        //   content: '前往登录？',
+        //   onHide() {
+        //     // console.log('Plugin: I\'m hiding now');
+        //     window.location.href = 'http://login.ourwill.cn/login';
+        //   },
+        // });
       }
     },
     backhomeFn() { // 返回首页
