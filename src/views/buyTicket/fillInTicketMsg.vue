@@ -37,7 +37,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import userInput3 from '@/components/userInput3.vue';
+// import userInput3 from '@/components/userInput3.vue';
 import userInputBox from '@/components/userInputBox.vue';
 
 export default {
@@ -169,7 +169,7 @@ export default {
     },
   },
   components: {
-    userInput3,
+    // userInput3,
     userInputBox,
   },
 };

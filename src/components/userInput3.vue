@@ -76,9 +76,10 @@ export default {
     setNameDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.name;
-      } else {
-        debugger;
+      } else if (this.index && this.ticketsRecordList.length > 1){
         return this.ticketsRecordList[this.index].confereeName;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -86,9 +87,10 @@ export default {
     setPhoneDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.phone;
-      } else {
-        debugger;
+      } else if (this.index && this.ticketsRecordList.length > 1){
         return this.ticketsRecordList[this.index].confereePhone;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -96,9 +98,10 @@ export default {
     setEmailDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.email;
-      } else {
-        debugger;
+      } else if (this.index && this.ticketsRecordList.length > 1){
         return this.ticketsRecordList[this.index].confereeEmail;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -114,10 +117,12 @@ export default {
       const list = this.ticketsRecordList.slice(0);
       if (userName !== '') {
         this.user.nameInfo = false;
+        console.log(123);
         list[this.index].confereeName = userName;
         this.setTicketsRecordList(list);
       } else {
         this.user.nameInfo = true;
+        console.log(456);
         list[this.index].confereeName = '';
         this.setTicketsRecordList(list);
       }
