@@ -155,7 +155,8 @@ export default {
     },
     backhomeFn() { // 返回首页
       // window.location.href = conf.publicPath;
-      this.$router.push('/');
+      // this.$router.push('/');
+      window.location.href="http:www.ourwill.cn/login";
     }
   },
 };
