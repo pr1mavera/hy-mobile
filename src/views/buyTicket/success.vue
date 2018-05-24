@@ -3,34 +3,36 @@
     <div class="orderType">
       <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-chenggong" v-if="feedback.code === 0"></use>
-          <use xlink:href="#icon-shibai" v-if="feedback.code === 1"></use>
-          <use xlink:href="#icon-dengdaishenhe" style="color: #ff9041;" v-if="feedback.code === -1"></use>
+          <use xlink:href="#icon-shibai" v-if="feedback.code === -1"></use>
+          <use xlink:href="#icon-dengdaishenhe" style="color: #ff9041;" v-if="feedback.code === 1"></use>
       </svg>
-      <span class="text" v-if="feedback.code !== -1">购票{{feedback.code ? '失败' : '成功'}}！</span>
-      <span class="text" v-if="feedback.code === -1">等待审核！</span>
+      <span class="text" v-if="feedback.code !== 1">购票{{feedback.code ? '失败' : '成功'}}！</span>
+      <span class="text" v-if="feedback.code === 1">等待审核！</span>
     </div>
-    <div class="msgContent" v-if="feedback.code !== 1">
+    <div class="msgContent" v-if="feedback.code !== -1">
       <p class="text" v-if="feedback.code === 0">您的订单及门票信息已下发到您的邮箱，请注意查收！若未收到邮件，请查看垃圾邮件是否屏蔽。</p>
-      <p class="text" v-if="feedback.code === -1">您本次申请的门票需要组织者审核，审核结果将发送至您的邮箱，请注意查收。</p>
+      <p class="text" v-if="feedback.code === 1">您本次申请的门票需要组织者审核，审核结果将发送至您的邮箱，请注意查收。</p>
       <p class="text">订单号：<span class="orderNum">{{feedback.message.orderNum}}</span></p>
       <p class="text">订票时间：<span class="orderTime">{{feedback.message.orderTime}}</span></p>
       <div class="QRbox">
-        <img :src="feedback.message.QRcode" alt="二维码" width="150" height="150">
+        <img v-if="feedback.message.code !== -1" :src="feedback.message.QRcode" alt="二维码" width="150" height="150">
+        <loading :show="loadingQrcode" tip="订单已提交，请等待"></loading>
         <p class="QRtext">长按保存</p>
         <p class="QRtext">微信扫码领取电子票</p>
       </div>
     </div>
     <div class="orderBtn">
-      <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== -1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
-      <button class="btnItem" type="button" name="button" @click="$router.push('/')">返回首页</button>
+      <button class="btnItem" type="button" name="button" @click="ticketMsgFn" v-if="feedback.code !== 1" :class="{'btnItemHighLight': feedback.code}">{{feedback.code ? '重新购买' : '查看门票'}}</button>
+      <button class="btnItem" type="button" name="button" @click="backhomeFn">返回首页</button>
     </div>
     <!-- <scan-tickets :activity="activityMsg" :currentTicket="currentTicket" :showTicket="showTicket"></scan-tickets> -->
   </div>
 </template>
 
 <script>
-import { purchaseTicket } from '@/server';
+import { purchaseTicket, getProfileDetail } from '@/server';
 import { mapGetters } from 'vuex';
+import { AlertModule, Loading } from 'vux';
 
 export default {
   props: {
@@ -45,7 +47,7 @@ export default {
     return {
       // 假数据
       feedback: {
-        code: 0,
+        code: Number, // 0：购票成功，-1： 购票失败, 1: 待审核
         message: {
           orderNum: '', // 订单号
           orderTime: '', // 订票时间
@@ -76,6 +78,10 @@ export default {
       // currentTicket: {
       //   ticketsName: '',
       // }, // 买票成功后返回信息
+      currentUser: {
+        id: '',
+      }, // 判断当前用户是否登录
+      loadingQrcode: true, // 二维码渲染之前loading
     };
   },
   computed: {
@@ -87,9 +93,12 @@ export default {
     ]),
   },
   components: {
+    AlertModule,
+    Loading,
   },
   mounted() {
     this.getData();
+    this.checkUser();
   },
   methods: {
     getData() {
@@ -105,17 +114,46 @@ export default {
           this.feedback.message.orderNum = res.data.orderNo;
           this.feedback.message.orderTime = res.data.createTime;
           this.feedback.message.overTime = res.data.overTime;
+          this.loadingQrcode = false;
+          // isCheckView; //是否显示需要审核页面 0：否  1：是   用于下单返回前端的标志位
+          this.feedback.code = res.data.isCheckView === 0 ? 0 : 1;
+        } else {
+          this.feedback.code = -1;
         }
         // console.log(res, 123);
       });
     },
-    ticketMsgFn() {
-      // 购买成功(等待审核，购票成功，购票失败)
-      if (this.feedback.code === 0) {
-        // 跳转查看门票
-        this.$router.push(`/usercenter/partake/${this.id}`);
+    checkUser() {
+      getProfileDetail().then(res => {
+        if (res.code === 0) {
+          this.currentUser.id = res.data.id;
+        }
+      })
+    }, 
+    ticketMsgFn() { // 查看门票
+      // 购买成功(购票成功，购票失败)
+      if (this.currentUser.id) {
+        if (this.feedback.code === 0) {
+          // 跳转查看门票
+          this.$router.push(`/usercenter/partake/${this.id}`);
+        } else if (this.feedback.code === -1) {
+          // 购票失败，重新购买
+          this.$router.push(`/buyTicket/${this.activityId}/`);
+        }
+      } else {
+        AlertModule.show({
+          title: '当前用户未登录！',
+          content: '前往登录？',
+          onHide() {
+            // console.log('Plugin: I\'m hiding now');
+            window.location.href = 'http://login.ourwill.cn/login';
+          },
+        });
       }
     },
+    backhomeFn() { // 返回首页
+      window.location.href = 'http://huiyizhan.ourwill.cn';
+    }
   },
 };
 </script>

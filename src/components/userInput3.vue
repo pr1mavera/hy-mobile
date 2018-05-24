@@ -6,21 +6,21 @@
           姓名<i>*</i>
           <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
         </label>
-        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name'>
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name' :value="setNameDefaultInput">
       </div>
       <div class="inputItem">
         <label class="title" :class="setTitleSize">
           电话<i>*</i>
           <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
         </label>
-        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'>
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone' :value="setPhoneDefaultInput">
       </div>
       <div class="inputItem">
         <label class="title" :class="setTitleSize">
           邮箱<i>*</i>
           <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
         </label>
-        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'>
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email' :value="setEmailDefaultInput">
       </div>
     </form>
   </div>
@@ -72,9 +72,14 @@ export default {
       const className = `titleSize-${this.titleSize}`;
       return className;
     },
+    // 第一张门票信息默认是买家信息
     setNameDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.name;
+      } else if (this.index && this.ticketsRecordList.length > 1){
+        return this.ticketsRecordList[this.index].confereeName;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -82,6 +87,10 @@ export default {
     setPhoneDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.phone;
+      } else if (this.index && this.ticketsRecordList.length > 1){
+        return this.ticketsRecordList[this.index].confereePhone;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -89,6 +98,10 @@ export default {
     setEmailDefaultInput() {
       if (this.index === 0) {
         return this.firstEditData.email;
+      } else if (this.index && this.ticketsRecordList.length > 1){
+        return this.ticketsRecordList[this.index].confereeEmail;
+      } else {
+        return '';
       }
       // eslint-disable-next-line
       return;
@@ -101,39 +114,45 @@ export default {
     ownerNameFn() {
       // 正则验证
       const userName = this.$refs.name.value.replace(/\s+/g, '');
+      const list = this.ticketsRecordList.slice(0);
       if (userName !== '') {
         this.user.nameInfo = false;
-        const list = this.ticketsRecordList.slice(0);
+        console.log(123);
         list[this.index].confereeName = userName;
         this.setTicketsRecordList(list);
       } else {
         this.user.nameInfo = true;
+        console.log(456);
+        list[this.index].confereeName = '';
+        this.setTicketsRecordList(list);
       }
     },
     ownerPhoneFn() {
-      // debugger;
       const phone = this.$refs.phone.value.replace(/\s+/g, '');
       const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+      const list = this.ticketsRecordList.slice(0);
         if (phone !== '' && phone.match(regNum)) {
           this.user.phoneInfo = false;
-          const list = this.ticketsRecordList.slice(0);
           list[this.index].confereePhone = phone;
-          // debugger;
           this.setTicketsRecordList(list);
         } else {
           this.user.phoneInfo = true;
+          list[this.index].confereePhone = '';
+          this.setTicketsRecordList(list);
         }
     },
     ownerEmailFn() {
       const email = this.$refs.email.value.replace(/\s+/g, '');
       const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      const list = this.ticketsRecordList.slice(0);
       if (email !== '' && email.match(regEmail)) {
         this.user.emailInfo = false;
-        const list = this.ticketsRecordList.slice(0);
-          list[this.index].confereeEmail = email;
-          this.setTicketsRecordList(list);
+        list[this.index].confereeEmail = email;
+        this.setTicketsRecordList(list);
       } else {
         this.user.emailInfo = true;
+        list[this.index].confereeEmail = '';
+        this.setTicketsRecordList(list);
       }
     },
     

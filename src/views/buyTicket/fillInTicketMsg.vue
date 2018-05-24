@@ -37,7 +37,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import userInput3 from '@/components/userInput3.vue';
+// import userInput3 from '@/components/userInput3.vue';
 import userInputBox from '@/components/userInputBox.vue';
 
 export default {
@@ -62,6 +62,7 @@ export default {
       'tickets',
       'selTickets',
       'firstEditData',
+      'ticketsRecordList',
     ]),
     setSelectTicketToArray() {
       const tickets = [];
@@ -77,6 +78,7 @@ export default {
   methods: {
     ...mapMutations({
       setFirstEditData: 'SET_FIRST_EDIT_DATA',
+      setTicketsRecordList: 'SET_TICKET_RECORD_LIST',
     }),
     setFirstFocus() {
       if (this.BuyerFirstFocus) {
@@ -102,11 +104,18 @@ export default {
         editData.name = inputItem[0].value;
         // 姓名不能为空
         const userName = editData.name.replace(/\s+/g, '');
+        const list = this.ticketsRecordList.slice(0);
         if (userName !== '') {
           this.user.nameInfo = false;
           this.setFirstEditData(editData);
+          list[0].confereeName = userName;
+          this.setTicketsRecordList(list);
         } else {
           this.user.nameInfo = true;
+          editData.name = '';
+          this.setFirstEditData(editData);
+          list[0].confereeName = '';
+          this.setTicketsRecordList(list);
         }
       }
     },
@@ -118,11 +127,18 @@ export default {
         // 电话号码
         const phoneNum = editData.phone.replace(/\s+/g, '');
         const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+        const list = this.ticketsRecordList.slice(0);
         if (phoneNum !== '' && editData.phone.match(regNum)) {
           this.user.phoneInfo = false;
           this.setFirstEditData(editData);
+          list[0].confereePhone = phoneNum;
+          this.setTicketsRecordList(list);
         } else {
           this.user.phoneInfo = true;
+          editData.phone = 0;
+          this.setFirstEditData(editData);
+          list[0].confereePhone = '';
+          this.setTicketsRecordList(list);
         }
         // console.log('修改编辑phone');
       }
@@ -135,18 +151,25 @@ export default {
         // 邮箱
         const userEmail = editData.email.replace(/\s+/g, '');
         const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+        const list = this.ticketsRecordList.slice(0);
         if (userEmail !== '' && editData.email.match(regEmail)) {
           this.user.emailInfo = false;
           this.setFirstEditData(editData);
+          list[0].confereeEmail = userEmail;
+          this.setTicketsRecordList(list);
         } else {
           this.user.emailInfo = true;
+          editData.email = '';
+          this.setFirstEditData(editData);
+          list[0].confereeEmail = '';
+          this.setTicketsRecordList(list);
         }
         // console.log('修改编辑email');
       }
     },
   },
   components: {
-    userInput3,
+    // userInput3,
     userInputBox,
   },
 };

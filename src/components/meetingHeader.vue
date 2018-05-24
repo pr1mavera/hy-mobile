@@ -211,7 +211,7 @@ export default {
         this.isLogin = true;
         this.setId(res.data.id);
         this.userProfile = res.data;
-        console.log(this.userProfile, 123);
+        // console.log(this.userProfile, 123);
       } else {
         console.log('error in getUserProfile');
       }

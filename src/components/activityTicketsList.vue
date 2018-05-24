@@ -32,9 +32,16 @@
           <p class="text">{{ticket.confereeName}}</p>
           <div class="ticketOptionBtn">
             <button class="item" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
-            <button class="item" type="button" name="button" @click="downloadTicket(ticket)">下载门票</button>
-            <button v-show="false" class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button>
+            <button class="item" type="button" name="button" @click="downloadTicket(ticket, activity)">下载门票</button>
+            <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
             <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
+          </div>
+          <!-- 下载png格式门票二维码 -->
+          <qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>
+          <div v-transfer-dom>
+            <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketFn(ticket, activity)">
+              <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
+            </confirm>
           </div>
         </li>
       </ul>
@@ -138,7 +145,7 @@
 </template>
 
 <script>
-import { TransferDom, Popup, Qrcode, XInput, Group } from 'vux';
+import { TransferDom, Popup, Qrcode, XInput, Group, Checklist, Confirm } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';
 import { updateTicket } from '@/server';
@@ -164,6 +171,15 @@ export default {
         confereePhone: '',
         confereeEmail: '',
       },
+      downloadArray: [{
+        key: 1,
+        value: 'pdf',
+      }, {
+        key: 2,
+        value: 'png',
+      }],
+      loadConfirm: false, // 下载弹框
+      selectLoadArray: [], // 下载类型
     };
   },
   methods: {
@@ -194,8 +210,12 @@ export default {
       }
       // return;
     },
-    downloadTicket(ticket) {
-      if (!ticket.id) {
+    loadTypeFn(value) {
+      this.selectLoadArray = value;
+    },
+    // 下载门票
+    loadTicketFn(ticket, activity) {
+      if (!ticket.id && this.selectLoadArray[0] === 1) {
         this.$vux.toast.text('没有pdf门票，请联系管理员', 'top');
       } else {
         try {
@@ -208,7 +228,15 @@ export default {
           console.log(err);
         }
       }
+      if (this.selectLoadArray[0] === 2) {
+        this.downloadTicket2(ticket, activity);
+      }
     },
+    // 下载门票pdf
+    downloadTicket(ticket, activity) {
+      this.loadConfirm = true;
+    },
+    // 下载门票png
     downloadTicket2(ticket, activity) {
     // downloadTicket2() {
       // debugger;
@@ -289,8 +317,8 @@ export default {
     },
     PDFDrawMsg(context, ticket, activity) {
       const activityName = new PDFTicketItem({
-        // itemText: activity.activityTitle,
-        itemText: '好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊',
+        itemText: activity.activityTitle,
+        // itemText: '好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊好多字啊',
         x: 260,
         y: 133,
         font: '52px PingFangSC-Medium',
@@ -329,9 +357,14 @@ export default {
       });
       ticketName.drawTextChangeLine(context, '#333333', 417);
 
+      // 绘制二维码
+      const value = 'ticketCode' + ticket.id;
+      const img = this.$refs[value][0].$el.childNodes[2];
+      context.drawImage(img, 1372, 150, 300, 300);
+
       const code = new PDFTicketItem({
         itemText: ticket.signCode,
-        x: 1442,
+        x: 1402,
         y: 613,
         font: '62px SFUIText-Medium',
       });
@@ -414,6 +447,8 @@ export default {
     Qrcode,
     XInput,
     Group,
+    Checklist,
+    Confirm,
   },
 };
 </script>
@@ -421,7 +456,15 @@ export default {
 <style lang="less">
 @import '~vux/src/styles/1px.less';
 @import '../common/style/mixin.less';
-
+.weui-cells:before{
+  border-top:0px!important;
+}
+.weui-cells:after{
+  border-bottom:0px!important;
+}
+.weui-cell:before{
+  border-top:0px!important;
+}
 .activityTicketsList {
   .activityBanner {
     width: 100%;
