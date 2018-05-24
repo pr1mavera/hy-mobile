@@ -99,6 +99,10 @@ export default {
   mounted() {
     this.getData();
   },
+  updated() {
+    // 页面跳转置顶
+    window.scroll(0, 0);
+  },
   methods: {
     getData() {
       this.userMsg.buyer = this.firstEditData.name;
