@@ -156,7 +156,7 @@ export default {
     backhomeFn() { // 返回首页
       // window.location.href = conf.publicPath;
       // this.$router.push('/');
-      window.location.href="http:www.ourwill.cn";
+      window.location.href="http://huiyizhan.ourwill.cn/";
     }
   },
 };
