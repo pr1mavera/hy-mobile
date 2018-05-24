@@ -85,6 +85,7 @@ Body {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
+  // height: calc(100%-155px);
   box-sizing: border-box;
   padding: 18px 18px 73px;
   // margin-top: 100px;

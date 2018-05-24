@@ -131,5 +131,5 @@ export default new Router({
     },
     // { path: '*', name: '404', component: NotFoundComponent },
   ],
-  base: '/web/',
+  // base: '/web/',
 });

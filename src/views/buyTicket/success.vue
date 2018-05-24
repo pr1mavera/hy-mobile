@@ -33,6 +33,7 @@
 import { purchaseTicket } from '@/server';
 import { mapGetters } from 'vuex';
 import { AlertModule, Loading } from 'vux';
+// import conf from '@/config/index';
 
 export default {
   props: {
@@ -153,7 +154,8 @@ export default {
       }
     },
     backhomeFn() { // 返回首页
-      window.location.href = 'http://huiyizhan.ourwill.cn';
+      // window.location.href = conf.publicPath;
+      this.$router.push('/');
     }
   },
 };
