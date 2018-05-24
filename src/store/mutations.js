@@ -1,12 +1,12 @@
 import * as types from './ActionTypes';
 
 export const state = {
-  id: null,
-  activityId: 14,
+  id: null, // 用户id
+  activityId: 14, // 活动id
   tickets: [],
   selTickets: [],
   loginUrl: '',
-  firstEditData: {
+  firstEditData: { // 买家信息
     name: '',
     phone: 0,
     email: '',
