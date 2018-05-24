@@ -1,10 +1,10 @@
 <template>
   <div class="success">
     <div class="orderType">
-      <svg class="icon" aria-hidden="true">
+      <svg :class="['icon', feedback.code === 1 ?'ex-icon' : '']" aria-hidden="true">
           <use xlink:href="#icon-chenggong" v-if="feedback.code === 0"></use>
           <use xlink:href="#icon-shibai" v-if="feedback.code === -1"></use>
-          <use xlink:href="#icon-dengdaishenhe" style="color: #ff9041;" v-if="feedback.code === 1"></use>
+          <use xlink:href="#icon-dengdaishenhe" v-if="feedback.code === 1"></use>
       </svg>
       <span class="text" v-if="feedback.code !== 1">购票{{feedback.code ? '失败' : '成功'}}！</span>
       <span class="text" v-if="feedback.code === 1">等待审核！</span>
@@ -167,16 +167,20 @@ Body {
 }
 .success {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: #ffffff;
   .orderType {
     padding: 30px 0;
     text-align: center;
+    
     .icon {
       font-size: 35px;
       #icon-dengdaishenhe {
         color: #ff9041;
       }
+    }
+    .ex-icon{
+      color: #ff9041;
     }
     .text {
       display: inline-block;

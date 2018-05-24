@@ -125,12 +125,12 @@
           </h1>
           <div class="content">
             <div v-for="item in tableData.activityContacts" class="box">
-              <flexbox >
+              <flexbox>
                 <flexbox-item >
-                  <svg class="icon" aria-hidden="true">
+                    <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-wode"></use>
-                  </svg>
-                  <span>{{item.contactName}}</span>
+                    </svg>
+                    <span>{{item.contactName}}</span>
                 </flexbox-item>
                 <flexbox-item  >
                   <svg class="icon" aria-hidden="true">
@@ -152,7 +152,6 @@
                   </svg>
                   <span>{{item.contactWechat}}</span>
                 </flexbox-item>
-
               </flexbox>
             </div>
           </div>
@@ -721,9 +720,20 @@ export default {
         }
         &.detailContact{
           .content{
+            overflow-x: auto;
+            overflow-y: hidden;
             .box{
               color:#5d6574;
               font-size: 12px;
+              .vux-flexbox .vux-flexbox-item{
+                display: flex;
+                flex: 0 0 65%;
+                /* -webkit-box-flex: 1; */
+                /* flex: 1; */
+                /* -webkit-flex: 1; */
+                min-width: 20px;
+                width: 0%;
+              }
               &:not(:last-child){
                 .border-1px-b(#5d6574)
               }
