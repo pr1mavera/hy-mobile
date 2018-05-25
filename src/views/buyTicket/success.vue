@@ -30,6 +30,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { purchaseTicket } from '@/server';
 import { mapGetters } from 'vuex';
 import { AlertModule, Loading } from 'vux';
@@ -98,34 +99,66 @@ export default {
     Loading,
   },
   mounted() {
-    this.getData();
+    this.dealData();
   },
   updated() {
     // 页面跳转置顶
     window.scroll(0, 0);
   },
   methods: {
-    getData() {
+    dealData() {
+      // 判断sessionStorage有无数据
+      var successMsg = null;
+      successMsg = JSON.parse(sessionStorage.getItem('successMsg'));
+      if (successMsg) {
+        this.feedback.message.QRcode = successMsg.qrcodeTicketUrl;
+        this.feedback.message.orderNum = successMsg.orderNo;
+        this.feedback.message.orderTime = successMsg.createTime;
+        this.feedback.message.overTime = successMsg.overTime;
+        this.feedback.code = successMsg.isCheckView === 0 ? 0 : 1;
+        this.loadingQrcode = false;
+      } else {
+        this.postUserFn();
+      }
+    },
+    postUserFn() {
       this.userMsg.buyer = this.firstEditData.name;
       this.userMsg.buyerPhone = this.firstEditData.phone;
       this.userMsg.buyerEmail = this.firstEditData.email;
       this.userMsg.ticketsRecordList = this.ticketsRecordList;
-      // console.log(this.userMsg, 'success');
-      /* eslint-disable */
-      purchaseTicket(this.activityId, this.userMsg).then((res) => {
-        if (res.code === 0) {
-          this.feedback.message.QRcode = res.data.qrcodeTicketUrl;
-          this.feedback.message.orderNum = res.data.orderNo;
-          this.feedback.message.orderTime = res.data.createTime;
-          this.feedback.message.overTime = res.data.overTime;
-          this.loadingQrcode = false;
-          // isCheckView; //是否显示需要审核页面 0：否  1：是   用于下单返回前端的标志位
-          this.feedback.code = res.data.isCheckView === 0 ? 0 : 1;
-        } else {
-          this.feedback.code = -1;
-        }
-        // console.log(res, 123);
-      });
+      // 提交请求之前判断一下，有无信息
+      // var judge = true;
+      // for (let i in this.userMsg) {
+      //   if (this.userMsg[i].constructor === Array) {
+      //     this.userMsg[i].forEach(item => {
+      //       if (item === '') {
+      //         judge = false;
+      //       }
+      //     })
+      //   } else {
+      //     if (this.userMsg[i] === '') {
+      //       judge = false;
+      //     }
+      //   }
+      // }
+      // if (judge) {
+        purchaseTicket(this.activityId, this.userMsg).then((res) => {
+          if (res.code === 0) {
+            this.feedback.message.QRcode = res.data.qrcodeTicketUrl;
+            this.feedback.message.orderNum = res.data.orderNo;
+            this.feedback.message.orderTime = res.data.createTime;
+            this.feedback.message.overTime = res.data.overTime;
+            this.loadingQrcode = false;
+            // isCheckView; //是否显示需要审核页面 0：否  1：是   用于下单返回前端的标志位
+            this.feedback.code = res.data.isCheckView === 0 ? 0 : 1;
+            // 购票成功，存储信息
+            sessionStorage.setItem('successMsg', JSON.stringify(res.data));
+          } else {
+            this.feedback.code = -1;
+            // sessionStorage.removeItem('sucessMsg');
+          }
+        });
+      // }
     },
     ticketMsgFn() { // 查看门票
       // 购买成功(购票成功，购票失败)

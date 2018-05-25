@@ -735,7 +735,10 @@ export default {
                 width: 0%;
               }
               &:not(:last-child){
-                .border-1px-b(#5d6574)
+                .border-1px-b(#5d6574);
+                &:after{
+                  width:115%;
+                }
               }
               padding-bottom: 15px;
               &:not(:first-child){
