@@ -1,7 +1,10 @@
 <template>
   <div class="banner">
     <blur :blur-amount=5 :url="src">
-      <p class="center"><img :src="src"></p>
+      <div class="center">
+        <div :style="`backgroundImage:url(${src})`" class="banner-img"></div>
+        <!--<img :src="src">-->
+      </div>
     </blur>
   </div>
 </template>
@@ -28,19 +31,27 @@ export default {
 
 <style lang="less" >
 .banner{
+  .banner-img{
+    width:calc(~'100vw - 50px');
+    height:calc(~'(100vw - 50px)/16*9');
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+    margin:0 auto;
+  }
   &>div{
     height: unset !important;
   }
   .center {
-    text-align: center;
+    // text-align: center;
     padding-top: 45px;
-    padding-bottom: 14px;
+    padding-bottom: 15px;
     color: #fff;
     font-size: 18px;
   }
-  .center img {
-    width: calc(~'100vw - 50px');
-    height: auto;
-  }
+  // .center img {
+  //   width: calc(~'100vw - 50px');
+  //   height: auto;
+  // }
 }
 </style>

@@ -61,7 +61,7 @@
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodehuiyi"></use>
                 </svg>
-                <span>我的会议</span>
+                <span>我的活动</span>
               </a>
               <a @click="clickToRouteByPathName('/usercenter/partake/', 1)">
                 <svg class="icon" aria-hidden="true">
@@ -127,7 +127,7 @@
             <input
               v-model="searchVal"
               type="text"
-              placeholder="搜索会议关键字"
+              placeholder="搜索活动关键字"
               @focus="changeHandler"
             >
               <!-- <div >

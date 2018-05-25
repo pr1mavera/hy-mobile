@@ -154,9 +154,9 @@ export default {
       }
     },
     backhomeFn() { // 返回首页
-      // window.location.href = conf.publicPath;
+      // const host=window.location.host;
       // this.$router.push('/');
-      window.location.href="http://huiyizhan.ourwill.cn/";
+      window.location.href="/";
     }
   },
 };
