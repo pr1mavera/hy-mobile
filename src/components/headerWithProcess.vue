@@ -1,6 +1,6 @@
 <template>
   <div class="headerWithProcess border-1px-b">
-    <h1 class="title">{{this.activityId}}</h1>
+    <h1 class="title">{{this.activityTitle}}</h1>
     <div class="process">
       <router-link tag="span" class="processItem" :to="{ path: 'selectTicket', name: 'selectTicket', query: this.query ? this.query : {}}">选择门票</router-link>
       <svg class="icon" aria-hidden="true">
@@ -19,6 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { getActivityInfoById } from '@/server';
 
 export default {
   computed: {
@@ -40,7 +41,22 @@ export default {
       return count;
     },
   },
+  data() {
+    return {
+      activityTitle: '',
+    };
+  },
+  mounted() {
+    this.getData();
+  },
   methods: {
+    getData() {
+      getActivityInfoById(this.activityId).then((res) => {
+        if (res.code === 0) {
+          this.activityTitle = res.data.activityTitle;
+        }
+      });
+    },
     // 判断是否选择门票之后跳转
     toMsgFn() {
       if (this.totalCount >= 1) {
@@ -69,7 +85,7 @@ export default {
           }
         }
       }
-      if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '' && judge) {
+      if (this.firstEditData.name !== '' && this.firstEditData.phone !== '' && this.firstEditData.email !== '' && judge) {
         this.$router.push({
           path: 'success',
           query: this.query,

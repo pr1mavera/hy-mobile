@@ -76,7 +76,6 @@ export default {
         // 判断是否填写个人信息
         /* eslint-disable */
         var judge = false;
-        debugger;
         for (let i = 0; i < this.ticketsRecordList.length; i += 1) {
           for(let j in this.ticketsRecordList[i]) {
             if (this.ticketsRecordList[i][j] !== '') {
@@ -86,7 +85,7 @@ export default {
             }
           }
         }
-        if (this.firstEditData.name !== '' && this.firstEditData.phone !== 0 && this.firstEditData.email !== '' && judge) {
+        if (this.firstEditData.name !== '' && this.firstEditData.phone !== '' && this.firstEditData.email !== '' && judge) {
           this.$router.push({
             path: 'success',
             query: this.query,

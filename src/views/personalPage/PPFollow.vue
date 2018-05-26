@@ -28,7 +28,7 @@
                   <h5>{{item.nickname?item.nickname:item.username}}</h5>
                   <p p-intro>{{item.info?item.info:'这个人很懒，但还是什么都没写...'}}</p>
                   <div v-if="item.userStatistics">
-                    <p>会议<span class="num" >{{item.userStatistics.activityCount }}</span></p>
+                    <p>活动<span class="num" >{{item.userStatistics.activityCount }}</span></p>
                     <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
               </div>
@@ -50,7 +50,7 @@
                   <h5>{{item.nickname}}</h5>
                   <p>{{item.info}}</p>
                   <div v-if="item.userStatistics">
-                    <p>会议<span class="num">{{item.userStatistics.activityCount }}</span></p>
+                    <p>活动<span class="num">{{item.userStatistics.activityCount }}</span></p>
                     <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
               </div>
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { Tab, TabItem, Swiper, SwiperItem } from 'vux';
 import { getWatchPeopleList, getFanList, addWatch, deleteWatch } from '@/server/index.js';
 

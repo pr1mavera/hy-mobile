@@ -25,8 +25,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
-    // publicPath: 'http://cdn.ourwill.cn/huiyi/production/',//正式
-    publicPath: 'http://cdn.ourwill.cn/huiyi/production_dev/'//dev
+    publicPath: 'http://cdn.ourwill.cn/huiyi/production/',//正式
+    // publicPath: 'http://cdn.ourwill.cn/huiyi/production_dev/'//dev
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -66,13 +66,13 @@ const webpackConfig = merge(baseWebpackConfig, {
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeAttributeQuotes: true
+        // removeAttributeQuotes: false
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // chunks: ['manifest', 'vendor', 'app'],
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
+      chunksSortMode: 'dependency',
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),

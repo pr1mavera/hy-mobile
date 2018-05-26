@@ -125,12 +125,12 @@
           </h1>
           <div class="content">
             <div v-for="item in tableData.activityContacts" class="box">
-              <flexbox >
+              <flexbox>
                 <flexbox-item >
-                  <svg class="icon" aria-hidden="true">
+                    <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-wode"></use>
-                  </svg>
-                  <span>{{item.contactName}}</span>
+                    </svg>
+                    <span>{{item.contactName}}</span>
                 </flexbox-item>
                 <flexbox-item  >
                   <svg class="icon" aria-hidden="true">
@@ -152,7 +152,6 @@
                   </svg>
                   <span>{{item.contactWechat}}</span>
                 </flexbox-item>
-
               </flexbox>
             </div>
           </div>
@@ -170,7 +169,7 @@
       </div>
     </div>
     <footer>
-      <p>本站由<span>会议站</span>提供技术支持</p>
+      <p>本站由<span>映目活动</span>提供技术支持</p>
       <p>Copyright © 2013-2017 版权所有 北京韦尔科技有限公司</p>
       <p>京ICP备14040981号-2</p>
     </footer>
@@ -323,7 +322,7 @@ export default {
     ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
       // debugger;
-      // 获取会议详情
+      // 获取活动详情
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
       this.goBuyTicket();
@@ -336,26 +335,26 @@ export default {
             this.isWatch = 1;
           }
         });
-        this.$nextTick(() => {
-          MP().then((mp) => {
-            const map = new mp.Map('container');
-            let temp = JSON.parse(this.tableData.activityAddress);
-            const city = Object.values(temp)[0];
-            temp = Object.values(temp).join('');
-            map.centerAndZoom(temp, 12);
-            const myGeo = new mp.Geocoder();
-            // 将地址解析结果显示在地图上,并调整地图视野
-            myGeo.getPoint(temp, (point) => {
-              if (point) {
-                map.centerAndZoom(point, 16);
-                map.addOverlay(new mp.Marker(point));
-              } else {
-                console.log('您选择地址没有解析到结果!');
-              }
-            }, city);
-          });
-        });
       }
+      this.$nextTick(() => {
+        MP().then((mp) => {
+          const map = new mp.Map('container');
+          let temp = JSON.parse(this.tableData.activityAddress);
+          const city = Object.values(temp)[0];
+          temp = Object.values(temp).join('');
+          map.centerAndZoom(temp, 12);
+          const myGeo = new mp.Geocoder();
+          // 将地址解析结果显示在地图上,并调整地图视野
+          myGeo.getPoint(temp, (point) => {
+            if (point) {
+              map.centerAndZoom(point, 16);
+              map.addOverlay(new mp.Marker(point));
+            } else {
+              console.log('您选择地址没有解析到结果!');
+            }
+          }, city);
+        });
+      });
     },
     /* eslint-disable */
     copyToClipboard(elem) {
@@ -415,9 +414,17 @@ export default {
     goBuyTicket(value) {
       // const url = document.getElementById('url');
       // this.copyToClipboard(url);
-      // 判断会议 是否结束
+      // 判断活动 是否结束
       const time = this.tableData.endTime.replace(/-/g, '/');
       if (new Date(time) - new Date() > 0) {
+        const tickets = this.tableData.validActivityTickets;
+        if (tickets.length === 0 || !tickets) {
+          this.$vux.alert.show({
+            title: '温馨提示',
+            content: '本场活动门票已售完',
+          });
+          return;
+        }
         this.$refs.getTicket.style.backgroundColor = '#2c7dfa';
         if (value) {
           const id = this.id;
@@ -428,22 +435,14 @@ export default {
         }
       } else {
         this.$refs.getTicket.style.backgroundColor = '#ccc';
-        // 会议已结束
+        // 活动已结束
         if (value) {
           this.$vux.alert.show({
             title: '温馨提示',
-            content: '会议已结束，不能购票！',
+            content: '活动已结束，不能购票！',
           });
-          return;
+          // return;
         }
-      }
-      const tickets = this.tableData.validActivityTickets;
-      if (tickets.length === 0 || !tickets) {
-        this.$vux.alert.show({
-          title: '温馨提示',
-          content: '本场会议门票已售完',
-        });
-        // return;
       }
     },
     addWatchMeeting() {
@@ -721,11 +720,25 @@ export default {
         }
         &.detailContact{
           .content{
+            overflow-x: auto;
+            overflow-y: hidden;
             .box{
               color:#5d6574;
               font-size: 12px;
+              .vux-flexbox .vux-flexbox-item{
+                display: flex;
+                flex: 0 0 65%;
+                /* -webkit-box-flex: 1; */
+                /* flex: 1; */
+                /* -webkit-flex: 1; */
+                min-width: 20px;
+                width: 0%;
+              }
               &:not(:last-child){
-                .border-1px-b(#5d6574)
+                .border-1px-b(#5d6574);
+                &:after{
+                  width:115%;
+                }
               }
               padding-bottom: 15px;
               &:not(:first-child){
