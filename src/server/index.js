@@ -49,7 +49,7 @@ export const getActivityListIsOver = () => http.get('/activity/issueOver?page=0'
 export const getActivityListById = (query) => http.get(`/activity/userId?page=1`, null, { params: query });
 
 // 根据主办方获取参与的会议(购票)
-export const getActivityMyJoin = (isValid) => http.get(`/activity/myJoin?isValid=${isValid}`);
+export const getActivityMyJoin = (query) => http.get(`/activity/myJoin?page=1`, null, { params: query });
 // 根据状态获取当前登录人参与的会议的 票的信息（有效票—已失效）
 export const getActivityWithStatus = status => http.get(`/ticketsRecord/participation/${status}`);
 

@@ -98,7 +98,11 @@ export default {
       if (res && res.code === 0) {
         return res.data;
       }
-      return [];
+      const obj = {
+        list: [],
+        total: '',
+      };
+      return obj;
     },
     getActivityTotal() {
       const curId = this.$route.params.id;
@@ -115,11 +119,11 @@ export default {
       this.curIndex = index;
     },
   },
-  watch: {
-    $route() {
-      this.getActivityTotal();
-    },
-  },
+  // watch: {
+  //   // $route() {
+  //   //   this.getActivityTotal();
+  //   // },
+  // },
   components: {
     Tab,
     TabItem,
