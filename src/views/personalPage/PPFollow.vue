@@ -19,7 +19,7 @@
     <div class="swiper-container">
       <!--<swiper @on-index-change="handlerHeight(check)" id="swiper" class="swiper" v-model="check"  :show-dots="false">
         <swiper-item >-->
-          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData" v-show="check===0">
+          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData" v-show="check===0" :key='index'>
             <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
@@ -41,7 +41,7 @@
           </div>
         <!--</swiper-item>
         <swiper-item >-->
-          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData" v-show="check===1">
+          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData" v-show="check===1" :key='index'>
             <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
@@ -125,15 +125,6 @@ export default {
         }
       });
     },
-    // handlerHeight(index) {
-    //   if (index === 0) {
-    //     document.getElementById('swiper').style.height = `${this.wTableData.length * 95}px`;
-    //     document.getElementById('swiper').firstChild.style.height = `${this.wTableData.length * 95}px`;
-    //   } else {
-    //     document.getElementById('swiper').style.height = `${this.fTableData.length * 95}px`;
-    //     document.getElementById('swiper').firstChild.style.height = `${this.fTableData.length * 95}px`;
-    //   }
-    // },
     watchPeople(obj, index, swiper) {
       addWatch(obj.id).then((res) => {
         if (res.code === 0) {
