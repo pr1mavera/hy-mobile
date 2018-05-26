@@ -47,7 +47,7 @@ export default {
     padding-top: 45px;
     padding-bottom: 15px;
     color: #fff;
-    font-size: 18px;
+    font-size: 14px;
   }
   // .center img {
   //   width: calc(~'100vw - 50px');

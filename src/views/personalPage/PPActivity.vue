@@ -7,34 +7,34 @@
       default-color="#5d6574"
       active-color="#2c7dfa"
       >
-        <tab-item selected @on-item-click="onTabItemClick">
-          发布中({{activityIsPublish.length}})
+        <tab-item selected @on-item-click="changeTab">
+          发布中({{activityHas.total}})
         </tab-item>
-        <tab-item @on-item-click="onTabItemClick">
-          未发布({{activityNotPublish.length}})
+        <tab-item @on-item-click="changeTab">
+          未发布({{activityNo.total}})
         </tab-item>
-        <tab-item @on-item-click="onTabItemClick" v-if="!this.$route.query.id">
-          已结束({{activityIsOver.length}})
+        <tab-item @on-item-click="changeTab" v-if="!this.$route.query.id">
+          已结束({{activityOver.total}})
         </tab-item>
       </tab>
     </div>
-    <div class="activityListView" v-if="currentShowActivityIndex === 0">
+    <div class="activityListView" v-show="curIndex === 0">
       <ul>
-        <li v-for="(activity, index) in activityIsPublish" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityHas.list" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
     </div>
-    <div class="activityListView" v-if="currentShowActivityIndex === 1">
+    <div class="activityListView" v-show="curIndex === 1">
       <ul>
-        <li v-for="(activity, index) in activityNotPublish" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityNo.list" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
     </div>
-    <div class="activityListView" v-if="currentShowActivityIndex === 2">
+    <div class="activityListView" v-show="curIndex === 2">
       <ul>
-        <li v-for="(activity, index) in activityIsOver" class="activityListLi" :key="index">
+        <li v-for="(activity, index) in activityOver.list" class="activityListLi" :key="index">
           <activityList :activity="activity"></activityList>
         </li>
       </ul>
@@ -47,7 +47,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { getActivityListById, getActivityList, getActivityListIsOver, getProfile } from '@/server/index.js';
+import { getActivityListById } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import activityList from '@/components/activityList';
 // import { constants } from 'zlib';
@@ -56,10 +56,19 @@ import activityList from '@/components/activityList';
 export default {
   data() {
     return {
-      activityIsPublish: [],
-      activityNotPublish: [],
-      activityIsOver: [],
-      currentShowActivityIndex: 0,
+      activityHas: {
+        list: [],
+        total: '',
+      },
+      activityNo: {
+        list: [],
+        total: '',
+      },
+      activityOver: {
+        list: [],
+        total: '',
+      },
+      curIndex: 0,
     };
   },
   created() {
@@ -67,7 +76,7 @@ export default {
   },
   mounted() {
     // this.setId(this.$route.params.id);
-    this.getActivityList();
+    this.getActivityTotal();
   },
   computed: {
     ...mapGetters([
@@ -77,68 +86,38 @@ export default {
   },
   methods: {
     // ...mapMutations(['SET_ID']),
-    async getActivityList() {
-      const user = await getProfile();
-      if (user.code === 0) {
-        // 判断是否是当前用户
-        const userId = user.data.id;
-        const id = parseInt(this.$route.params.id, 10);
-        if (userId === id) {
-          this.getSelfActivity();
-        } else {
-          this.getOtherActivity();
-        }
-      } else {
-        this.$vux.toast.text('获取当前用户信息失败', 'top');
+    async getActivity(curId, curStatus) {
+      const query = {
+        id: curId,
+        pageNum: 1,
+        pageSize: 10,
+        status: curStatus,
+      };
+      const res = await getActivityListById(query);
+      // debugger;
+      if (res && res.code === 0) {
+        return res.data;
       }
+      return [];
     },
-    async getOtherActivity() {
-      const res0 = await getActivityListById(this.$route.params.id, 0);
-      if (res0.code === 0) {
-        this.activityNotPublish = res0.data;
-      } else {
-        console.log(res0.msg);
-      }
-      const res1 = await getActivityListById(this.$route.params.id, 1);
-      if (res1.code === 0) {
-        this.activityIsPublish = res1.data;
-      } else {
-        console.log(res1.msg);
-      }
-      const res2 = await getActivityListById(this.$route.params.id, 3);
-      if (res2.code === 0) {
-        this.activityIsOver = res2.data;
-      } else {
-        console.log(res2.msg);
-      }
+    getActivityTotal() {
+      const curId = this.$route.params.id;
+      const p1 = this.getActivity(curId, 1);
+      const p2 = this.getActivity(curId, 0);
+      const p3 = this.getActivity(curId, 3);
+      Promise.all([p1, p2, p3]).then((values) => {
+        this.activityHas = values[0];
+        this.activityNo = values[1];
+        this.activityOver = values[2];
+      });
     },
-    async getSelfActivity() {
-      const res0 = await getActivityList(0);
-      if (res0.code === 0) {
-        this.activityNotPublish = res0.data;
-      } else {
-        console.log(res0.msg);
-      }
-      const res1 = await getActivityList(1);
-      if (res1.code === 0) {
-        this.activityIsPublish = res1.data;
-      } else {
-        console.log(res1.msg);
-      }
-      const res2 = await getActivityListIsOver();
-      if (res2.code === 0) {
-        this.activityIsOver = res2.data;
-      } else {
-        console.log(res2.msg);
-      }
-    },
-    onTabItemClick(index) {
-      this.currentShowActivityIndex = index;
+    changeTab(index) {
+      this.curIndex = index;
     },
   },
   watch: {
     $route() {
-      this.getActivityList();
+      this.getActivityTotal();
     },
   },
   components: {
