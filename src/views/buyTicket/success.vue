@@ -83,6 +83,7 @@ export default {
   },
   mounted() {
     this.dealData();
+    this.backActivity();
   },
   updated() {
     // 页面跳转置顶
@@ -162,6 +163,14 @@ export default {
       // const host=window.location.host;
       // this.$router.push('/');
       window.location.href="/";
+    },
+    backActivity() {
+      const self = this;
+      window.onpopstate = function(e) {
+        // history.pushState({page: 1}, '映目活动', `/web/activity/${self.activityId}`);
+        // history.back(-1);
+        window.location.href = `/web/activity/${self.activityId}`;
+      }
     }
   },
 };
