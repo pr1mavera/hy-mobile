@@ -19,7 +19,7 @@
     <div class="swiper-container">
       <!--<swiper @on-index-change="handlerHeight(check)" id="swiper" class="swiper" v-model="check"  :show-dots="false">
         <swiper-item >-->
-          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData" v-show="check===0">
+          <div class="tab-swiper vux-center" v-for="(item, index) in wTableData" v-show="check===0" :key='index'>
             <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
@@ -28,7 +28,7 @@
                   <h5>{{item.nickname?item.nickname:item.username}}</h5>
                   <p p-intro>{{item.info?item.info:'这个人很懒，但还是什么都没写...'}}</p>
                   <div v-if="item.userStatistics">
-                    <p>会议<span class="num" >{{item.userStatistics.activityCount }}</span></p>
+                    <p>活动<span class="num" >{{item.userStatistics.activityCount }}</span></p>
                     <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
               </div>
@@ -41,7 +41,7 @@
           </div>
         <!--</swiper-item>
         <swiper-item >-->
-          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData" v-show="check===1">
+          <div class="tab-swiper vux-center" v-for="(item, index) in fTableData" v-show="check===1" :key='index'>
             <div class="flex-box">
               <div class="left">
                 <img :src="item.avatarUrl" alt="">
@@ -50,7 +50,7 @@
                   <h5>{{item.nickname}}</h5>
                   <p>{{item.info}}</p>
                   <div v-if="item.userStatistics">
-                    <p>会议<span class="num">{{item.userStatistics.activityCount }}</span></p>
+                    <p>活动<span class="num">{{item.userStatistics.activityCount }}</span></p>
                     <p>粉丝<span class="num">{{item.userStatistics.fansCount }}</span></p>
                   </div>
               </div>
@@ -125,15 +125,6 @@ export default {
         }
       });
     },
-    // handlerHeight(index) {
-    //   if (index === 0) {
-    //     document.getElementById('swiper').style.height = `${this.wTableData.length * 95}px`;
-    //     document.getElementById('swiper').firstChild.style.height = `${this.wTableData.length * 95}px`;
-    //   } else {
-    //     document.getElementById('swiper').style.height = `${this.fTableData.length * 95}px`;
-    //     document.getElementById('swiper').firstChild.style.height = `${this.fTableData.length * 95}px`;
-    //   }
-    // },
     watchPeople(obj, index, swiper) {
       addWatch(obj.id).then((res) => {
         if (res.code === 0) {

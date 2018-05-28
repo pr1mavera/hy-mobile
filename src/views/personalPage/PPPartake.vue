@@ -8,30 +8,36 @@
       active-color="#2c7dfa"
       >
         <tab-item selected @on-item-click="onTabItemClick">
-          有效票({{getValidTicketTotalCount}})
+          有效票({{ticketsIsValid.total}})
         </tab-item>
         <tab-item @on-item-click="onTabItemClick">
-          已失效({{getInvalidTicketTotalCount}})
+          已失效({{ticketsIsInvalid.total}})
         </tab-item>
       </tab>
     </div>
-    <div class="activityListView" v-if="currentShowActivityIndex === 0">
+    <div class="activityListView" v-if="curIndex === 0">
       <ul>
-        <li v-for="(activity, index) in ticketsIsValid" class="activityTicketsListLi" :key="index">
-          <activityTicketsList @update="getActivityTicketsList" :currentIndex="currentShowActivityIndex" :activity="activity"></activityTicketsList>
+        <li v-for="(activity, index) in ticketsIsValid.list" class="activityTicketsListLi" :key="index">
+          <activityTicketsList @checkTicket="checkTicketFn" @update="getActivityTicketsList" :currentIndex="curIndex" :activity="activity"></activityTicketsList>
         </li>
       </ul>
     </div>
-    <div class="activityListView" v-if="currentShowActivityIndex === 1">
+    <div class="activityListView" v-if="curIndex === 1">
       <ul>
-        <li v-for="(activity, index) in ticketsIsInvalid" class="activityTicketsListLi" :key="index">
-          <activityTicketsList @update="getActivityTicketsList" :currentIndex="currentShowActivityIndex" :activity="activity"></activityTicketsList>
+        <li v-for="(activity, index) in ticketsIsInvalid.list" class="activityTicketsListLi" :key="index">
+          <activityTicketsList @update="getActivityTicketsList" :currentIndex="curIndex" :activity="curActivity"></activityTicketsList>
         </li>
       </ul>
     </div>
     <div class="bottom">
       已经到底啦~
     </div>
+    <checkTicket
+      @closeTicket="checkTicketFn"
+      :currentTicket="currTickets" 
+      :ticketView="ticketView"
+      :activity="curActivity"
+    ></checkTicket>
   </div>
 </template>
 
@@ -39,51 +45,80 @@
 import { getActivityMyJoin } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import activityTicketsList from '@/components/activityTicketsList';
+import checkTicket from '@/components/checkTicket';
 
 export default {
   data() {
     return {
-      ticketsIsInvalid: [ // 失效
-        // ticketsRecords: [],
-      ],
-      ticketsIsValid: [ // 有效
-        // ticketsRecords: [],
-      ],
-      currentShowActivityIndex: 0, // 0有效 1失效
+      ticketsIsInvalid: { // 失效
+        list: [],
+        ticketsTotal: '',
+        Total: '',
+      },
+      ticketsIsValid: {
+        list: [],
+        ticketsTotal: '',
+        Total: '',
+      },
+      curIndex: 0, // 0有效 1失效
+      currTickets: {},
+      ticketView: false,
+      curActivity: {},
     };
   },
   mounted() {
     this.getActivityTicketsList();
   },
-  computed: {
-
-    getInvalidTicketTotalCount() {
-      let count = 0;
-      this.ticketsIsInvalid.forEach((item) => {
-        count += item.ticketsRecords.length;
-      });
-      return count;
-    },
-    getValidTicketTotalCount() {
-      let count = 0;
-      this.ticketsIsValid.forEach((item) => {
-        count += item.ticketsRecords.length;
-      });
-      return count;
-    },
-  },
+  // computed: {
+  //   // getInvalidTicketTotalCount() {
+  //   //   let count = 0;
+  //   //   this.ticketsIsInvalid.forEach((item) => {
+  //   //     count += item.ticketsRecords.length;
+  //   //   });
+  //   //   return count;
+  //   // },
+  //   // getValidTicketTotalCount() {
+  //   //   let count = 0;
+  //   //   this.ticketsIsValid.forEach((item) => {
+  //   //     count += item.ticketsRecords.length;
+  //   //   });
+  //   //   return count;
+  //   // },
+  // },
   methods: {
-    async getActivityTicketsList() {
-      const res0 = await getActivityMyJoin(false);
-      this.ticketsIsInvalid = res0.data;
-      const res1 = await getActivityMyJoin(true);
-      this.ticketsIsValid = res1.data;
-      if (res1.code !== 0 || res1.code !== 0) {
-        console.log('error in getActivityTicketsList');
+    checkTicketFn(isview, data, activity) {
+      this.ticketView = isview;
+      if (isview) {
+        this.currTickets = data;
+        this.curActivity = activity;
       }
     },
+    async getTicketsList(num, valid) {
+      const query = {
+        pageNum: num,
+        pageSize: 2,
+        isValid: valid,
+      };
+      const res = await getActivityMyJoin(query);
+      if (res.code === 0) {
+        return res.data;
+      }
+      return {
+        list: [],
+        ticketsTotal: '',
+        Total: '',
+      };
+    },
+    getActivityTicketsList() {
+      const res0 = this.getTicketsList(1, true);
+      const res1 = this.getTicketsList(1, false);
+      Promise.all([res0, res1]).then((values) => {
+        this.ticketsIsValid = values[0];
+        this.ticketsIsInvalid = values[1];
+      });
+    },
     onTabItemClick(index) {
-      this.currentShowActivityIndex = index;
+      this.curIndex = index;
     },
   },
   filters: {
@@ -102,6 +137,7 @@ export default {
     Tab,
     TabItem,
     activityTicketsList,
+    checkTicket,
   },
 };
 </script>

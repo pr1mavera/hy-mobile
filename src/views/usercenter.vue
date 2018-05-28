@@ -25,7 +25,7 @@
           </keep-alive>
         </div>
         <footer class="footer">
-          <p class="text">本站由<span> 会议站 </span>提供技术支持</p>
+          <p class="text">本站由<span> 映目活动 </span>提供技术支持</p>
           <p class="text">Copyright &copy; 2013-2018 版权所有 北京韦尔科技有限公司</p>
           <p class="text">京ICP备14040981号-2</p>
         </footer>

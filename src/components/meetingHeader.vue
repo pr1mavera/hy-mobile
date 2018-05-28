@@ -61,7 +61,7 @@
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodehuiyi"></use>
                 </svg>
-                <span>我的会议</span>
+                <span>我的活动</span>
               </a>
               <a @click="clickToRouteByPathName('/usercenter/partake/', 1)">
                 <svg class="icon" aria-hidden="true">
@@ -127,7 +127,7 @@
             <input
               v-model="searchVal"
               type="text"
-              placeholder="搜索会议关键字"
+              placeholder="搜索活动关键字"
               @focus="changeHandler"
             >
               <!-- <div >
@@ -434,6 +434,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
   }
 }
 .header{
+  position:relative;
   .meetingHeader{
     padding: 0;
     top: 0;
@@ -441,7 +442,7 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
     width: 100%;
     background-color: transparent;
     z-index: 499;
-    // position: absolute;
+    position: absolute;
     &::after{
       content: '';
       position: absolute;

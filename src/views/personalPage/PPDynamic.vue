@@ -28,11 +28,11 @@
                 <!-- 别人收藏你 -->
                 <div v-if="item.status">
                   <h5>{{item.user.nickname}}</h5>
-                  <p>收藏了你的会议</p>
+                  <p>收藏了你的活动</p>
                   <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>
                 <div v-else>
-                  <h5>我<span class="gray">收藏了会议</span></h5>
+                  <h5>我<span class="gray">收藏了活动</span></h5>
                   <h5>{{item.activity.activityTitle}}</h5>
                   <p class="time">{{item.watchDate | timeApart}}</p>
                 </div>

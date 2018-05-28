@@ -20,7 +20,7 @@
     <div class="attribute" v-if="isCurrentUser">
       <div class="item">
         <p>{{this.userProfile.userStatistics.activityCount}}</p>
-        <p>会议</p>
+        <p>活动</p>
       </div>
       <div class="item">
         <p>{{this.userProfile.userStatistics.fansCount}}</p>

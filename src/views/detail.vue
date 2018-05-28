@@ -169,7 +169,7 @@
       </div>
     </div>
     <footer>
-      <p>本站由<span>会议站</span>提供技术支持</p>
+      <p>本站由<span>映目活动</span>提供技术支持</p>
       <p>Copyright © 2013-2017 版权所有 北京韦尔科技有限公司</p>
       <p>京ICP备14040981号-2</p>
     </footer>
@@ -322,7 +322,7 @@ export default {
     ...mapMutations(['SET_ACTIVITY_ID']),
     async getInfoById() {
       // debugger;
-      // 获取会议详情
+      // 获取活动详情
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
       this.goBuyTicket();
@@ -414,14 +414,14 @@ export default {
     goBuyTicket(value) {
       // const url = document.getElementById('url');
       // this.copyToClipboard(url);
-      // 判断会议 是否结束
+      // 判断活动 是否结束
       const time = this.tableData.endTime.replace(/-/g, '/');
       if (new Date(time) - new Date() > 0) {
         const tickets = this.tableData.validActivityTickets;
         if (tickets.length === 0 || !tickets) {
           this.$vux.alert.show({
             title: '温馨提示',
-            content: '本场会议门票已售完',
+            content: '本场活动门票已售完',
           });
           return;
         }
@@ -435,11 +435,11 @@ export default {
         }
       } else {
         this.$refs.getTicket.style.backgroundColor = '#ccc';
-        // 会议已结束
+        // 活动已结束
         if (value) {
           this.$vux.alert.show({
             title: '温馨提示',
-            content: '会议已结束，不能购票！',
+            content: '活动已结束，不能购票！',
           });
           // return;
         }
