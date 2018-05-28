@@ -18,14 +18,25 @@
     <div class="activityListView" v-if="curIndex === 0">
       <ul>
         <li v-for="(activity, index) in ticketsIsValid.list" class="activityTicketsListLi" :key="index">
-          <activityTicketsList @checkTicket="checkTicketFn" @update="getActivityTicketsList" :currentIndex="curIndex" :activity="activity"></activityTicketsList>
+          <activityTicketsList
+            @updateTicket="updateTicketFn"
+            @checkTicket="checkTicketFn" 
+            @update="getActivityTicketsList" 
+            :currentIndex="curIndex" 
+          :activity="activity"></activityTicketsList>
         </li>
       </ul>
     </div>
     <div class="activityListView" v-if="curIndex === 1">
       <ul>
         <li v-for="(activity, index) in ticketsIsInvalid.list" class="activityTicketsListLi" :key="index">
-          <activityTicketsList @update="getActivityTicketsList" :currentIndex="curIndex" :activity="curActivity"></activityTicketsList>
+          <activityTicketsList 
+            @updateTicket="updateTicketFn"
+            @checkTicket="checkTicketFn" 
+            @update="getActivityTicketsList" 
+            :currentIndex="curIndex" 
+            :activity="activity"
+          ></activityTicketsList>
         </li>
       </ul>
     </div>
@@ -34,10 +45,16 @@
     </div>
     <checkTicket
       @closeTicket="checkTicketFn"
-      :currentTicket="currTickets" 
+      :currentTicket="currTickets"
       :ticketView="ticketView"
       :activity="curActivity"
     ></checkTicket>
+    <updateTicket
+      :ticketForm="formTickets"
+      :formView="formView"
+      @closeTicket="updateTicketFn"
+    >
+    </updateTicket>
   </div>
 </template>
 
@@ -46,6 +63,7 @@ import { getActivityMyJoin } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import activityTicketsList from '@/components/activityTicketsList';
 import checkTicket from '@/components/checkTicket';
+import updateTicket from '@/components/updateTicket';
 
 export default {
   data() {
@@ -64,6 +82,8 @@ export default {
       currTickets: {},
       ticketView: false,
       curActivity: {},
+      formView: false,
+      formTickets: {},
     };
   },
   mounted() {
@@ -86,6 +106,12 @@ export default {
   //   // },
   // },
   methods: {
+    updateTicketFn(isview, data) {
+      this.formView = isview;
+      if (isview) {
+        this.formTickets = data;
+      }
+    },
     checkTicketFn(isview, data, activity) {
       this.ticketView = isview;
       if (isview) {
@@ -138,6 +164,7 @@ export default {
     TabItem,
     activityTicketsList,
     checkTicket,
+    updateTicket,
   },
 };
 </script>

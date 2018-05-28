@@ -47,53 +47,6 @@
       </div>
     </div>
     <!-- 查看门票 -->
-    <div v-transfer-dom>
-      <popup
-        v-model="showEdit"
-        height="90%"
-        position="bottom"
-        :is-transparent='true'
-        >
-        <div class="popup popupEdit">
-          <div class="popupEditBox">
-            <p class="title">修改门票</p>
-            <div class="inputContent">
-              <form>
-                <group>
-                  <x-input title="" v-model="ticketForm.confereeName" :min="1" :max="10"></x-input>
-                </group>
-                <group>
-                  <x-input title="" type v-model="ticketForm.confereePhone"></x-input>
-                </group>
-                <group>
-                  <x-input title="" v-model="ticketForm.confereeEmail"></x-input>
-                </group>
-                <!-- 姓名输入框 -->
-                <!-- <div class="inputItem userInput">
-                  <input type="text" placeholder="姓名" v-model="ticketForm.confereeName">
-                </div> -->
-                <!-- 手机号输入框 -->
-                <!-- <div class="inputItem userInput">
-                  <input type="number" placeholder="手机号" v-model="ticketForm.confereePhone">
-                </div> -->
-                <!-- 邮箱输入框 -->
-                <!-- <div class="inputItem userInput">
-                  <input type="email" placeholder="邮箱" v-model="ticketForm.confereeEmail">
-                </div> -->
-              </form>
-            </div>
-            <!-- 主按钮 -->
-            <button class="loginBtn" @click="updateTicket">确认</button>
-            <div class="close" @click="showEdit=false">
-              <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-guanbi2"></use>
-              </svg>
-            </div>
-          </div>
-          <div class="block"></div>
-        </div>
-      </popup>
-    </div>
   </div>
 </template>
 
@@ -102,7 +55,7 @@
 import { TransferDom, Popup, Qrcode, XInput, Group, Checklist, Confirm } from 'vux';
 import { formatDate } from '@/common/js/index.js';
 import Conf from '@/config/index';
-import { updateTicket } from '@/server';
+// import { updateTicket } from '@/server';
 import PDFTicketItem from '@/common/js/PDFTicketItem.js';
 
 export default {
@@ -137,32 +90,6 @@ export default {
   },
   methods: {
     /* eslint-disable */
-    updateTicket() {
-      const data = { ...this.ticketForm };
-      const len = data.confereeName.length;
-      const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
-      const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-      if (len === 0) {
-        this.$vux.toast.text('姓名不能为空', 'top');
-      } else if (len > 10) {
-        this.$vux.toast.text('姓名在10个字符', 'top');
-      } else if (!regNum.test(data.confereePhone)) {
-        this.$vux.toast.text('手机号码格式不正确', 'top');
-      } else if (!regEmail.test(data.confereeEmail)) {
-        this.$vux.toast.text('邮箱格式不正确', 'top');
-      } else {
-        updateTicket(data.id, data).then((res) => {
-          if (res.code === 0) {
-            this.$vux.toast.text('修改成功', 'top');
-            this.$emit('update');
-            this.showEdit = false;
-          } else {
-            this.$vux.toast.text('修改失败', 'top');
-          }
-        });
-      }
-      // return;
-    },
     loadTypeFn(value) {
       this.selectLoadArray = value;
     },
@@ -354,13 +281,23 @@ export default {
       //   document.getElementById('hole').style.height = `${popupTicketBoxHeight}px`;
       // });
     },
+    copy(ticket) {
+      let obj = {};
+      for(let key in ticket){
+        if (key === 'id' || key === 'confereeName'|| key === 'confereePhone'|| key === 'confereeEmail') {
+          obj[key] = ticket[key];
+        }
+      }
+      return obj;
+    },
     clickToShowEdit(ticket) {
-      // debugger;
-      this.showEdit = true;
-      this.ticketForm.id = ticket.id;
-      this.ticketForm.confereeName = ticket.confereeName;
-      this.ticketForm.confereePhone = ticket.confereePhone;
-      this.ticketForm.confereeEmail = ticket.confereeEmail;
+      const copyTicket = this.copy(ticket);
+      this.$emit("updateTicket", true, copyTicket);
+      // this.showEdit = true;
+      // this.ticketForm.id = ticket.id;
+      // this.ticketForm.confereeName = ticket.confereeName;
+      // this.ticketForm.confereePhone = ticket.confereePhone;
+      // this.ticketForm.confereeEmail = ticket.confereeEmail;
       // const ticketForm = this.ticketForm;
     },
     downLoadImage(canvas, name) {
