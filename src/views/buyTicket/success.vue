@@ -56,16 +56,6 @@ export default {
           QRcode: '', // 二维码
           overTime: '', // 二维码失效时间
         },
-        // code: 1,
-        // message: {
-        //   error: '',
-        // },
-        // code: -1,
-        // message: {
-        //   orderNum: '518032490929310',
-        //   orderTime: '2018-03-26 14:36:56',
-        //   QRcode: 'https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=fa9140accd95d143ce7bec711299e967/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg',
-        // },
       },
       userMsg: { // 买家信息和门票信息
         buyer: '', // （必填）
@@ -73,13 +63,6 @@ export default {
         buyerEmail: '', // （必填）
         ticketsRecordList: [],
       },
-      // showTicket: false,
-      // activityMsg: {
-      //   activityTitle: '',
-      // }, // 会议信息
-      // currentTicket: {
-      //   ticketsName: '',
-      // }, // 买票成功后返回信息
       currentUser: {
         id: '',
       }, // 判断当前用户是否登录
@@ -109,8 +92,9 @@ export default {
     dealData() {
       // 判断sessionStorage有无数据
       var successMsg = null;
-      successMsg = JSON.parse(sessionStorage.getItem('successMsg'));
+      successMsg = sessionStorage.getItem('successMsg');
       if (successMsg) {
+        successMsg = JSON.parse(successMsg);
         this.feedback.message.QRcode = successMsg.qrcodeTicketUrl;
         this.feedback.message.orderNum = successMsg.orderNo;
         this.feedback.message.orderTime = successMsg.createTime;
@@ -127,20 +111,6 @@ export default {
       this.userMsg.buyerEmail = this.firstEditData.email;
       this.userMsg.ticketsRecordList = this.ticketsRecordList;
       // 提交请求之前判断一下，有无信息
-      // var judge = true;
-      // for (let i in this.userMsg) {
-      //   if (this.userMsg[i].constructor === Array) {
-      //     this.userMsg[i].forEach(item => {
-      //       if (item === '') {
-      //         judge = false;
-      //       }
-      //     })
-      //   } else {
-      //     if (this.userMsg[i] === '') {
-      //       judge = false;
-      //     }
-      //   }
-      // }
       purchaseTicket(this.activityId, this.userMsg).then((res) => {
         if (res.code === 0) {
           this.feedback.message.QRcode = res.data.qrcodeTicketUrl;
@@ -158,6 +128,7 @@ export default {
             title: '提示：',
             content: res.msg,
           })
+          // sessionStorage.setItem('successMsg', '');
         }
       });
     },
