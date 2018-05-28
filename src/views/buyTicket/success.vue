@@ -167,8 +167,6 @@ export default {
     backActivity() {
       const self = this;
       window.onpopstate = function(e) {
-        // history.pushState({page: 1}, '映目活动', `/web/activity/${self.activityId}`);
-        // history.back(-1);
         window.location.href = `/web/activity/${self.activityId}`;
       }
     }

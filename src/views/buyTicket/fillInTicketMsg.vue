@@ -140,7 +140,6 @@ export default {
           list[0].confereePhone = '';
           this.setTicketsRecordList(list);
         }
-        // console.log('修改编辑phone');
       }
     },
     emailInput() {
@@ -164,7 +163,6 @@ export default {
           list[0].confereeEmail = '';
           this.setTicketsRecordList(list);
         }
-        // console.log('修改编辑email');
       }
     },
   },

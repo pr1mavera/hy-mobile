@@ -14,8 +14,10 @@
         </svg>
       </div>
       <div class="title" slot="default" >
-        <h1 :style="{color:colorStyle.mainColor}">会议站</h1>
-
+        <!-- <h1 :style="{color:colorStyle.mainColor}">映目活动</h1> -->
+        <svg class="icon activity-icon" aria-hidden="true" :style="{color:colorStyle.mainColor}">
+            <use xlink:href="#icon-yingmuhuodong"></use>
+        </svg>
       </div>
       <div class="right" slot="right" :style="{color:colorStyle.minorColor}" @click="showMenu = true">
         <svg class="icon" aria-hidden="true">
@@ -478,6 +480,11 @@ input::-webkit-input-placeholder{/* webkit内核的浏览器，如谷歌，edge 
           line-height: 45px;
           font-size: 23px;
           color: #ffffff;
+        }
+        .activity-icon{
+          width:100%;
+          height:110px;
+          transform: translateY(-35px);
         }
       }
     }

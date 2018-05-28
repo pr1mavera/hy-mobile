@@ -1,6 +1,6 @@
 <template>
   <div class="userLogin">
-    <div class="banner">会议站</div>
+    <div class="banner">映目活动</div>
     <div class="userLoginContent">
       <tab
       class="tab"
