@@ -82,7 +82,11 @@ export default {
               judge = true;
             } else {
               judge = false;
+              break;
             }
+          }
+          if (judge === false) {
+            break;
           }
         }
         if (this.firstEditData.name !== '' && this.firstEditData.phone !== '' && this.firstEditData.email !== '' && judge) {

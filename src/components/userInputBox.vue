@@ -12,6 +12,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import userInput3 from '@/components/userInput3.vue';
 import { mapGetters, mapMutations } from 'vuex';
 
@@ -33,6 +34,13 @@ export default {
   },
   mounted() {
     this.handelData();
+  },
+  watch: {
+    selectTicket: function(val, oldVal) {
+      if (val !== oldVal) {
+        this.handelData();
+      }
+    }
   },
   methods: {
     // userChangeEdit() {

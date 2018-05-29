@@ -1,26 +1,53 @@
 <template>
   <div class="userInput-3">
-    <form method="post">
+    <!-- 第一张门票信息默认是买家信息 -->
+    <form method="post" v-if="index === 0">
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketName">
           姓名<i>*</i>
           <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
         </label>
-        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name' :value="setNameDefaultInput">
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="ticketName" ref='name' :value="setNameDefaultInput" v-if="ticketDefault.name">
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="ticketName" ref='name' v-else>
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketPhone">
           电话<i>*</i>
           <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
         </label>
-        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone' :value="setPhoneDefaultInput">
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone' :value="setPhoneDefaultInput" v-if="ticketDefault.phone" id="ticketPhone">
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'  v-else  id="ticketPhone">
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketEmail">
           邮箱<i>*</i>
           <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
         </label>
-        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email' :value="setEmailDefaultInput">
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email' :value="setEmailDefaultInput" v-if="ticketDefault.email" id="ticketEmail">
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'  v-else  id="ticketEmail">
+      </div>
+    </form>
+    <form method="post" v-else>
+      <div class="inputItem">
+        <label class="title" :class="setTitleSize" for="ticketSecName">
+          姓名<i>*</i>
+          <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
+        </label>
+        <input class="input input-hook" id="ticketSecName" type="text" name="name" v-on:input="ownerNameFn" ref='name'>
+      </div>
+      <div class="inputItem">
+        <label class="title" :class="setTitleSize" for="ticketSecPhone">
+          电话<i>*</i>
+          <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
+        </label>
+        <input class="input input-hook" id="ticketSecPhone" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'>
+      </div>
+      <div class="inputItem">
+        <label class="title" :class="setTitleSize" for="ticketSecEmail">
+          邮箱<i>*</i>
+          <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
+        </label>
+        <input class="input input-hook" id="ticketSecEmail" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'>
       </div>
     </form>
   </div>
@@ -52,6 +79,11 @@ export default {
         phoneInfo: false,
         emailInfo: false,
       },
+      ticketDefault: { // 默认第一张填写买家信息
+        name: true,
+        phone: true,
+        email: true,
+      }
     };
   },
   computed: {
@@ -74,37 +106,40 @@ export default {
     },
     // 第一张门票信息默认是买家信息
     setNameDefaultInput() {
-      if (this.index === 0) {
+      if (this.index === 0 && this.ticketDefault.name) {
         return this.firstEditData.name;
-      } else if (this.index && this.ticketsRecordList.length > 1){
-        return this.ticketsRecordList[this.index].confereeName;
-      } else {
-        return '';
       }
-      // eslint-disable-next-line
-      return;
+      //  else if (this.index && this.ticketsRecordList.length > 1 || this.ticketDefault.name === false){
+      //   return this.ticketsRecordList[this.index].confereeName;
+      // } else {
+      //   return '';
+      // }
+      // // eslint-disable-next-line
+      // return;
     },
     setPhoneDefaultInput() {
-      if (this.index === 0) {
+      if (this.index === 0 && this.ticketDefault.phone) {
         return this.firstEditData.phone;
-      } else if (this.index && this.ticketsRecordList.length > 1){
-        return this.ticketsRecordList[this.index].confereePhone;
-      } else {
-        return '';
       }
+      //  else if (this.index && this.ticketsRecordList.length > 1 || this.ticketDefault.phone === false){
+      //   return this.ticketsRecordList[this.index].confereePhone;
+      // } else {
+      //   return '';
+      // }
       // eslint-disable-next-line
-      return;
+      // return;
     },
     setEmailDefaultInput() {
-      if (this.index === 0) {
+      if (this.index === 0 && this.ticketDefault.email) {
         return this.firstEditData.email;
-      } else if (this.index && this.ticketsRecordList.length > 1){
-        return this.ticketsRecordList[this.index].confereeEmail;
-      } else {
-        return '';
       }
+      //  else if (this.index && this.ticketsRecordList.length > 1 || this.ticketDefault.email === false){
+      //   return this.ticketsRecordList[this.index].confereeEmail;
+      // } else {
+      //   return '';
+      // }
       // eslint-disable-next-line
-      return;
+      // return;
     },
   },
   methods: {
@@ -112,22 +147,26 @@ export default {
       setTicketsRecordList: 'SET_TICKET_RECORD_LIST'
     }),
     ownerNameFn() {
+      if (this.index === 0) {
+        this.ticketDefault.name = false;
+      }
       // 正则验证
       const userName = this.$refs.name.value.replace(/\s+/g, '');
       const list = this.ticketsRecordList.slice(0);
       if (userName !== '') {
         this.user.nameInfo = false;
-        console.log(123);
         list[this.index].confereeName = userName;
         this.setTicketsRecordList(list);
       } else {
         this.user.nameInfo = true;
-        console.log(456);
         list[this.index].confereeName = '';
         this.setTicketsRecordList(list);
       }
     },
     ownerPhoneFn() {
+      if (this.index === 0) {
+        this.ticketDefault.phone = false;
+      }
       const phone = this.$refs.phone.value.replace(/\s+/g, '');
       const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
       const list = this.ticketsRecordList.slice(0);
@@ -142,6 +181,9 @@ export default {
         }
     },
     ownerEmailFn() {
+      if (this.index === 0) {
+        this.ticketDefault.email = false;
+      }
       const email = this.$refs.email.value.replace(/\s+/g, '');
       const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
       const list = this.ticketsRecordList.slice(0);

@@ -1,6 +1,6 @@
 <template>
   <footer class="homeFooter">
-    <p class="text"><span> 会议站 </span></p>
+    <p class="text"><span> 映目活动 </span></p>
     <p class="text phone">免费服务热线 <i>400-616-1905</i></p>
     <p class="text">Copyright &copy; 2013-2018 版权所有 北京韦尔科技有限公司</p>
     <p class="text">京ICP备14040981号-2</p>
