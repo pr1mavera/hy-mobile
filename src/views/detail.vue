@@ -195,7 +195,8 @@ import { XImg, XButton, Grid, GridItem, Flexbox, FlexboxItem, Alert } from 'vux'
 import { mapMutations, mapState } from 'vuex';
 import banner from '@/components/banner';
 import meetingHeader from '@/components/meetingHeader';
-import { getActivityInfoById, addWatchCollect, removeWatchCollect, addWatch, deleteWatch, getWatchPeopleList } from '@/server/index.js';
+import { getActivityInfoById, addWatchCollect, removeWatchCollect, addWatch, deleteWatch } from '@/server/index.js';
+// getWatchPeopleList
 import { formatDate, MP } from '@/common/js/index.js';
 
 export default {
@@ -326,16 +327,16 @@ export default {
       const res1 = await getActivityInfoById(this.id);
       this.tableData = res1.data;
       this.goBuyTicket();
-      const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
-      if (!(res1 && res1.code === 0) || !(res2 && res2.code === 0)) {
-        console.log('error in getInfoById ');
-      } else {
-        res2.data.forEach((e) => {
-          if (e.id === res1.data.userId) {
-            this.isWatch = 1;
-          }
-        });
-      }
+      // const res2 = await getWatchPeopleList({ page: 0, orderBy: 1 });
+      // if (!(res1 && res1.code === 0) || !(res2 && res2.code === 0)) {
+      //   console.log('error in getInfoById ');
+      // } else {
+      //   res2.data.forEach((e) => {
+      //     if (e.id === res1.data.userId) {
+      //       this.isWatch = 1;
+      //     }
+      //   });
+      // }
       this.$nextTick(() => {
         MP().then((mp) => {
           const map = new mp.Map('container');

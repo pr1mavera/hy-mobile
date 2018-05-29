@@ -34,9 +34,14 @@ body {
     fill: currentColor;
     overflow: hidden;
 }
-html, body, #app {
+html,body{
   height: 100%;
-  -webkit-overflow-scrolling: touch;
+  // overflow-y:auto;
+  // -webkit-overflow-scrolling: touch;
+}
+#app {
+  // height: 100%;
+  // -webkit-overflow-scrolling: touch;
 }
 img{
   vertical-align: middle;

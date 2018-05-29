@@ -1,53 +1,63 @@
 <template>
-  <div class="activityTicketsList">
-    <div class="activityBanner">
-      <h1 class="title">
-        <div class="text">
-          {{activity.activityTitle}}
-        </div>
-        <div class="BgImg">
-          <img :src="activity.activityBannerMobileUrl">
-        </div>
-      </h1>
-      <div class="activityDetail">
-        <p class="text">
-          <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-shijian"></use>
-          </svg>
-          {{activity.startTime | timeFormat}}
-        </p>
-        <p class="text">
-          <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-weizhi"></use>
-          </svg>
-          {{activity.activityAddress | adressFormat}}
-        </p>
-      </div>
-    </div>
-    <div class="ticketsList">
-      <ul>
-        <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
-          <span class="ticketState">{{ticket.ticketStatus | ticketFilter}}</span>
-          <p class="text">{{ticket.ticketsName?ticket.ticketsName:'无'}}</p>
-          <p class="text">{{ticket.confereeName}}</p>
-          <div class="ticketOptionBtn">
-            <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="clickToShowTicket(ticket)">查看门票</button>
-            <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="downloadTicket(ticket, index)">下载门票</button>
-            <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
-            <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
+  <div class="activityListView">
+    <ul>
+      <li v-for="(activity, index) in ticketsList" :key="index">
+        <div class="activityTicketsList">
+          <div class="activityBanner">
+            <h1 class="title">
+              <div class="text">
+                {{activity.activityTitle}}
+              </div>
+              <div class="BgImg">
+                <img :src="activity.activityBannerMobileUrl">
+              </div>
+            </h1>
+            <div class="activityDetail">
+              <p class="text">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-shijian"></use>
+                </svg>
+                {{activity.startTime | timeFormat}}
+              </p>
+              <p class="text">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-weizhi"></use>
+                </svg>
+                {{activity.activityAddress | adressFormat}}
+              </p>
+            </div>
           </div>
-          <!-- 下载png格式门票二维码 -->
-          <!--<qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>-->
-        </li>
-      </ul> 
-      <div v-transfer-dom>
-        <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketsFn">
-          <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
-        </confirm>
-      </div>
+          <div class="ticketsList">
+            <ul>
+              <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
+                <span class="ticketState">{{ticket.ticketStatus | ticketFilter}}</span>
+                <p class="text">{{ticket.ticketsName?ticket.ticketsName:'无'}}</p>
+                <p class="text">{{ticket.confereeName}}</p>
+                <div class="ticketOptionBtn">
+                  <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="clickToShowTicket(ticket, activity)">查看门票</button>
+                  <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="downloadTicket(ticket, index)">下载门票</button>
+                  <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
+                  <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
+                </div>
+                <!-- 下载png格式门票二维码 -->
+                <!--<qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>-->
+              </li>
+            </ul> 
+            <div v-transfer-dom>
+              <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketsFn">
+                <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
+              </confirm>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="activity-footer" v-show="ticketsList && ticketsList.length > 0">
+      <span class="no-more-tip" v-if='loadStatus === 2'>没有更多数据</span>
+      <span class="loading-tip" v-else-if='loadStatus === 1'>加载中...</span>
     </div>
-    <!-- 查看门票 -->
   </div>
+  <!-- 查看门票 -->
 </template>
 
 <script>
@@ -60,22 +70,15 @@ import PDFTicketItem from '@/common/js/PDFTicketItem.js';
 
 export default {
   props: {
-    currentIndex: {
+    loadStatus: {
       type: Number,
     },
-    activity: {
-      type: Object,
+    ticketsList: {
+      type: Array,
     },
   },
   data() {
     return {
-      showEdit: false,
-      ticketForm: {
-        id: '',
-        confereeName: '',
-        confereePhone: '',
-        confereeEmail: '',
-      },
       downloadArray: [{
         key: 1,
         value: 'pdf',
@@ -269,10 +272,10 @@ export default {
       });
       code.draw(context, '#4D4D4D');
     },
-    clickToShowTicket(ticket) {
+    clickToShowTicket(ticket,activity) {
       // debugger
       if (ticket.ticketStatus !== 3) {
-        this.$emit("checkTicket", true, ticket, this.activity)
+        this.$emit("checkTicket", true, ticket, activity)
         // this.showTicket = true;
         // this.currentTicket = ticket;
       }
@@ -293,12 +296,6 @@ export default {
     clickToShowEdit(ticket) {
       const copyTicket = this.copy(ticket);
       this.$emit("updateTicket", true, copyTicket);
-      // this.showEdit = true;
-      // this.ticketForm.id = ticket.id;
-      // this.ticketForm.confereeName = ticket.confereeName;
-      // this.ticketForm.confereePhone = ticket.confereePhone;
-      // this.ticketForm.confereeEmail = ticket.confereeEmail;
-      // const ticketForm = this.ticketForm;
     },
     downLoadImage(canvas, name) {
       const a = document.createElement('a');
@@ -376,7 +373,16 @@ export default {
 // .weui-mask{
 //   background: rgba(0,0,0,0.03)!important;
 // }
+.activityListView {
+    ul {
+      width: calc(~'100% - 40px');
+      padding: 0 20px;
+    }
+  }
 .activityTicketsList {
+  width: 100%;
+  margin-bottom: 10px;
+  list-style-type: none;
   .activityBanner {
     width: 100%;
     border-radius: 6px;

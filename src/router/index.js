@@ -7,11 +7,11 @@ const selectTicketC = require('@/views/buyTicket/selectTicket');
 const fillInTicketMsgC = require('@/views/buyTicket/fillInTicketMsg');
 const successC = require('@/views/buyTicket/success');
 const usercenterC = require('@/views/usercenter');
-const PPActivityC = require('@/views/personalPage/PPActivity');
-const PPPartakeC = require('@/views/personalPage/PPPartake');
-const PPCollectionC = require('@/views/personalPage/PPCollection');
-const PPFollowC = require('@/views/personalPage/PPFollow');
-const PPDynamicC = require('@/views/personalPage/PPDynamic');
+// const PPActivityC = require('@/views/personalPage/PPActivity');
+// const PPPartakeC = require('@/views/personalPage/PPPartake');
+// const PPCollectionC = require('@/views/personalPage/PPCollection');
+// const PPFollowC = require('@/views/personalPage/PPFollow');
+// const PPDynamicC = require('@/views/personalPage/PPDynamic');
 const searchC = require('@/views/searchPage');
 const activityListC = require('@/views/ticketsRecord/activityList');
 const recordC = require('@/views/ticketsRecord/record');
@@ -33,11 +33,11 @@ const success = r => require.ensure([], () => r(successC), 'success');
 // import usercenter from '@/views/usercenter';
 const usercenter = r => require.ensure([], () => r(usercenterC), 'usercenter');
 // import PPActivity from '@/views/personalPage/PPActivity';
-const PPActivity = r => require.ensure([], () => r(PPActivityC), 'PPActivity');
-const PPPartake = r => require.ensure([], () => r(PPPartakeC), 'PPPartake');
-const PPCollection = r => require.ensure([], () => r(PPCollectionC), 'PPCollection');
-const PPFollow = r => require.ensure([], () => r(PPFollowC), 'PPFollow');
-const PPDynamic = r => require.ensure([], () => r(PPDynamicC), 'PPDynamic');
+// const PPActivity = r => require.ensure([], () => r(PPActivityC), 'PPActivity');
+// const PPPartake = r => require.ensure([], () => r(PPPartakeC), 'PPPartake');
+// const PPCollection = r => require.ensure([], () => r(PPCollectionC), 'PPCollection');
+// const PPFollow = r => require.ensure([], () => r(PPFollowC), 'PPFollow');
+// const PPDynamic = r => require.ensure([], () => r(PPDynamicC), 'PPDynamic');
 // import PPPartake from '@/views/personalPage/PPPartake';
 // import PPCollection from '@/views/personalPage/PPCollection';
 // import PPFollow from '@/views/personalPage/PPFollow';
@@ -129,40 +129,40 @@ export default new Router({
       ],
     },
     {
-      path: '/usercenter', // 我的会议
+      path: '/usercenter/:id', // 我的会议
       name: 'usercenter',
       component: usercenter,
-      children: [
-        {
-          path: '/usercenter/',
-          redirect: '/usercenter/activity/:id?',
-        },
-        {
-          path: 'activity/:id?', // 活动
-          component: PPActivity,
-          name: 'PPActivity',
-        },
-        {
-          path: 'partake/:id?', // 参与
-          component: PPPartake,
-          name: 'PPPartake',
-        },
-        {
-          path: 'collection/:id?', // 收藏
-          component: PPCollection,
-          name: 'PPCollection',
-        },
-        {
-          path: 'follow/:id?', // 关注
-          component: PPFollow,
-          name: 'PPFollow',
-        },
-        {
-          path: 'dynamic/:id?', // 动态
-          component: PPDynamic,
-          name: 'PPDynamic',
-        },
-      ],
+      // children: [
+        // {
+        //   path: '/usercenter/',
+        //   redirect: '/usercenter/activity/:id?',
+        // },
+        // {
+        //   path: 'activity/:id?', // 活动
+        //   component: PPActivity,
+        //   name: 'PPActivity',
+        // },
+        // {
+        //   path: 'partake/:id?', // 参与
+        //   component: PPPartake,
+        //   name: 'PPPartake',
+        // },
+        // {
+        //   path: 'collection/:id?', // 收藏
+        //   component: PPCollection,
+        //   name: 'PPCollection',
+        // },
+        // {
+        //   path: 'follow/:id?', // 关注
+        //   component: PPFollow,
+        //   name: 'PPFollow',
+        // },
+        // {
+        //   path: 'dynamic/:id?', // 动态
+        //   component: PPDynamic,
+        //   name: 'PPDynamic',
+        // },
+      // ],
     },
     // { path: '*', name: '404', component: NotFoundComponent },
   ],

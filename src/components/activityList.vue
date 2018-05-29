@@ -18,6 +18,9 @@ export default {
     activity: {
       type: Object,
     },
+    loadStatus: {
+      type: Number,
+    },
   },
   filters: {
     timeFilter(val) {

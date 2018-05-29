@@ -8,41 +8,34 @@
       active-color="#2c7dfa"
       >
         <tab-item selected @on-item-click="onTabItemClick">
-          有效票({{ticketsIsValid.total}})
+          有效票({{ticketsValid.ticketsTotal}})
         </tab-item>
         <tab-item @on-item-click="onTabItemClick">
-          已失效({{ticketsIsInvalid.total}})
+          已失效({{ticketsInvalid.ticketsTotal}})
         </tab-item>
       </tab>
     </div>
-    <div class="activityListView" v-if="curIndex === 0">
-      <ul>
-        <li v-for="(activity, index) in ticketsIsValid.list" class="activityTicketsListLi" :key="index">
-          <activityTicketsList
-            @updateTicket="updateTicketFn"
-            @checkTicket="checkTicketFn" 
-            @update="getActivityTicketsList" 
-            :currentIndex="curIndex" 
-          :activity="activity"></activityTicketsList>
-        </li>
-      </ul>
-    </div>
-    <div class="activityListView" v-if="curIndex === 1">
-      <ul>
-        <li v-for="(activity, index) in ticketsIsInvalid.list" class="activityTicketsListLi" :key="index">
-          <activityTicketsList 
-            @updateTicket="updateTicketFn"
-            @checkTicket="checkTicketFn" 
-            @update="getActivityTicketsList" 
-            :currentIndex="curIndex" 
-            :activity="activity"
-          ></activityTicketsList>
-        </li>
-      </ul>
-    </div>
-    <div class="bottom">
-      已经到底啦~
-    </div>
+    <keep-alive>
+      <activityTicketsList
+        v-if="curIndex === 0"
+        @updateTicket="updateTicketFn"
+        @checkTicket="checkTicketFn"
+        @update="getActivityTicketsList"
+        :currentIndex="curIndex" 
+        :ticketsList="ticketsValid.list"
+        :loadStatus="ticketsValid.loadStatus"
+      >
+      </activityTicketsList>
+      <activityTicketsList
+        v-else-if="curIndex === 1"
+        @updateTicket="updateTicketFn"
+        @checkTicket="checkTicketFn" 
+        @update="getActivityTicketsList" 
+        :currentIndex="curIndex"
+        :ticketsList="ticketsInvalid.list"
+        :loadStatus="ticketsInvalid.loadStatus"
+      ></activityTicketsList>
+    </keep-alive>
     <checkTicket
       @closeTicket="checkTicketFn"
       :currentTicket="currTickets"
@@ -59,7 +52,7 @@
 </template>
 
 <script>
-import { getActivityMyJoin } from '@/server/index.js';
+import { getActivityMyJoin, getTicketsRecord } from '@/server/index.js';
 import { Tab, TabItem } from 'vux';
 import activityTicketsList from '@/components/activityTicketsList';
 import checkTicket from '@/components/checkTicket';
@@ -68,16 +61,20 @@ import updateTicket from '@/components/updateTicket';
 export default {
   data() {
     return {
-      ticketsIsInvalid: { // 失效
+      ticketsInvalid: { // 失效
         list: [],
         ticketsTotal: '',
-        Total: '',
+        loadStatus: 0,
+        nextPage: 1,
       },
-      ticketsIsValid: {
+      ticketsValid: {
         list: [],
         ticketsTotal: '',
-        Total: '',
+        loadStatus: 0,
+        nextPage: 1,
       },
+      ticketStatus: ['ticketsValid', 'ticketsInvalid'],
+      ticketStatusNum: [true, false],
       curIndex: 0, // 0有效 1失效
       currTickets: {},
       ticketView: false,
@@ -87,25 +84,35 @@ export default {
     };
   },
   mounted() {
+    this.getTicketsCount();
     this.getActivityTicketsList();
   },
   // computed: {
   //   // getInvalidTicketTotalCount() {
   //   //   let count = 0;
-  //   //   this.ticketsIsInvalid.forEach((item) => {
+  //   //   this.ticketsInvalid.forEach((item) => {
   //   //     count += item.ticketsRecords.length;
   //   //   });
   //   //   return count;
   //   // },
   //   // getValidTicketTotalCount() {
   //   //   let count = 0;
-  //   //   this.ticketsIsValid.forEach((item) => {
+  //   //   this.ticketsValid.forEach((item) => {
   //   //     count += item.ticketsRecords.length;
   //   //   });
   //   //   return count;
   //   // },
   // },
   methods: {
+    getTicketsCount() {
+      getTicketsRecord().then((res) => {
+        // debugger;
+        if (res.code === 0) {
+          this.ticketsInvalid.ticketsTotal = res.data.invalid;
+          this.ticketsValid.ticketsTotal = res.data.valid;
+        }
+      });
+    },
     updateTicketFn(isview, data) {
       this.formView = isview;
       if (isview) {
@@ -119,29 +126,43 @@ export default {
         this.curActivity = activity;
       }
     },
-    async getTicketsList(num, valid) {
+    loadMore() {
+      // debugger;
+      const index = this.curIndex;// 标签
+      const statusText = this.ticketStatus[index];// 对应data
+      const curStatus = this.ticketStatusNum[index];// 对应当前状态
+      this.getTicketsList(this[statusText].nextPage, curStatus, statusText);
+    },
+    getTicketsList(num, valid, statusText) {
+      // debugger;
+      if (this[statusText].loadStatus !== 0) return;
+      this[statusText].loadStatus = 1;
       const query = {
         pageNum: num,
         pageSize: 2,
         isValid: valid,
       };
-      const res = await getActivityMyJoin(query);
-      if (res.code === 0) {
-        return res.data;
-      }
-      return {
-        list: [],
-        ticketsTotal: '',
-        Total: '',
-      };
+      getActivityMyJoin(query).then((data) => {
+        // debugger;
+        if (data.code === 0) {
+          this[statusText].list.push(...data.data.list);
+          if (data.data.hasNextPage) {
+            this[statusText].nextPage += 1;
+            this[statusText].loadStatus = 0;
+          } else {
+            this[statusText].loadStatus = 2;
+          }
+        } else {
+          this.$vux.toast.text(data.msg, 'middle');
+        }
+      }).catch((e) => {
+        this[statusText].loadStatus = 0;
+        console.warn(e);
+      });
     },
     getActivityTicketsList() {
-      const res0 = this.getTicketsList(1, true);
-      const res1 = this.getTicketsList(1, false);
-      Promise.all([res0, res1]).then((values) => {
-        this.ticketsIsValid = values[0];
-        this.ticketsIsInvalid = values[1];
-      });
+      this.getTicketsList(1, true, 'ticketsValid');
+      this.getTicketsList(1, false, 'ticketsInvalid');
     },
     onTabItemClick(index) {
       this.curIndex = index;
@@ -192,21 +213,11 @@ export default {
       }
     }
   }
-  .activityListView {
-    ul {
-      width: calc(~'100% - 40px');
-      padding: 0 20px;
-      .activityTicketsListLi {
-        width: 100%;
-        margin-bottom: 10px;
-        list-style-type: none;
-      }
-    }
-  }
-  .bottom{
-    text-align: center;
-    color: #b8bcc4;
-    margin: 15px;
-  }
+
+  // .bottom{
+  //   text-align: center;
+  //   color: #b8bcc4;
+  //   margin: 15px;
+  // }
 }
 </style>

@@ -1,27 +1,31 @@
 <template>
   <div id="personalPage">
-
-    <div class="scrollWrapper" ref="scrollWrapper">
-      <div class="mainContainer">
+    <!--<div class="scrollWrapper" ref="scrollWrapper">-->
+      <!--<div class="mainContainer">-->
         <meetingHeader :colorStyle="colorStyle" @rightSliderClickToChangeTabFlag="ChangeCurrentTabIndex"></meetingHeader>
         <bannerWithTransBlur :userProfile="userProfile" :isCurrentUser="isCurrentUser"></bannerWithTransBlur>
         <tab
-        class="tab"
-        :line-width="2"
-        default-color="#9098a8"
-        active-color="#2b313c"
-        bar-active-color="#2c7dfa"
-        custom-bar-width="28px"
+          class="tab"
+          :line-width="2"
+          default-color="#9098a8"
+          active-color="#2b313c"
+          bar-active-color="#2c7dfa"
+          custom-bar-width="28px"
         >
-          <tab-item :selected="currentTabIndex === 0"  @on-item-click="onTabItemClick">活动</tab-item>
-          <tab-item :selected="currentTabIndex === 1"  @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
-          <tab-item :selected="currentTabIndex === 2"  @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
-          <tab-item :selected="currentTabIndex === 3"  @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
-          <tab-item :selected="currentTabIndex === 4"  @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
+          <tab-item :selected="currIndex === 0"  @on-item-click="onTabItemClick">活动</tab-item>
+          <tab-item :selected="currIndex === 1"  @on-item-click="onTabItemClick" v-if="isCurrentUser">参与</tab-item>
+          <tab-item :selected="currIndex === 2"  @on-item-click="onTabItemClick" v-if="isCurrentUser">收藏</tab-item>
+          <tab-item :selected="currIndex === 3"  @on-item-click="onTabItemClick" v-if="isCurrentUser">关注</tab-item>
+          <tab-item :selected="currIndex === 4"  @on-item-click="onTabItemClick" v-if="isCurrentUser">动态</tab-item>
         </tab>
         <div class="routerBody clearfix">
           <keep-alive>
-            <router-view class="routerView"></router-view>
+            <!--<router-view class="routerView"></router-view>-->
+            <person-activity ref="activity" v-if="currIndex === 0"></person-activity>
+            <person-partake ref="partake" v-else-if="currIndex === 1"></person-partake>
+            <person-collection ref="collection" v-else-if="currIndex === 2"></person-collection>
+            <person-follow ref="follow" v-else-if="currIndex === 3"></person-follow>
+            <person-dynamic ref="dynamic" v-else-if="currIndex === 4"></person-dynamic>
           </keep-alive>
         </div>
         <footer class="footer">
@@ -29,8 +33,8 @@
           <p class="text">Copyright &copy; 2013-2018 版权所有 北京韦尔科技有限公司</p>
           <p class="text">京ICP备14040981号-2</p>
         </footer>
-      </div>
-    </div>
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -40,6 +44,11 @@ import { Tab, TabItem } from 'vux';
 import { mapGetters } from 'vuex';
 import meetingHeader from '@/components/meetingHeader';
 import bannerWithTransBlur from '@/components/bannerWithTransBlur';
+import personActivity from './personalPage/personActivity';
+import personPartake from './personalPage/personPartake';
+import personCollection from './personalPage/personCollection';
+import personFollow from './personalPage/personFollow';
+import personDynamic from './personalPage/personDynamic';
 
 export default {
   name: 'personalPage',
@@ -60,24 +69,28 @@ export default {
           showMore: false,
         },
       },
-      blurConfig: {
-        isBlurred: false, // activate and deactivate blur directive example 2
-        opacity: 0.3,
-        filter: 'blur(1.2px)',
-        transition: 'all .3s linear',
-      },
-      pathMap: ['PPActivity', 'PPPartake', 'PPCollection', 'PPFollow', 'PPDynamic'],
+      // blurConfig: {
+      //   isBlurred: false, // activate and deactivate blur directive example 2
+      //   opacity: 0.3,
+      //   filter: 'blur(1.2px)',
+      //   transition: 'all .3s linear',
+      // },
+      refs: ['activity', 'partake', 'collection', 'follow', 'dynamic'],
+      // pathMap: ['PPActivity', 'PPPartake', 'PPCollection', 'PPFollow', 'PPDynamic'],
       userProfile: {
         userStatistics: {},
       },
-      currentTabIndex: null,
+      currIndex: 4,
       nearNode: false,
     };
   },
   mounted() {
     // debugger;
-    this.currentTabIndex = this.pathMap.indexOf(this.$route.name);
+    // this.currIndex = this.pathMap.indexOf(this.$route.name);
     this.getUserProfile();
+    // debugger;
+    // document.querySelector('.mainContainer').addEventListener('scroll', this.throttleScroll);
+    document.addEventListener('scroll', this.throttleScroll);
     // this.setIDInQuery();
   },
   created() {
@@ -94,15 +107,33 @@ export default {
     ]),
   },
   methods: {
+    throttleScroll() {
+      if (this.$route.name !== 'usercenter') {
+        return;
+      }
+      if (this.reachBottom()) {
+        const refName = this.refs[this.currIndex];
+        this.$refs[refName].loadMore();
+      }
+    },
+    reachBottom() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      // console.log(scrollTop);
+      // console.log(clientHeight);
+      // console.log(scrollHeight);
+      return scrollHeight - scrollTop - clientHeight < 300;
+    },
     onTabItemClick(index) {
       // debugger;
-      this.currentTabIndex = index;
-      this.$router.push({
-        name: this.pathMap[index],
-        params: {
-          id: this.$route.params.id,
-        },
-      });
+      this.currIndex = index;
+      // this.$router.push({
+      //   name: this.pathMap[index],
+      //   params: {
+      //     id: this.$route.params.id,
+      //   },
+      // });
     },
     // setIDInQuery() {
     //   if (this.$route.query.id) {
@@ -112,7 +143,7 @@ export default {
     //   }
     // },
     ChangeCurrentTabIndex(tabFlag) {
-      this.currentTabIndex = tabFlag;
+      this.currIndex = tabFlag;
       this.$nextTick(() => {
         // debugger
         // this.resetNavSelected();
@@ -144,27 +175,29 @@ export default {
     Tab,
     TabItem,
     bannerWithTransBlur,
+    personActivity,
+    personPartake,
+    personCollection,
+    personFollow,
+    personDynamic,
   },
 };
 </script>
 
 <style lang="less">
-html, body, #app, #personalPage {
-  height: 100%;
-}
 #personalPage {
-
-  .scrollWrapper {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    .mainContainer {
-      overflow: scroll;
-      height: 100%;
-      -webkit-overflow-scrolling: touch;
+  // height:auto;
+  // .scrollWrapper {
+  //   position: absolute;
+  //   top: 0;
+  //   bottom: 0;
+  //   width: 100%;
+  //   height: auto;
+  //   overflow: hidden;
+    // .mainContainer {
+    //   overflow: scroll;
+    //   height: auto;
+    //   -webkit-overflow-scrolling: touch;
       .header {
         // position: absolute;
         top: 0;
@@ -233,11 +266,11 @@ html, body, #app, #personalPage {
       .routerBody {
         width: 100%;
         height: auto;
-        min-height: calc(~'100% - 330px');
+        min-height: calc(~'100vh - 427px');
         background-color: #f4f7fa;
-        .routerView {
-          padding-bottom: 90px;
-        }
+        // .routerView {
+        //   padding-bottom: 90px;
+        // }
       }
       .clearfix{
         display: inline-block;
@@ -252,7 +285,7 @@ html, body, #app, #personalPage {
       .footer {
         position: relative;
         height: 90px;
-        margin-top: -90px;
+        // margin-top: -90px;
         background-color: #2b3134;
         color: #aaaaaa;
         text-align: center;
@@ -268,7 +301,12 @@ html, body, #app, #personalPage {
           }
         }
       }
+    .activity-footer{
+      padding:4px 0 9px; 
+      text-align:center;
+      color:#646464;
     }
-  }
+    // }
+  // }
 }
 </style>
