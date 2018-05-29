@@ -8,7 +8,7 @@
       @on-click-more=""
       :style="{backgroundColor:colorStyle.backgroundColor}"
     >
-      <div class="left" slot="left" :style="{color:colorStyle.minorColor}" @click="showSearch = true">
+      <div class="left" slot="left" :style="{color:colorStyle.minorColor}" @click="changeHandler">
         <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-Seach"></use>
         </svg>

@@ -3,51 +3,51 @@
     <!-- 第一张门票信息默认是买家信息 -->
     <form method="post" v-if="index === 0">
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketName">
           姓名<i>*</i>
           <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
         </label>
-        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name' :value="setNameDefaultInput" v-if="ticketDefault.name">
-        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name' v-else>
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="ticketName" ref='name' :value="setNameDefaultInput" v-if="ticketDefault.name">
+        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="ticketName" ref='name' v-else>
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketPhone">
           电话<i>*</i>
           <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
         </label>
-        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone' :value="setPhoneDefaultInput" v-if="ticketDefault.phone">
-        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'  v-else>
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone' :value="setPhoneDefaultInput" v-if="ticketDefault.phone" id="ticketPhone">
+        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'  v-else  id="ticketPhone">
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketEmail">
           邮箱<i>*</i>
           <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
         </label>
-        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email' :value="setEmailDefaultInput" v-if="ticketDefault.email">
-        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'  v-else>
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email' :value="setEmailDefaultInput" v-if="ticketDefault.email" id="ticketEmail">
+        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'  v-else  id="ticketEmail">
       </div>
     </form>
     <form method="post" v-else>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketSecName">
           姓名<i>*</i>
           <span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span>
         </label>
-        <input class="input input-hook" type="text" name="name" v-on:input="ownerNameFn" id="firstFocus" ref='name'>
+        <input class="input input-hook" id="ticketSecName" type="text" name="name" v-on:input="ownerNameFn" ref='name'>
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketSecPhone">
           电话<i>*</i>
           <span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span>
         </label>
-        <input class="input input-hook" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'>
+        <input class="input input-hook" id="ticketSecPhone" type="text" name="phone" v-on:input="ownerPhoneFn"  ref='phone'>
       </div>
       <div class="inputItem">
-        <label class="title" :class="setTitleSize">
+        <label class="title" :class="setTitleSize" for="ticketSecEmail">
           邮箱<i>*</i>
           <span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span>
         </label>
-        <input class="input input-hook" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'>
+        <input class="input input-hook" id="ticketSecEmail" type="text" name="email" v-on:input="ownerEmailFn"  ref='email'>
       </div>
     </form>
   </div>

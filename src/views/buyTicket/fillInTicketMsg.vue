@@ -13,16 +13,16 @@
         <div class="userInputBuyer">
           <form method="post">
             <div class="inputItem">
-              <label class="title">姓名<i>*</i><span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span></label>
-              <input class="input input-hook" type="text" name="name" v-on:input="nameInput" id="firstFocus" autocomplete='name'>
+              <label class="title" for="buyerName">姓名<i>*</i><span class="info-msg" v-if="user.nameInfo">请填入正确的姓名</span></label>
+              <input class="input input-hook" type="text" name="name" v-on:input="nameInput" id="buyerName" autocomplete='name' autofocus="autofocus">
             </div>
             <div class="inputItem">
-              <label class="title">电话<i>*</i><span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span></label>
-              <input class="input input-hook" type="text" name="phone" v-on:input="phoneInput" autocomplete='tel-national'>
+              <label class="title" for="buyerPhone">电话<i>*</i><span class="info-msg" v-if="user.phoneInfo">请填入正确的号码</span></label>
+              <input class="input input-hook" type="text" name="phone" v-on:input="phoneInput" autocomplete='tel-national' id="buyerPhone">
             </div>
             <div class="inputItem">
-              <label class="title">邮箱<i>*</i><span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span></label>
-              <input class="input input-hook" type="text" name="email" v-on:input="emailInput" autocomplete='email'>
+              <label class="title" for="buyerEmail">邮箱<i>*</i><span class="info-msg" v-if="user.emailInfo">请填入正确的邮箱</span></label>
+              <input class="input input-hook" type="text" name="email" v-on:input="emailInput" autocomplete='email' id="buyerEmail">
             </div>
           </form>
         </div>
@@ -53,9 +53,9 @@ export default {
     };
   },
   created() {
-    this.$nextTick(() => {
-      this.setFirstFocus();
-    });
+    // this.$nextTick(() => {
+    //   this.setFirstFocus();
+    // });
   },
   computed: {
     ...mapGetters([
@@ -81,10 +81,10 @@ export default {
       setTicketsRecordList: 'SET_TICKET_RECORD_LIST',
     }),
     setFirstFocus() {
-      if (this.BuyerFirstFocus) {
-        document.getElementById('firstFocus').focus();
-        this.BuyerFirstFocus = false;
-      }
+      // if (this.BuyerFirstFocus) {
+      //   document.getElementById('firstFocus').focus();
+      //   this.BuyerFirstFocus = false;
+      // }
     },
     userChangeEdit() {
       this.BuyerFirstEdit = false;

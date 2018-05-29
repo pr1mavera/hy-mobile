@@ -98,6 +98,9 @@ export default {
     // box-sizing: border-box;
     .homeContentWrapper {
       padding-bottom: 134px;
+      .vux-slider{
+        padding-top:45px;
+      }
       .vux-slider > .vux-indicator > a > .vux-icon-dot, .vux-slider .vux-indicator-right > a > .vux-icon-dot {
         background-color: rgba(255, 255, 255, .5);
       }
