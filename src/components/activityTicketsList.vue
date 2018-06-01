@@ -29,25 +29,25 @@
           </div>
           <div class="ticketsList">
             <ul>
-              <li v-for="(ticket, index) in activity.ticketsRecords" class="ticketsListLi" :key="index">
+              <li v-for="(ticket, i) in activity.ticketsRecords" class="ticketsListLi" :key="i">
                 <span class="ticketState">{{ticket.ticketStatus | ticketFilter}}</span>
                 <p class="text">{{ticket.ticketsName?ticket.ticketsName:'无'}}</p>
                 <p class="text">{{ticket.confereeName}}</p>
                 <div class="ticketOptionBtn">
                   <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="clickToShowTicket(ticket, activity)">查看门票</button>
-                  <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="downloadTicket(ticket, index)">下载门票</button>
+                  <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="downloadTicket(ticket, i)">下载门票</button>
                   <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
-                  <button class="item" type="button" name="button" @click="clickToShowEdit(ticket)">修改门票</button>
+                  <button class="item" type="button" name="button" @click="clickToShowEdit(ticket, i, index)">修改门票</button>
                 </div>
                 <!-- 下载png格式门票二维码 -->
                 <!--<qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>-->
               </li>
             </ul> 
-            <div v-transfer-dom>
+            <!--<div v-transfer-dom>
               <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketsFn">
                 <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
               </confirm>
-            </div>
+            </div>-->
           </div>
         </div>
       </li>
@@ -118,6 +118,7 @@ export default {
     },
     // 下载门票pdf
     downloadTicket(ticket, index) {
+      debugger;
       if (ticket.ticketStatus !== 3) {
         // this.loadConfirm = true;
         if (!ticket.id) {
@@ -125,7 +126,7 @@ export default {
         } else {
           try {
             const downloadLink = document.createElement('a');
-            downloadLink.download = `${ticket.ticketsName}门票`;
+            downloadLink.download = `${ticket.ticketsName}-门票`;
             downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
             downloadLink.click();
             // this.$vux.toast.text('正在下载', 'top');
@@ -133,7 +134,7 @@ export default {
             console.log(err);
           }
         }
-        this.downTickets = this.activity.ticketsRecords[index];
+        // this.downTickets = this.activity.ticketsRecords[index];
       } else {
         return false;
       }
@@ -293,9 +294,9 @@ export default {
       }
       return obj;
     },
-    clickToShowEdit(ticket) {
+    clickToShowEdit(ticket, tindex, aindex) {
       const copyTicket = this.copy(ticket);
-      this.$emit("updateTicket", true, copyTicket);
+      this.$emit("updateTicket", true, copyTicket, tindex, aindex);
     },
     downLoadImage(canvas, name) {
       const a = document.createElement('a');

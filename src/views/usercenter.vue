@@ -80,7 +80,7 @@ export default {
       userProfile: {
         userStatistics: {},
       },
-      currIndex: 4,
+      currIndex: 0,
       nearNode: false,
     };
   },

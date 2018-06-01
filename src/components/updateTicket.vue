@@ -12,13 +12,13 @@
           <div class="inputContent">
             <form>
               <group>
-                <x-input title="" v-model="ticketForm.confereeName" :min="1" :max="10"></x-input>
+                <input class="popup-conferee" placeholder="姓名" @blur="validateNameFn" v-model="ticketForm.confereeName"></input>
               </group>
               <group>
-                <x-input title="" type v-model="ticketForm.confereePhone"></x-input>
+                <input class="popup-conferee" placeholder="手机号" @blur="validatePhoneFn" v-model="ticketForm.confereePhone"></input>
               </group>
               <group>
-                <x-input title="" v-model="ticketForm.confereeEmail"></x-input>
+                <input class="popup-conferee" placeholder="邮箱" @blur="validateEmailFn" v-model="ticketForm.confereeEmail"></input>
               </group>
             </form>
           </div>
@@ -49,37 +49,83 @@ export default {
     ticketForm: {
       type: Object,
     },
+    index: {
+      type: Number,
+    },
   },
   data() {
     return {
+      validate: true,
       // showTicket: false,
       // currentTicket: {},
     };
   },
   methods: {
+    regValidate (type){
+      switch (type){
+        case '':
+          this.$vux.toast.text('姓名不能为空', 'top');
+          break;
+        case 'len':
+          this.$vux.toast.text('姓名在10个字符', 'top');
+          break;
+        case 'phone':
+          this.$vux.toast.text('手机格式不正确', 'top');
+          break;
+        case 'email':
+          this.$vux.toast.text('邮箱格式不正确', 'top');
+          break;
+      }
+      this.regValue=type;
+    },
+    validateNameFn() {
+      const val = this.ticketForm.confereeName;
+      const len = val.length;
+      if (len === 0) {
+        this.regValidate('');
+        this.validate = false;
+      } else if (len > 10) {
+        this.regValidate('len');
+        this.validate = false;
+      } else {
+        this.validate = true;
+      }
+    },
+    validatePhoneFn() {
+      const val = this.ticketForm.confereePhone;
+      const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+      if (!regNum.test(val)) {
+        this.regValidate('phone');
+        this.validate = false;
+      } else {
+        this.validate = true;
+      }
+    },
+    validateEmailFn() {
+      const val = this.ticketForm.confereeEmail;
+      const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (!regEmail.test(val)) {
+        this.regValidate('email');
+        this.validate = false;
+      } else {
+        this.validate = true;
+      }
+    },
     updateTicketFn() {
       const data = { ...this.ticketForm };
-      const len = data.confereeName.length;
-      const regNum = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
-      const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-      if (len === 0) {
-        this.$vux.toast.text('姓名不能为空', 'top');
-      } else if (len > 10) {
-        this.$vux.toast.text('姓名在10个字符', 'top');
-      } else if (!regNum.test(data.confereePhone)) {
-        this.$vux.toast.text('手机号码格式不正确', 'top');
-      } else if (!regEmail.test(data.confereeEmail)) {
-        this.$vux.toast.text('邮箱格式不正确', 'top');
-      } else {
+      if (this.validate) {
         updateTicket(data.id, data).then((res) => {
           if (res.code === 0) {
             this.$vux.toast.text('修改成功', 'top');
-            this.$emit('update');
+            // this.$emit('update');
             this.showEdit = false;
+            this.$emit('closeTicket', false, data, true);
           } else {
             this.$vux.toast.text('修改失败', 'top');
           }
         });
+      }else{
+        this.$vux.toast.text('请填写正确格式内容', 'top');
       }
     },
     closeFormTicket() {
@@ -94,6 +140,20 @@ export default {
     Group,
     XInput
   },
+  // watch: {
+  //   'ticketForm.confereeName'(newVal) {
+      
+  //     //  else if (len > 10) {
+  //     //   this.$vux.toast.text('姓名在10个字符', 'top');
+  //     // }
+  //   },
+  //   'ticketForm.confereePhone'(newVal) {
+
+  //   },
+  //   'ticketForm.confereeEmail'(newVal) {
+      
+  //   },
+  // }
 };
 </script>
 
@@ -333,6 +393,20 @@ export default {
           font-size: 15px;
           color: #5d6574-light;
           form {
+            .popup-conferee{
+              width:100%;
+              box-sizing:border-box;
+              border: solid 1px #d8dbe0;
+              border-radius: 2px;
+              padding:2px 6px;
+              line-height:40px;
+              height:40px;
+              font-size:14px;
+              color:#b8bcc4;
+              // &:focus{
+              //   border: solid 1px #6ea4f7;
+              // }
+            }
             .inputItem {
               width: 100%;
               height: 40px;

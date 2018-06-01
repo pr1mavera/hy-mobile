@@ -20,7 +20,6 @@
         v-if="curIndex === 0"
         @updateTicket="updateTicketFn"
         @checkTicket="checkTicketFn"
-        @update="getActivityTicketsList"
         :currentIndex="curIndex" 
         :ticketsList="ticketsValid.list"
         :loadStatus="ticketsValid.loadStatus"
@@ -30,7 +29,6 @@
         v-else-if="curIndex === 1"
         @updateTicket="updateTicketFn"
         @checkTicket="checkTicketFn" 
-        @update="getActivityTicketsList" 
         :currentIndex="curIndex"
         :ticketsList="ticketsInvalid.list"
         :loadStatus="ticketsInvalid.loadStatus"
@@ -81,6 +79,8 @@ export default {
       curActivity: {},
       formView: false,
       formTickets: {},
+      curIndexTicket: '', // 编辑当前门票index
+      curIndexActivity: '', // 编辑当前门票所在会议的index
     };
   },
   mounted() {
@@ -113,14 +113,23 @@ export default {
         }
       });
     },
-    updateTicketFn(isview, data) {
+    updateTicketFn(isview, data, tindex, aindex) {
       this.formView = isview;
-      if (isview) {
+      if (isview) { // open弹窗
         this.formTickets = data;
+        this.curIndexTicket = tindex;
+        this.curIndexActivity = aindex;
+      } else {
+        // 关闭弹窗 两种情况:1、普通关闭；
+        if (!tindex) return;// 2、更新提交后关闭,改变本地数据
+        const ticketStatus = this.ticketStatus[this.curIndex];
+        const aindexVal = this.curIndexActivity;
+        const tindexVal = this.curIndexTicket;
+        this[ticketStatus].list[aindexVal].ticketsRecords.splice(tindexVal, 1, data);
       }
     },
     checkTicketFn(isview, data, activity) {
-      this.ticketView = isview;
+      this.ticketView = isview; // false 关闭 true 弹出
       if (isview) {
         this.currTickets = data;
         this.curActivity = activity;

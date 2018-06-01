@@ -59,13 +59,13 @@
               <div class="line"></div>
             </div>
             <div class="list">
-              <a @click="clickToRouteByPathName('/usercenter/activity/', 0)">
+              <a @click="clickToRouteByPathName('/usercenter/', 0)">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodehuiyi"></use>
                 </svg>
                 <span>我的活动</span>
               </a>
-              <a @click="clickToRouteByPathName('/usercenter/partake/', 1)">
+              <a @click="clickToRouteByPathName('/usercenter/', 1)">
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-wodemenpiao"></use>
                 </svg>
