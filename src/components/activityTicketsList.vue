@@ -36,6 +36,7 @@
                 <div class="ticketOptionBtn">
                   <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="clickToShowTicket(ticket, activity)">查看门票</button>
                   <button :class="['item',ticket.ticketStatus === 3?'active':'']" type="button" name="button" @click="downloadTicket(ticket, i)">下载门票</button>
+                  <a :href="`${http}/ticketsRecord/getPDFTicket/${ticket.id}?mp.weixin.qq.com`" download>你好</a>
                   <!-- <button class="item" type="button" name="button" @click="downloadTicket2(ticket, activity)">下2</button> -->
                   <button class="item" type="button" name="button" @click="clickToShowEdit(ticket, i, index)">修改门票</button>
                 </div>
@@ -89,7 +90,13 @@ export default {
       loadConfirm: false, // 下载弹框
       selectLoadArray: [], // 下载类型
       downTickets: {}, // 要下载的门票信息
+      // http: '',
     };
+  },
+  computed:{
+    http(){
+      return Conf.publicPath;
+    }
   },
   methods: {
     /* eslint-disable */
@@ -118,7 +125,7 @@ export default {
     },
     // 下载门票pdf
     downloadTicket(ticket, index) {
-      debugger;
+      // debugger;
       if (ticket.ticketStatus !== 3) {
         // this.loadConfirm = true;
         if (!ticket.id) {
@@ -127,7 +134,9 @@ export default {
           try {
             const downloadLink = document.createElement('a');
             downloadLink.download = `${ticket.ticketsName}-门票`;
-            downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}`;
+            console.log(downloadLink.download);
+            downloadLink.href = `${Conf.publicPath}/ticketsRecord/getPDFTicket/${ticket.id}#mp.weixin.qq.com`;
+            console.log(downloadLink.href);
             downloadLink.click();
             // this.$vux.toast.text('正在下载', 'top');
           } catch (err) {

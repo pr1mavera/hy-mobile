@@ -4,7 +4,7 @@
       <!-- 购买门票进度 -->
       <headerWithProcess></headerWithProcess>
     </div>
-    <div class="routerBody">
+    <div class="buyTicketBody">
       <keep-alive>
         <router-view @countChangeWithId="countChangeWithId"></router-view>
       </keep-alive>
@@ -158,7 +158,7 @@ export default {
     width: 100%;
     z-index: 10;
   }
-  .routerBody {
+  .buyTicketBody {
     margin-top: 100px;
   }
 }

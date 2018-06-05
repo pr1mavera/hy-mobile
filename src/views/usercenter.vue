@@ -266,22 +266,22 @@ export default {
       .routerBody {
         width: 100%;
         height: auto;
-        min-height: calc(~'100vh - 427px');
+        min-height: calc(~'100vh - 420px');
         background-color: #f4f7fa;
         // .routerView {
         //   padding-bottom: 90px;
         // }
       }
-      .clearfix{
-        display: inline-block;
-      }
-      .clearfix:after {
-        content: "";
-        display: block;
-        height: 0;
-        clear: both;
-        visibility: hidden;
-      }
+      // .clearfix{
+      //   // display: inline-block;
+      // }
+      // .clearfix:after {
+      //   content: "";
+      //   display: block;
+      //   height: 0;
+      //   clear: both;
+      //   visibility: hidden;
+      // }
       .footer {
         position: relative;
         height: 90px;
