@@ -20,7 +20,7 @@
         v-if="curIndex === 0"
         @updateTicket="updateTicketFn"
         @checkTicket="checkTicketFn"
-        :currentIndex="curIndex" 
+        :currentIndex="curIndex"
         :ticketsList="ticketsValid.list"
         :loadStatus="ticketsValid.loadStatus"
       >
@@ -28,7 +28,7 @@
       <activityTicketsList
         v-else-if="curIndex === 1"
         @updateTicket="updateTicketFn"
-        @checkTicket="checkTicketFn" 
+        @checkTicket="checkTicketFn"
         :currentIndex="curIndex"
         :ticketsList="ticketsInvalid.list"
         :loadStatus="ticketsInvalid.loadStatus"
@@ -39,6 +39,7 @@
       :currentTicket="currTickets"
       :ticketView="ticketView"
       :activity="curActivity"
+      :canvasImg="curCanvasImg"
     ></checkTicket>
     <updateTicket
       :ticketForm="formTickets"
@@ -46,6 +47,7 @@
       @closeTicket="updateTicketFn"
     >
     </updateTicket>
+    <canvas id="canvas" width="320" height="500"></canvas>
   </div>
 </template>
 
@@ -74,6 +76,7 @@ export default {
       ticketStatus: ['ticketsValid', 'ticketsInvalid'],
       ticketStatusNum: [true, false],
       curIndex: 0, // 0有效 1失效
+      curCanvasImg: null,
       currTickets: {},
       ticketView: false,
       curActivity: {},
@@ -131,9 +134,35 @@ export default {
     checkTicketFn(isview, data, activity) {
       this.ticketView = isview; // false 关闭 true 弹出
       if (isview) {
+        this.createCanvas(data, activity);
         this.currTickets = data;
         this.curActivity = activity;
       }
+    },
+    /* ******************************* 初始化canvas并且绘制并且转换成png ******************************** */
+    createCanvas(ticket, activity) {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      // 重置画布高度，相当于清空画布
+      canvas.height = canvas.height;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 320, 500);
+      // ctx.fillStyle = '#213C67';
+      // ctx.fillRect(0, 0, 156, 786);
+      // 这里绘画~  212，213行 用到时解开注释；
+
+      // 绘制PDF默认标题
+      // this.PDFDrawDefine(ctx);
+      // 绘制PDF会议门票基本信息
+
+      // 生成
+      this.curCanvasImg = this.downLoadImage(canvas);
+    },
+    downLoadImage(canvas) {
+      const img = new Image();
+      img.src = canvas.toDataURL('image/png');
+      return img;
     },
     loadMore() {
       // debugger;

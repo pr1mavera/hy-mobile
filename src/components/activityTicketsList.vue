@@ -43,7 +43,7 @@
                 <!-- 下载png格式门票二维码 -->
                 <!--<qrcode v-show="false" class="ticketCode" :ref="'ticketCode' + ticket.id" :value="ticket.authCode" type="img"></qrcode>-->
               </li>
-            </ul> 
+            </ul>
             <!--<div v-transfer-dom>
               <confirm v-model="loadConfirm" title="选择要下载的类型" @on-confirm="loadTicketsFn">
                 <checklist :options="downloadArray" @on-change="loadTypeFn" :max="1"></checklist>
@@ -270,9 +270,9 @@ export default {
       ticketName.drawTextChangeLine(context, '#333333', 417);
 
       // 绘制二维码
-      const value = 'ticketCode' + ticket.id;
-      const img = this.$refs[value][0].$el.childNodes[2];
-      context.drawImage(img, 1372, 150, 300, 300);
+      // const value = 'ticketCode' + ticket.id;
+      // const img = this.$refs[value][0].$el.childNodes[2];
+      // context.drawImage(img, 1372, 150, 300, 300);
 
       const code = new PDFTicketItem({
         itemText: ticket.signCode,

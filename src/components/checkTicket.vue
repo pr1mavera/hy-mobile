@@ -6,8 +6,8 @@
       position="top"
       :is-transparent='true'
       >
-      <div class="popup popupTicket">
-        <div class="popupTicketBox" id="popupTicketBox">
+      <div class="popup popupTicket" id="imgBox">
+        <!-- <div class="popupTicketBox" id="popupTicketBox">
           <div class="popupTicketBoxContent">
             <div class="activity">
               <div class="content">
@@ -36,7 +36,7 @@
                   </div>
                   <p class="code vux-1px">取票号 {{currentTicket.signCode}}</p>
                 </div>
-                
+
                 <div class="massage">
                   <p class="name"><span>姓名</span> {{currentTicket.confereeName}}</p>
                   <p class="price"><span>票价</span> ￥{{currentTicket.ticketsPrice}}</p>
@@ -52,7 +52,7 @@
                 <use xlink:href="#icon-guanbi2"></use>
             </svg>
           </div>
-        </div>
+        </div> -->
         <!-- <div class="block"></div> -->
       </div>
     </popup>
@@ -74,7 +74,10 @@ export default {
     currentTicket: {
       type: Object,
     },
-    activity:{
+    activity: {
+      type: Object,
+    },
+    canvasImg: {
       type: Object,
     }
   },
@@ -84,9 +87,13 @@ export default {
       // currentTicket: {},
     };
   },
+  mounted() {
+    const imgBox = document.getElementById("imgBox");
+    imgBox.appendChild(this.canvasImg);
+  },
   methods: {
     closeCheckTicket() {
-      this.$emit('closeTicket',false);
+      this.$emit('closeTicket', false);
     }
   },
   filters: {
